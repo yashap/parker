@@ -1,6 +1,22 @@
-
-
 # Parker
+
+A monorepo for the Parker parking app.
+
+## Setup
+
+Install the following:
+* [nvm](https://github.com/nvm-sh/nvm)
+  * For managing multiple node versions
+  * `nvm use` in the root of the `parker` repo to ensure you're on the right version
+* [Nx](https://nx.dev)
+  * Our monorepo build tool
+  * `npm install -g nx`
+
+## Dev Workflow
+
+TODO
+
+# NX README boilerplate
 
 This project was generated using [Nx](https://nx.dev).
 
