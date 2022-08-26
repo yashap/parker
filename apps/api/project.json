@@ -19,8 +19,8 @@
           "inspect": false,
           "fileReplacements": [
             {
-              "replace": "apps/api/src/environments/environment.ts",
-              "with": "apps/api/src/environments/environment.prod.ts"
+              "replace": "apps/api/src/config/config.ts",
+              "with": "apps/api/src/config/config.prod.ts"
             }
           ]
         }
