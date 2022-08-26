@@ -1,6 +1,15 @@
 {
     "cSpell.words": [
+        "Buildable",
         "nestjs",
-        "nrwl"
+        "nrwl",
+        "Parens"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": [
+        "typescript",
+        "javascript"
     ]
 }

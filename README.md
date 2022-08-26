@@ -7,16 +7,30 @@ A monorepo for the Parker parking app.
 Install the following:
 * [nvm](https://github.com/nvm-sh/nvm)
   * For managing multiple node versions
-  * `nvm use` in the root of the `parker` repo to ensure you're on the right version
+  * Suggest setting up `nvm` to [auto-switch to the right node version on cd](https://github.com/nvm-sh/nvm#deeper-shell-integration)
 * [Nx](https://nx.dev)
   * Our monorepo build tool
   * `npm install -g nx`
 
 ## Dev Workflow
-* Build everything
+
+* Build
   * `nx run build`
-* Serve the API
-  * `nx run api:serve`
+* Serve (e.g. start a server or frontend)
+  * `nx run serve`
+* Test
+  * `nx run test`
+* Lint
+  * Check linting rules: `nx run lint`
+  * Check and auto-fix linting rules: `nx run lint --fix`
+* Add an external dependency
+  * `npm install <dep>`
+  * Dev-only dependency: `npm install -D <dep>`
+  * Note that with `nx`, dependencies are installed once for all apps/libs, not per app/lib
+
+Note that, with every `nx run` command, you can prefix with a specific app/lib. For example:
+* `nx run build` builds everything
+* `nx run api:build` builds only the `api` app
 
 ## Nx
 
