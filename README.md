@@ -11,6 +11,8 @@ Install the following:
 * [Nx](https://nx.dev)
   * Our monorepo build tool
   * `npm install -g nx`
+* Docker Desktop
+  * For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
 ## Dev Workflow
 

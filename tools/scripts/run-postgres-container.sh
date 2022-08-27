@@ -2,26 +2,27 @@
 
 set -euo pipefail
 
+PG_HOST=localhost
+
+# Get command line options
 PG_USER=app
 PG_PASSWORD=app121
-PG_HOST=localhost
 PG_PORT_CONTAINER=5432 # Within the container, PG runs on the standard port
 PG_PORT=5440           # On the host, we default to a non-standard port to not clash with local PG
 PG_DB=api
 PG_CONTAINER_NAME=parker_postgres
 PG_DATA_VOLUME=pg_data
 
-while getopts ":u:w:h:p:d:c:v:" arg; do
+while getopts ":u:w:p:d:c:v:" arg; do
     case $arg in
     u) PG_USER=$OPTARG ;;
     w) PG_PASSWORD=$OPTARG ;;
-    h) PG_HOST=$OPTARG ;;
     p) PG_PORT=$OPTARG ;;
     d) PG_DB=$OPTARG ;;
     c) PG_CONTAINER_NAME=$OPTARG ;;
     v) PG_DATA_VOLUME=$OPTARG ;;
     *)
-        echo "usage: $0 [-v] [-r]" >&2
+        echo "usage: $0 [-u user] [-w password] [-p port] [-d db_name] [-c container_name] [-v container_volume]" >&2
         exit 1
         ;;
     esac
