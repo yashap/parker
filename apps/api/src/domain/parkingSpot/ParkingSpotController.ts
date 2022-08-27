@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common'
-import { BaseController } from '../../util/BaseController'
+import { BaseController } from '../../http/BaseController'
 import { CreateParkingSpotDto, ParkingSpotDto, UpdateParkingSpotDto } from './ParkingSpotDto'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
