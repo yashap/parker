@@ -31,6 +31,7 @@
       "options": {
         "buildTarget": "api:build"
       },
+      "dependsOn": ["devDB"],
       "configurations": {
         "production": {
           "buildTarget": "api:build:production"
@@ -50,6 +51,19 @@
       "options": {
         "jestConfig": "apps/api/jest.config.ts",
         "passWithNoTests": true
+      },
+      "dependsOn": ["testDB"]
+    },
+    "devDB": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["./tools/scripts/run-postgres-container.sh"]
+      }
+    },
+    "testDB": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["./tools/scripts/run-postgres-container.sh -p 5441 -c parker_postgres_test -v pg_data_test"]
       }
     }
   },

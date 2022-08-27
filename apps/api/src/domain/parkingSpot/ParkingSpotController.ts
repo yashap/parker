@@ -5,6 +5,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -68,13 +69,8 @@ export class ParkingSpotController {
   private async findById(id: string): Promise<ParkingSpot> {
     const parkingSpot = await this.parkingSpotRepository.findById(id)
     if (!parkingSpot) {
-      // TODO: centralize errors
-      throw new HttpException(
-        {
-          error: 'ParkingSpot not found',
-        },
-        HttpStatus.NOT_FOUND
-      )
+      // TODO: centralize errors into a library
+      throw new NotFoundException({ error: 'ParkingSpot not found' })
     }
     return parkingSpot
   }
