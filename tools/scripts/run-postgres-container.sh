@@ -42,13 +42,15 @@ docker volume create "$PG_DATA_VOLUME"
 docker rm -f "$PG_CONTAINER_NAME" >/dev/null 2>&1 || true
 
 # Start the DB
-docker run --name "$PG_CONTAINER_NAME" \
+docker run \
+    --name "$PG_CONTAINER_NAME" \
     -v "$PG_DATA_VOLUME":/var/lib/postgresql/data \
     -e POSTGRES_USER="$PG_USER" \
     -e POSTGRES_PASSWORD="$PG_PASSWORD" \
     -e POSTGRES_DB="$PG_DB" \
     -p "$PG_PORT":"$PG_PORT_CONTAINER" \
-    -d postgres:14.5
+    -d \
+    postgres:14.5
 
 # Wait for the DB to come up before letting the script finish
 DB_UP=0

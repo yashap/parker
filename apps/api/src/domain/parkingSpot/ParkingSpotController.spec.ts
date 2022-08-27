@@ -1,4 +1,6 @@
+import { NotFoundException } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
+import { v4 as uuid } from 'uuid'
 import { ParkingSpotController } from './ParkingSpotController'
 import { ParkingSpotDto } from './ParkingSpotDto'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
@@ -19,6 +21,10 @@ describe(ParkingSpotController.name, () => {
   describe('findOne', () => {
     it('should find a parking spot by id', async () => {
       expect(await parkingSpotController.findOne(spot1.id)).toStrictEqual(spot1)
+    })
+
+    it('should throw a not found error if the id is not found', async () => {
+      expect(parkingSpotController.findOne(uuid())).rejects.toBeInstanceOf(NotFoundException)
     })
   })
 })

@@ -1,23 +1,13 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  HttpStatus,
-  NotFoundException,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-} from '@nestjs/common'
-import { ParkingSpot } from './ParkingSpot'
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common'
+import { BaseController } from '../../util/BaseController'
 import { CreateParkingSpotDto, ParkingSpotDto, UpdateParkingSpotDto } from './ParkingSpotDto'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
 @Controller('parkingSpots')
-export class ParkingSpotController {
-  constructor(private readonly parkingSpotRepository: ParkingSpotRepository) {}
+export class ParkingSpotController extends BaseController {
+  constructor(private readonly parkingSpotRepository: ParkingSpotRepository) {
+    super('ParkingSpot')
+  }
 
   @Post()
   public async create(@Body() createParkingSpotDto: CreateParkingSpotDto): Promise<ParkingSpotDto> {
@@ -33,16 +23,7 @@ export class ParkingSpotController {
 
   @Get(':id')
   public async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<ParkingSpotDto> {
-    const parkingSpot = await this.parkingSpotRepository.findById(id)
-    if (!parkingSpot) {
-      // TODO: centralize errors
-      throw new HttpException(
-        {
-          error: 'ParkingSpot not found',
-        },
-        HttpStatus.NOT_FOUND
-      )
-    }
+    const parkingSpot = this.require(await this.parkingSpotRepository.findById(id))
     return ParkingSpotDto.buildFromDomain(parkingSpot)
   }
 
@@ -52,7 +33,7 @@ export class ParkingSpotController {
     @Body() updateParkingSpotDto: UpdateParkingSpotDto
   ): Promise<ParkingSpotDto> {
     // TODO: in a transaction
-    const currentParkingSpot = await this.findById(id)
+    const currentParkingSpot = this.require(await this.parkingSpotRepository.findById(id))
     const parkingSpot = {
       ...currentParkingSpot,
       ...updateParkingSpotDto,
@@ -64,14 +45,5 @@ export class ParkingSpotController {
   @Delete(':id')
   public async delete(@Param('id') id: string): Promise<void> {
     await this.parkingSpotRepository.delete(id)
-  }
-
-  private async findById(id: string): Promise<ParkingSpot> {
-    const parkingSpot = await this.parkingSpotRepository.findById(id)
-    if (!parkingSpot) {
-      // TODO: centralize errors into a library
-      throw new NotFoundException({ error: 'ParkingSpot not found' })
-    }
-    return parkingSpot
   }
 }
