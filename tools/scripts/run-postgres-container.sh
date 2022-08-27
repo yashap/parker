@@ -52,11 +52,11 @@ docker run --name "$PG_CONTAINER_NAME" \
 
 # Wait for the DB to come up before letting the script finish
 DB_UP=0
-while [ $DB_UP -eq 0 ]; do
-    echo 'Waiting for DB to come up ...'
+while [ "$DB_UP" -eq 0 ]; do
+    echo "Waiting for DB to come up ..."
     DB_UP=$(docker exec -t "$PG_CONTAINER_NAME" /bin/bash -c 'psql '"$PG_URL"' -c "SELECT 1"' >/dev/null 2>&1 && echo 1 || echo 0)
     if [ "$DB_UP" -eq 1 ]; then
-        echo 'DB is up'
+        echo "DB is up"
     else
         sleep 1
     fi
