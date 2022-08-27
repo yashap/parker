@@ -24,11 +24,10 @@ describe(ParkingSpotRepository.name, () => {
     })
   })
 
-  describe('replace', () => {
+  describe('update', () => {
     it('should update a parking spot', async () => {
-      const updatedSpot = { ...spot1, name: 'some updated name' }
-      await parkingSpotRepository.replace(updatedSpot)
-      expect(await parkingSpotRepository.findById(spot1.id)).toEqual(updatedSpot)
+      await parkingSpotRepository.update(spot1.id, { name: 'some updated name' })
+      expect(await parkingSpotRepository.findById(spot1.id)).toEqual({ ...spot1, name: 'some updated name' })
     })
   })
 

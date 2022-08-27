@@ -6,7 +6,7 @@ export abstract class BaseController {
   protected require<T>(maybeValue: T | undefined): T {
     if (!maybeValue) {
       // TODO: centralize errors into a library
-      throw new NotFoundException({ error: `${this.entityName} not found` })
+      throw new NotFoundException({ message: `${this.entityName} not found` })
     }
     return maybeValue
   }

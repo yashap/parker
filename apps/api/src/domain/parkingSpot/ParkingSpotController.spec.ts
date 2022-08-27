@@ -18,13 +18,13 @@ describe(ParkingSpotController.name, () => {
     spot1 = await parkingSpotController.create({ name: 'test spot 1' })
   })
 
-  describe('findOne', () => {
+  describe('findById', () => {
     it('should find a parking spot by id', async () => {
-      expect(await parkingSpotController.findOne(spot1.id)).toStrictEqual(spot1)
+      expect(await parkingSpotController.findById(spot1.id)).toStrictEqual(spot1)
     })
 
     it('should throw a not found error if the id is not found', async () => {
-      expect(parkingSpotController.findOne(uuid())).rejects.toBeInstanceOf(NotFoundException)
+      expect(parkingSpotController.findById(uuid())).rejects.toBeInstanceOf(NotFoundException)
     })
   })
 })

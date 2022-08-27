@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { v4 as uuid } from 'uuid'
 import { ParkingSpot } from './ParkingSpot'
 
 type CreateParkingSpotInput = Omit<ParkingSpot, 'id'>
+type UpdateParkingSpotInput = Partial<CreateParkingSpotInput>
 
 @Injectable()
 export class ParkingSpotRepository {
@@ -22,9 +23,17 @@ export class ParkingSpotRepository {
     return this.store.get(id)
   }
 
-  public async replace(newParkingSpot: ParkingSpot): Promise<ParkingSpot> {
-    this.store.set(newParkingSpot.id, newParkingSpot)
-    return newParkingSpot
+  public async update(id: string, updates: UpdateParkingSpotInput): Promise<ParkingSpot> {
+    const currentParkingSpot = await this.findById(id)
+    if (!currentParkingSpot) {
+      throw new NotFoundException({ message: 'ParkingSpot not found' })
+    }
+    const parkingSpotWithUpdates = {
+      ...currentParkingSpot,
+      ...updates,
+    }
+    this.store.set(id, new ParkingSpot(id, parkingSpotWithUpdates.name))
+    return parkingSpotWithUpdates
   }
 
   public async delete(id: string): Promise<void> {

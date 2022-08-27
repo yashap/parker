@@ -22,7 +22,7 @@ export class ParkingSpotController extends BaseController {
   }
 
   @Get(':id')
-  public async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<ParkingSpotDto> {
+  public async findById(@Param('id', ParseUUIDPipe) id: string): Promise<ParkingSpotDto> {
     const parkingSpot = this.require(await this.parkingSpotRepository.findById(id))
     return ParkingSpotDto.buildFromDomain(parkingSpot)
   }
@@ -32,13 +32,7 @@ export class ParkingSpotController extends BaseController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateParkingSpotDto: UpdateParkingSpotDto
   ): Promise<ParkingSpotDto> {
-    // TODO: in a transaction
-    const currentParkingSpot = this.require(await this.parkingSpotRepository.findById(id))
-    const parkingSpot = {
-      ...currentParkingSpot,
-      ...updateParkingSpotDto,
-    }
-    const updatedParkingSpot = await this.parkingSpotRepository.replace(parkingSpot)
+    const updatedParkingSpot = await this.parkingSpotRepository.update(id, updateParkingSpotDto)
     return ParkingSpotDto.buildFromDomain(updatedParkingSpot)
   }
 
