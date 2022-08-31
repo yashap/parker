@@ -1,15 +1,17 @@
 import { OmitType, PartialType } from '@nestjs/mapped-types'
 import { IsNotEmpty, IsUUID } from 'class-validator'
-import { ParkingSpot } from './ParkingSpot'
+import { ParkingSpot, ParkingSpotProps } from './ParkingSpot'
+
+export type ParkingSpotDtoProps = ParkingSpotProps
 
 export class ParkingSpotDto {
-  constructor(id: string, name: string) {
+  constructor({ id, name }: ParkingSpotProps) {
     this.id = id
     this.name = name
   }
 
   public static buildFromDomain(parkingSpot: ParkingSpot): ParkingSpotDto {
-    return new ParkingSpotDto(parkingSpot.id, parkingSpot.name)
+    return new ParkingSpotDto(parkingSpot)
   }
 
   @IsUUID()

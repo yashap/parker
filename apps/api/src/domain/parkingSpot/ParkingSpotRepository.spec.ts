@@ -27,7 +27,9 @@ describe(ParkingSpotRepository.name, () => {
   describe('update', () => {
     it('should update a parking spot', async () => {
       await parkingSpotRepository.update(spot1.id, { name: 'some updated name' })
-      expect(await parkingSpotRepository.findById(spot1.id)).toEqual({ ...spot1, name: 'some updated name' })
+      expect(await parkingSpotRepository.findById(spot1.id)).toEqual(
+        new ParkingSpot({ ...spot1, name: 'some updated name' })
+      )
     })
   })
 

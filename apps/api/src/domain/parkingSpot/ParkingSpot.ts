@@ -1,3 +1,12 @@
-export class ParkingSpot {
-  constructor(public readonly id: string, public readonly name: string) {}
+import { Record } from 'immutable'
+
+export interface ParkingSpotProps {
+  id: string
+  name: string
+}
+
+export class ParkingSpot extends Record<ParkingSpotProps>({ id: '', name: '' }) {
+  constructor(props: ParkingSpotProps) {
+    super(props)
+  }
 }
