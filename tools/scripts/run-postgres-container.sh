@@ -9,9 +9,9 @@ PG_USER=app
 PG_PASSWORD=app121
 PG_PORT_CONTAINER=5432 # Within the container, PG runs on the standard port
 PG_PORT=5440           # On the host, we default to a non-standard port to not clash with local PG
-PG_DB=api
-PG_CONTAINER_NAME=parker_postgres
-PG_DATA_VOLUME=pg_data
+PG_DB=core
+PG_CONTAINER_NAME=parker_postgres_main
+PG_DATA_VOLUME=parker_postgres_data_main
 
 while getopts ":u:w:p:d:c:v:" arg; do
     case $arg in
@@ -56,7 +56,7 @@ docker run \
 DB_UP=0
 while [ "$DB_UP" -eq 0 ]; do
     echo "Waiting for DB to come up ..."
-    DB_UP=$(docker exec -t "$PG_CONTAINER_NAME" /bin/bash -c 'psql '"$PG_URL"' -c "SELECT 1"' >/dev/null 2>&1 && echo 1 || echo 0)
+    DB_UP=$(docker exec -t "$PG_CONTAINER_NAME" /bin/bash -c 'psql '"$PG_URL"' -c "SELECT 1;"' >/dev/null 2>&1 && echo 1 || echo 0)
     if [ "$DB_UP" -eq 1 ]; then
         echo "DB is up"
     else

@@ -15,7 +15,7 @@ describe(ParkingSpotController.name, () => {
       providers: [ParkingSpotRepository],
     }).compile()
     parkingSpotController = app.get(ParkingSpotController)
-    spot1 = await parkingSpotController.create({ name: 'test spot 1' })
+    spot1 = await parkingSpotController.create({ landlordId: 'TODO have to create a landlord first' })
   })
 
   describe('findById', () => {

@@ -11,7 +11,7 @@ export class ParkingSpotController extends BaseController {
 
   @Post()
   public async create(@Body() createParkingSpotDto: CreateParkingSpotDto): Promise<ParkingSpotDto> {
-    const parkingSpot = await this.parkingSpotRepository.create(createParkingSpotDto)
+    const parkingSpot = await this.parkingSpotRepository.create({ ...createParkingSpotDto })
     return ParkingSpotDto.buildFromDomain(parkingSpot)
   }
 
@@ -32,7 +32,7 @@ export class ParkingSpotController extends BaseController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateParkingSpotDto: UpdateParkingSpotDto
   ): Promise<ParkingSpotDto> {
-    const updatedParkingSpot = await this.parkingSpotRepository.update(id, updateParkingSpotDto)
+    const updatedParkingSpot = await this.parkingSpotRepository.update(id, { ...updateParkingSpotDto })
     return ParkingSpotDto.buildFromDomain(updatedParkingSpot)
   }
 

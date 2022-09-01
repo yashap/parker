@@ -1,16 +1,16 @@
 {
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/api/src",
+  "sourceRoot": "apps/core/src",
   "projectType": "application",
   "targets": {
     "build": {
       "executor": "@nrwl/node:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/api",
-        "main": "apps/api/src/main.ts",
-        "tsConfig": "apps/api/tsconfig.app.json",
-        "assets": ["apps/api/src/assets"]
+        "outputPath": "dist/apps/core",
+        "main": "apps/core/src/main.ts",
+        "tsConfig": "apps/core/tsconfig.app.json",
+        "assets": ["apps/core/src/assets"]
       },
       "configurations": {
         "production": {
@@ -19,8 +19,8 @@
           "inspect": false,
           "fileReplacements": [
             {
-              "replace": "apps/api/src/config/config.ts",
-              "with": "apps/api/src/config/config.prod.ts"
+              "replace": "apps/core/src/config/config.ts",
+              "with": "apps/core/src/config/config.prod.ts"
             }
           ]
         }
@@ -29,12 +29,12 @@
     "serve": {
       "executor": "@nrwl/node:node",
       "options": {
-        "buildTarget": "api:build"
+        "buildTarget": "core:build"
       },
       "dependsOn": ["devDB"],
       "configurations": {
         "production": {
-          "buildTarget": "api:build:production"
+          "buildTarget": "core:build:production"
         }
       }
     },
@@ -42,14 +42,14 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/api/**/*.ts"]
+        "lintFilePatterns": ["apps/core/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/api"],
+      "outputs": ["coverage/apps/core"],
       "options": {
-        "jestConfig": "apps/api/jest.config.ts",
+        "jestConfig": "apps/core/jest.config.ts",
         "passWithNoTests": true
       },
       "dependsOn": ["testDB"]
@@ -57,13 +57,19 @@
     "devDB": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["./tools/scripts/run-postgres-container.sh"]
+        "commands": [
+          "./tools/scripts/run-postgres-container.sh",
+          "DATABASE_URL='postgresql://app:app121@localhost:5440/core?schema=public' npx prisma migrate dev --schema apps/core/prisma/schema.prisma"
+        ]
       }
     },
     "testDB": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["./tools/scripts/run-postgres-container.sh -p 5441 -c parker_postgres_test -v pg_data_test"]
+        "commands": [
+          "./tools/scripts/run-postgres-container.sh -p 5441 -c parker_postgres_test -v parker_postgres_data_test",
+          "DATABASE_URL='postgresql://app:app121@localhost:5441/core?schema=public' npx prisma migrate dev --schema apps/core/prisma/schema.prisma"
+        ]
       }
     }
   },

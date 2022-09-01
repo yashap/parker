@@ -29,5 +29,5 @@
     "appsDir": "apps",
     "libsDir": "libs"
   },
-  "defaultProject": "api"
+  "defaultProject": "core"
 }

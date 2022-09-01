@@ -2,10 +2,10 @@ import { Record } from 'immutable'
 
 export interface ParkingSpotProps {
   id: string
-  name: string
+  landlordId: string
 }
 
-export class ParkingSpot extends Record<ParkingSpotProps>({ id: '', name: '' }) {
+export class ParkingSpot extends Record<ParkingSpotProps>({ id: '', landlordId: '' }) {
   constructor(props: ParkingSpotProps) {
     super(props)
   }

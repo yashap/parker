@@ -14,25 +14,30 @@ Install the following:
 * Docker Desktop
   * For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
+Then you should be able to run `nx serve`, and have all services and frontends build and start up!
+
 ## Dev Workflow
 
 * Build
-  * `nx run build`
+  * `nx build`
 * Serve (e.g. start a server or frontend)
-  * `nx run serve`
+  * `nx serve`
 * Test
-  * `nx run test`
+  * `nx test`
 * Lint
-  * Check linting rules: `nx run lint`
-  * Check and auto-fix linting rules: `nx run lint --fix`
+  * Check linting rules: `nx lint`
+  * Check and auto-fix linting rules: `nx lint --fix`
 * Add an external dependency
   * `npm install <dep>`
   * Dev-only dependency: `npm install -D <dep>`
-  * Note that with `nx`, dependencies are installed once for all apps/libs, not per app/lib
+  * Note that with `nx`, you're strongly encouraged to declare dependencies once for all apps/libs, not per app/lib
+    * This means the above commands should be run at the **root** of the repository, adding deps to the **root** `package.json`
 
-Note that, with every `nx run` command, you can prefix with a specific app/lib. For example:
-* `nx run build` builds everything
-* `nx run api:build` builds only the `api` app
+Note that, with every `nx run` command, you can specify a specific app/lib. For example:
+* `nx test` runs all tests
+* `nx test core` only the tests for the `core` service
+
+Some apps have other app-specific elements to their workflow - if working on one of those apps, see their individual READMEs for more information.
 
 ## Nx
 
