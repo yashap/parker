@@ -35,7 +35,7 @@ describe(UserRepository.name, () => {
   describe('update', () => {
     it('should update a user', async () => {
       await userRepository.update(user1.id, { fullName: 'Updated Name' })
-      expect(await userRepository.findById(user1.id)).toEqual(new User({ ...user1.toJSON(), fullName: 'Updated Name' }))
+      expect(await userRepository.findById(user1.id)).toEqual(user1.set('fullName', 'Updated Name'))
     })
   })
 
