@@ -24,14 +24,7 @@ describe(ParkingSpotRepository.name, () => {
     })
   })
 
-  // describe('update', () => {
-  //   it('should update a parking spot', async () => {
-  //     await parkingSpotRepository.update(spot1.id, { name: 'some updated name' })
-  //     expect(await parkingSpotRepository.findById(spot1.id)).toEqual(
-  //       new ParkingSpot({ ...spot1, name: 'some updated name' })
-  //     )
-  //   })
-  // })
+  // TODO: update tests, once there are fields to update
 
   describe('delete', () => {
     it('should delete a parking spot', async () => {

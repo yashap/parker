@@ -3,7 +3,6 @@ import { ParkingSpotController } from './ParkingSpotController'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
 @Module({
-  imports: [],
   controllers: [ParkingSpotController],
   providers: [ParkingSpotRepository],
 })

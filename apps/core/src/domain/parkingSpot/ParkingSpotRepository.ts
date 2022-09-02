@@ -36,6 +36,6 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   private static parkingSpotToDomain(prismaParkingSpot: PrismaParkingSpot): ParkingSpot {
-    return new ParkingSpot(prismaParkingSpot)
+    return new ParkingSpot({ ...prismaParkingSpot })
   }
 }
