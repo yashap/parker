@@ -13,11 +13,6 @@ export class UserRepository extends BaseRepository {
     return UserRepository.userToDomain(prismaUser)
   }
 
-  public async findAll(): Promise<User[]> {
-    const prismaUsers = await this.user.findMany()
-    return prismaUsers.map(UserRepository.userToDomain)
-  }
-
   public async findById(id: string): Promise<User | undefined> {
     const prismaUser = await this.user.findUnique({ where: { id } })
     if (prismaUser === null) {
@@ -36,7 +31,7 @@ export class UserRepository extends BaseRepository {
   }
 
   private static userToDomain(prismaUser: PrismaUser): User {
-    const user = new User(prismaUser)
+    const user = new User({ ...prismaUser })
     return user
   }
 }

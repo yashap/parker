@@ -13,11 +13,6 @@ export class ParkingSpotRepository extends BaseRepository {
     return ParkingSpotRepository.parkingSpotToDomain(prismaParkingSpot)
   }
 
-  public async findAll(): Promise<ParkingSpot[]> {
-    const prismaParkingSpots = await this.parkingSpot.findMany()
-    return prismaParkingSpots.map(ParkingSpotRepository.parkingSpotToDomain)
-  }
-
   public async findById(id: string): Promise<ParkingSpot | undefined> {
     const prismaParkingSpot = await this.parkingSpot.findUnique({ where: { id } })
     if (prismaParkingSpot === null) {

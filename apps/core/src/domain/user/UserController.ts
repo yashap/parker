@@ -15,12 +15,6 @@ export class UserController extends BaseController {
     return UserDto.buildFromDomain(user)
   }
 
-  @Get()
-  public async findAll(): Promise<UserDto[]> {
-    const users = await this.userRepository.findAll()
-    return users.map(UserDto.buildFromDomain)
-  }
-
   @Get(':id')
   public async findById(@Param('id', ParseUUIDPipe) id: string): Promise<UserDto> {
     const user = this.require(await this.userRepository.findById(id))

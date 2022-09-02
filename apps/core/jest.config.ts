@@ -13,5 +13,6 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/core',
-  setupFiles: ['<rootDir>/.jest/setEnvVars.ts'],
+  setupFiles: ['<rootDir>/src/test/jestHooks/setEnvVars.ts'],
+  globalTeardown: '<rootDir>/src/test/jestHooks/globalTeardown.ts',
 }

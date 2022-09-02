@@ -15,12 +15,6 @@ export class ParkingSpotController extends BaseController {
     return ParkingSpotDto.buildFromDomain(parkingSpot)
   }
 
-  @Get()
-  public async findAll(): Promise<ParkingSpotDto[]> {
-    const parkingSpots = await this.parkingSpotRepository.findAll()
-    return parkingSpots.map(ParkingSpotDto.buildFromDomain)
-  }
-
   @Get(':id')
   public async findById(@Param('id', ParseUUIDPipe) id: string): Promise<ParkingSpotDto> {
     const parkingSpot = this.require(await this.parkingSpotRepository.findById(id))

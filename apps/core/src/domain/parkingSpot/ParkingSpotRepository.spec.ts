@@ -1,26 +1,24 @@
+import { User } from '../user/User'
+import { UserRepository } from '../user/UserRepository'
 import { ParkingSpot } from './ParkingSpot'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
 describe(ParkingSpotRepository.name, () => {
+  let userRepository: UserRepository
   let parkingSpotRepository: ParkingSpotRepository
-  let spot1: ParkingSpot
-  let spot2: ParkingSpot
+  let user: User
+  let spot: ParkingSpot
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     parkingSpotRepository = new ParkingSpotRepository()
-    spot1 = await parkingSpotRepository.create({ landlordId: 'TODO have to create a landlord first' })
-    spot2 = await parkingSpotRepository.create({ landlordId: 'TODO have to create a landlord first' })
+    userRepository = new UserRepository()
+    user = await userRepository.create({ fullName: 'The Tick' })
+    spot = await parkingSpotRepository.create({ ownerUserId: user.id })
   })
 
   describe('findById', () => {
     it('should find a parking spot by id', async () => {
-      expect(await parkingSpotRepository.findById(spot1.id)).toStrictEqual(spot1)
-    })
-  })
-
-  describe('findAll', () => {
-    it('should all parking spots', async () => {
-      expect(await parkingSpotRepository.findAll()).toEqual([spot1, spot2])
+      expect(await parkingSpotRepository.findById(spot.id)).toStrictEqual(spot)
     })
   })
 
@@ -28,8 +26,8 @@ describe(ParkingSpotRepository.name, () => {
 
   describe('delete', () => {
     it('should delete a parking spot', async () => {
-      await parkingSpotRepository.delete(spot1.id)
-      expect(await parkingSpotRepository.findById(spot1.id)).toBeUndefined()
+      await parkingSpotRepository.delete(spot.id)
+      expect(await parkingSpotRepository.findById(spot.id)).toBeUndefined()
     })
   })
 })

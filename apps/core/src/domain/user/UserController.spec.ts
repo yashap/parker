@@ -9,7 +9,7 @@ describe(UserController.name, () => {
   let userController: UserController
   let user1: UserDto
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const app = await Test.createTestingModule({
       controllers: [UserController],
       providers: [UserRepository],

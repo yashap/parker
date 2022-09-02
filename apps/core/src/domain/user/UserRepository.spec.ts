@@ -1,48 +1,32 @@
-import { PrismaClient } from '@prisma/client'
 import { User } from './User'
 import { UserRepository } from './UserRepository'
 
 describe(UserRepository.name, () => {
   let userRepository: UserRepository
-  let user1: User
-  let user2: User
+  let user: User
 
   beforeEach(async () => {
     userRepository = new UserRepository()
-    user1 = await userRepository.create({ fullName: 'Donald Duck' })
-    user2 = await userRepository.create({ fullName: 'The Tick' })
-  })
-
-  // TODO: abstract somewhere more general
-  afterEach(async () => {
-    const client = new PrismaClient()
-    await client.$connect()
-    await client.user.deleteMany()
+    user = await userRepository.create({ fullName: 'The Tick' })
   })
 
   describe('findById', () => {
     it('should find a user by id', async () => {
-      expect(await userRepository.findById(user1.id)).toStrictEqual(user1)
-    })
-  })
-
-  describe('findAll', () => {
-    it('should all users', async () => {
-      expect(await userRepository.findAll()).toEqual([user1, user2])
+      expect(await userRepository.findById(user.id)).toStrictEqual(user)
     })
   })
 
   describe('update', () => {
     it('should update a user', async () => {
-      await userRepository.update(user1.id, { fullName: 'Updated Name' })
-      expect(await userRepository.findById(user1.id)).toEqual(user1.set('fullName', 'Updated Name'))
+      await userRepository.update(user.id, { fullName: 'Updated Name' })
+      expect(await userRepository.findById(user.id)).toEqual(user.set('fullName', 'Updated Name'))
     })
   })
 
   describe('delete', () => {
     it('should delete a user', async () => {
-      await userRepository.delete(user1.id)
-      expect(await userRepository.findById(user1.id)).toBeUndefined()
+      await userRepository.delete(user.id)
+      expect(await userRepository.findById(user.id)).toBeUndefined()
     })
   })
 })
