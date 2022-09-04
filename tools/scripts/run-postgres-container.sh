@@ -50,7 +50,7 @@ docker run \
     -e POSTGRES_DB="$PG_DB" \
     -p "$PG_PORT":"$PG_PORT_CONTAINER" \
     -d \
-    postgres:14.5
+    postgis/postgis:14-3.2
 
 # Wait for the DB to come up before letting the script finish
 DB_UP=0

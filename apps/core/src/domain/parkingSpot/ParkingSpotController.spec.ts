@@ -21,7 +21,7 @@ describe(ParkingSpotController.name, () => {
     userRepository = app.get(UserRepository)
     parkingSpotController = app.get(ParkingSpotController)
     user = await userRepository.create({ fullName: 'The Tick' })
-    spot = await parkingSpotController.create({ ownerUserId: user.id })
+    spot = await parkingSpotController.create({ ownerUserId: user.id, location: { longitude: 10, latitude: 20 } })
   })
 
   describe('findById', () => {

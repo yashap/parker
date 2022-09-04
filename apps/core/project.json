@@ -59,8 +59,9 @@
       "options": {
         "commands": [
           "./tools/scripts/run-postgres-container.sh",
-          "DATABASE_URL='postgresql://app:app121@localhost:5440/core?schema=public' npx prisma migrate dev --schema apps/core/prisma/schema.prisma"
-        ]
+          "npx prisma migrate dev --schema apps/core/prisma/schema.prisma"
+        ],
+        "parallel": false
       }
     },
     "testDB": {
@@ -69,7 +70,8 @@
         "commands": [
           "./tools/scripts/run-postgres-container.sh -p 5441 -c parker_postgres_test -v parker_postgres_data_test",
           "DATABASE_URL='postgresql://app:app121@localhost:5441/core?schema=public' npx prisma migrate dev --schema apps/core/prisma/schema.prisma"
-        ]
+        ],
+        "parallel": false
       }
     }
   },

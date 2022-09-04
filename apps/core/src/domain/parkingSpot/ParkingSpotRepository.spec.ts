@@ -13,7 +13,7 @@ describe(ParkingSpotRepository.name, () => {
     parkingSpotRepository = new ParkingSpotRepository()
     userRepository = new UserRepository()
     user = await userRepository.create({ fullName: 'The Tick' })
-    spot = await parkingSpotRepository.create({ ownerUserId: user.id })
+    spot = await parkingSpotRepository.create({ ownerUserId: user.id, location: { longitude: 10, latitude: 20 } })
   })
 
   describe('findById', () => {
@@ -22,7 +22,14 @@ describe(ParkingSpotRepository.name, () => {
     })
   })
 
-  // TODO: update tests, once there are fields to update
+  describe('update', () => {
+    it('should update a parking spot', async () => {
+      await parkingSpotRepository.update(spot.id, { location: { longitude: -100, latitude: 100 } })
+      expect(await parkingSpotRepository.findById(spot.id)).toEqual(
+        spot.set('location', { longitude: -100, latitude: 100 })
+      )
+    })
+  })
 
   describe('delete', () => {
     it('should delete a parking spot', async () => {
