@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { User as PrismaUser } from '@prisma/client'
+import { User as PrismaUser } from '@prisma/core-client'
 import { BaseRepository } from '../../db/BaseRepository'
 import { User, UserProps } from './User'
 

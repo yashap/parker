@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
-import { ParkingSpot as PrismaParkingSpot, Prisma } from '@prisma/client'
+import { ParkingSpot as PrismaParkingSpot, Prisma } from '@prisma/core-client'
 import { isEmpty } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
 import { GeoJsonPoint, Point } from '../geography'

@@ -3,6 +3,9 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["interactiveTransactions"]
+  // To allow for multiple different generated Prisma client (e.g. for different services), we name each client after
+  // the service, e.g. core-client for core service 
+  output          = "../../../node_modules/@prisma/core-client"
 }
 
 datasource db {

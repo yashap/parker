@@ -31,7 +31,7 @@ Then you should be able to run `nx serve`, and have all services and frontends b
   * `npm install <dep>`
   * Dev-only dependency: `npm install -D <dep>`
   * Note that with `nx`, you're strongly encouraged to declare dependencies once for all apps/libs, not per app/lib
-    * This means the above commands should be run at the **root** of the repository, adding deps to the **root** `package.json`
+    * This means your dependencies get installed into the **root** `package.json`/`node_modules`
 
 Note that, with every `nx run` command, you can specify a specific app/lib. For example:
 * `nx test` runs all tests

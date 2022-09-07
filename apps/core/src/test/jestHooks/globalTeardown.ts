@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/core-client'
 import { setTestDBUrl } from './setTestDBUrl'
 
 const teardown = async (): Promise<void> => {
