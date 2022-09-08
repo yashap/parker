@@ -64,10 +64,12 @@ Run `nx g @nrwl/react:app my-app` to generate an app:
 
 ### Generate a library
 
-Run `nx g @nrwl/react:lib my-lib --buildable` to generate a library
+Run `nx g @nrwl/react:library my-lib --buildable` to generate a library
 - In this example, a React focused lib. But other plugins can be used too
-- This library will be generated in the `libs/` dir
-- Libraries are shareable across libraries and applications. They can be imported from `@parker/mylib`
+  - For example, `@nrwl/node` for a Node-specific library, `@nrwl/js` for a general TypeScript lib, `@nrwl/nest` for a Nest related lib, etc.
+- [Info about the buildable flag](https://nx.dev/more-concepts/buildable-and-publishable-libraries)
+- Libraries will be generated in the `libs/` dir
+- Libraries are shareable across libraries and applications. They can be imported from `@parker/my-lib`
 
 Or to create a generic TS lib, `nx g @nrwl/js:lib --name=my-lib --buildable`
 
