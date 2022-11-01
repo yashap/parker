@@ -1,18 +1,3 @@
 {
-    "cSpell.words": [
-        "Buildable",
-        "cacheable",
-        "frontends",
-        "nestjs",
-        "nrwl",
-        "Parens",
-        "SRID"
-    ],
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-    },
-    "eslint.validate": [
-        "typescript",
-        "javascript"
-    ]
+  "cSpell.words": ["nestjs", "nextjs", "turborepo", "unmocked"]
 }

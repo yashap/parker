@@ -2,115 +2,119 @@
 
 A monorepo for the Parker parking app.
 
-## Setup
+## Dependencies
 
 Install the following:
-* [nvm](https://github.com/nvm-sh/nvm)
-  * For managing multiple node versions
-  * Suggest setting up `nvm` to [auto-switch to the right node version on cd](https://github.com/nvm-sh/nvm#deeper-shell-integration)
-* [Nx](https://nx.dev)
-  * Our monorepo build tool
-  * `npm install -g nx`
-* Docker Desktop
-  * For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
-Then you should be able to run `nx serve`, and have all services and frontends build and start up!
+- [nvm](https://github.com/nvm-sh/nvm)
+  - For managing multiple node versions
+  - Suggest setting up `nvm` to [auto-switch to the right node version on cd](https://github.com/nvm-sh/nvm#deeper-shell-integration)
+- [pnpm](https://pnpm.io/)
+  - A package manager (similar to `npm`/`yarn`) that works particularly well with [Turborepo](https://turborepo.org/)
+  - Fist, ensure you're using the right `node` version
+    - From `parker` run `nvm use`
+  - `npm install -g pnpm`
+- Docker Desktop
+  - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
-## Dev Workflow
+After this, you can try running `pnpm install && pnpm generate && pnpm format && pnpm lint && pnpm test && pnpm dev` to ensure everything works.
 
-* Build
-  * `nx build`
-* Serve (e.g. start a server or frontend)
-  * `nx serve`
-* Test
-  * `nx test`
-* Lint
-  * Check linting rules: `nx lint`
-  * Check and auto-fix linting rules: `nx lint --fix`
-* Add an external dependency
-  * `npm install <dep>`
-  * Dev-only dependency: `npm install -D <dep>`
-  * Note that with `nx`, you're strongly encouraged to declare dependencies once for all apps/libs, not per app/lib
-    * This means your dependencies get installed into the **root** `package.json`/`node_modules`
+## Dev Workflows
 
-Note that, with every `nx run` command, you can specify a specific app/lib. For example:
-* `nx test` runs all tests
-* `nx test core` only the tests for the `core` service
+All of the below commands can be run at the root of the repo, where they will use the root `package.json` scripts. For the most part, this will invoke some sort of `turbo run` command, to run them in all workspaces (all apps and packages). Alternately, you can also run `pnpm` commands from the various app/package subdirectories, which will in turn use their `package.json` scripts, but running via the root directory (and thus `turbo`) is generally better, as it takes advantage of `turborepo` caching.
 
-Some apps have other app-specific elements to their workflow - if working on one of those apps, see their individual READMEs for more information.
+For any of the above commands, you can filter to a workspace (a library in `packages/` or an app in `apps/`) via `--filter`, e.g.:
 
-## Nx
+```
+pnpm test --filter context-propagation
+```
 
-We use [Nx](https://nx.dev) as a monorepo build system.
+### Commands
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+Run all apps in local development mode (will also ensure DB up, migrations run, etc.):
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+```bash
+pnpm dev
+```
 
-Below are some relevant core plugins:
+Run all tests (will also ensure test DB up, migrations run, etc.):
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
+```bash
+pnpm test
+```
 
-There are also many [community plugins](https://nx.dev/community).
+Format the code:
 
-### Generate an application
+```bash
+pnpm format
+```
 
-Run `nx g @nrwl/react:app my-app` to generate an app:
-- In this example, a React app. But other plugins can be used too
-- This app will be generated in the `apps/` dir
+Lint the code:
 
-### Generate a library
+```bash
+pnpm lint
+```
 
-Run `nx g @nrwl/react:library my-lib --buildable` to generate a library
-- In this example, a React focused lib. But other plugins can be used too
-  - For example, `@nrwl/node` for a Node-specific library, `@nrwl/js` for a general TypeScript lib, `@nrwl/nest` for a Nest related lib, etc.
-- [Info about the buildable flag](https://nx.dev/more-concepts/buildable-and-publishable-libraries)
-- Libraries will be generated in the `libs/` dir
-- Libraries are shareable across libraries and applications. They can be imported from `@parker/my-lib`
+Install an external dependency (e.g. an npm package):
 
-Or to create a generic TS lib, `nx g @nrwl/js:lib --name=my-lib --buildable`
+```bash
+# Add a package to a workspace
+pnpm add <package> --filter <workspace>
 
-### Development server
+# Add a dev package to a workspace
+pnpm add -D <package> --filter <workspace>
+```
 
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+Install an internal dependency (e.g. depend on something in `packages/`):
 
-### Code scaffolding
+```bash
+# Add a dependency like this to your package.json
+"<package>": "workspace:*"
 
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
+# e.g. to make the @parker/core app depend on @parker/context-propagation
+{
+  "name": "@parker/core",
+  ...
+  "dependencies": {
+    "@parker/context-propagation": "workspace:*",
+    ...
+  }
+}
+```
 
-### Build
+Ensure all dependencies installed, turborepo symlinks setup, etc.:
 
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```bash
+pnpm install
+```
 
-### Running unit tests
+Clear all build artifacts (`node_modules`, etc.):
 
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
+```bash
+pnpm clean
 
-Run `nx affected:test` to execute the unit tests affected by a change.
+# Or for a real "hard" version
+pnpm clean && rm pnpm-lock.yaml
+```
 
-### Running end-to-end tests
+Create production-ready builds of all apps and libraries:
 
-Run `nx e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
+```bash
+pnpm build
+```
 
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
+### Adding a new app/package
 
-### Understand your workspace
+For adding a new package, see `packages/context-propagation` as an example. Basically you should:
 
-Run `nx graph` to see a diagram of the dependencies of your projects.
+- Create a new directory inside `packages/`
+- Within this directory:
+  - Add a similar `.eslintrc.js`, `tsconfig.json` and `package.json` to `packages/context-propagation`
+  - Setup `jest` using [these instructions](https://kulshekhar.github.io/ts-jest/docs/getting-started/installation/)
+  - Add a main entrypoint for exports at `src/index.ts`
 
-### Further help
+For adding a new backend service, same idea, but use `src/apps/core` as an example.
 
-Visit the [Nx Documentation](https://nx.dev) to learn more.
+For adding a new React web frontend, see TODO
 
-### Nx Cloud
-
-#### Distributed Computation Caching & Distributed Task Execution
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+For adding a new React Native frontend, see TODO
