@@ -19,7 +19,7 @@ const levels: Record<LogLevel, number> = {
 }
 
 const getLevel = (): LogLevel => {
-  const defaultLogLevel = LogLevel.Warn
+  const defaultLogLevel = LogLevel.Info
   switch ((process.env['LOG_LEVEL'] ?? defaultLogLevel).toLowerCase()) {
     case LogLevel.Error:
       return LogLevel.Error

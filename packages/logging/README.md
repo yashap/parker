@@ -37,7 +37,7 @@ The logger can be configured via environment variables:
   - What level of logs should be emitted?
   - Allowed values: `error`, `warn`, `info`, `debug`, `trace`
     - For example, if set to `info`, then `error`/`warn`/`info` level logs will be emitted, while `debug`/`trace` will not
-  - Default: `warn`
+  - Default: `info`
 - `JSON_LOGS`
   - Should logs be in json format (machine friendly), or "pretty" format (human friendly - colors, indenting, etc.)?
   - Allowed values: `true`, `false`
