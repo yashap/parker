@@ -25,7 +25,7 @@ All of the below commands can be run at the root of the repo, where they will us
 
 For any of the above commands, you can filter to a workspace (a library in `packages/` or an app in `apps/`) via `--filter`, e.g.:
 
-```
+```bash
 pnpm test --filter context-propagation
 ```
 

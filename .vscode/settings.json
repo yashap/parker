@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["nestjs", "nextjs", "turborepo", "unmocked"]
+  "cSpell.words": ["Logform", "nestjs", "nextjs", "turborepo", "unmocked"],
+  "editor.tabSize": 2
 }
