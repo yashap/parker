@@ -26,4 +26,8 @@ describe(Logger.name, () => {
       // TODO
     })
   })
+
+  describe('isLevelEnabled', () => {
+    // TODO
+  })
 })

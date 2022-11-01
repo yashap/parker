@@ -2,7 +2,7 @@ import winston from 'winston'
 import { LogContextPropagator } from './LogContextPropagator'
 import { LogData } from './LogData'
 
-enum LogLevel {
+export enum LogLevel {
   Error = 'error',
   Warn = 'warn',
   Info = 'info',
@@ -50,15 +50,18 @@ interface LogOptions {
 
 export class Logger {
   private readonly underlyingLogger: winston.Logger
+  private readonly enabledLevelValue: number
 
   constructor(private readonly name: string, private readonly defaultMetadata?: LogData) {
+    const level = getLevel()
     this.underlyingLogger = winston.createLogger({
       levels,
-      level: getLevel(),
+      level,
       format: getFormat(),
       defaultMeta: defaultMetadata,
       transports: [new winston.transports.Console()],
     })
+    this.enabledLevelValue = levels[level]
   }
 
   public error(message: string, options: LogOptions): void {
@@ -90,6 +93,26 @@ export class Logger {
    */
   public child(name: string, defaultMetadataOverrides?: LogData) {
     return new Logger(name, { ...this.defaultMetadata, ...defaultMetadataOverrides })
+  }
+
+  /**
+   * Check if a log level is enabled. Useful if generating the log message/payload is expensive, and you only want to
+   * do it if you have to.
+   *
+   * Example:
+   *
+   * ```ts
+   * if (logger.isLevelEnabled(LogLevel.Debug)) {
+   *   const metadata = await expensiveGetMetadata()
+   *   logger.debug('Foo happened', { metadata })
+   * }
+   * ```
+   *
+   * @param level The level to check
+   * @returns Whether or not it's enabled.
+   */
+  public isLevelEnabled(level: LogLevel): boolean {
+    return levels[level] <= this.enabledLevelValue
   }
 
   private log(level: LogLevel, message: string, options: LogOptions): void {
