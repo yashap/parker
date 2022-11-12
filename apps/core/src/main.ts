@@ -1,7 +1,7 @@
 import { INestApplication, Type, ValidationPipe, Module } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { Logger } from '@parker/logging'
-import { logContextMiddleware, NestLogger } from '@parker/nest-utils'
+import { HttpExceptionFilter, HttpLoggingInterceptor, logContextMiddleware, NestLogger } from '@parker/nest-utils'
 import { BaseRepository } from './db/BaseRepository'
 import { ParkingSpotRepository, ParkingSpotModule } from './domain/parkingSpot'
 import { UserRepository, UserModule } from './domain/user'
@@ -25,13 +25,16 @@ const bootstrap = async (serviceName: string): Promise<void> => {
     logger: new NestLogger(),
   })
   app.setGlobalPrefix(serviceName)
+  app.use(logContextMiddleware)
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
       whitelist: true,
     })
   )
-  app.use(logContextMiddleware)
+  const httpAdapter = app.getHttpAdapter()
+  app.useGlobalFilters(new HttpExceptionFilter(httpAdapter))
+  app.useGlobalInterceptors(new HttpLoggingInterceptor(httpAdapter))
   await registerDbShutdownHooks(app)
   const port = process.env['PORT'] ?? 3333
   await app.listen(port)
