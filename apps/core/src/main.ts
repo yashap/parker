@@ -1,5 +1,7 @@
-import { INestApplication, Logger, Type, ValidationPipe, Module } from '@nestjs/common'
+import { INestApplication, Type, ValidationPipe, Module } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import { Logger } from '@parker/logging'
+import { logContextMiddleware, NestLogger } from '@parker/nest-utils'
 import { BaseRepository } from './db/BaseRepository'
 import { ParkingSpotRepository, ParkingSpotModule } from './domain/parkingSpot'
 import { UserRepository, UserModule } from './domain/user'
@@ -19,7 +21,9 @@ const registerDbShutdownHooks = async (app: INestApplication): Promise<void> => 
 }
 
 const bootstrap = async (serviceName: string): Promise<void> => {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    logger: new NestLogger(),
+  })
   app.setGlobalPrefix(serviceName)
   app.useGlobalPipes(
     new ValidationPipe({
@@ -27,10 +31,11 @@ const bootstrap = async (serviceName: string): Promise<void> => {
       whitelist: true,
     })
   )
+  app.use(logContextMiddleware)
   await registerDbShutdownHooks(app)
   const port = process.env['PORT'] ?? 3333
   await app.listen(port)
-  Logger.log(`🚀 ${serviceName} service is running on: http://localhost:${port}/${serviceName}`)
+  new Logger('main').info(`🚀 ${serviceName} listening for requests`, { metadata: { port } })
 }
 
 bootstrap('core')

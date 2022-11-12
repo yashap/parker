@@ -8,7 +8,7 @@ export const logContextMiddleware: NestFunctionalMiddleware = (request, _respons
       // TODO: when implementing propagation across services, get the correlationId from the header if it exists, else create a new UUID
       correlationId: uuid(),
       method: request.method,
-      path: new URL(request.url).pathname,
+      path: request.url.startsWith('/') ? request.url : new URL(request.url).pathname,
     },
     next
   )

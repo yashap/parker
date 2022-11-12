@@ -12,12 +12,12 @@
     "db:clean": "docker rm -f -v parker_postgres_dev parker_postgres_test && docker volume rm -f parker_postgres_data_dev parker_postgres_data_test",
     "db:migrate": "./tools/scripts/ensure_postgres_up.sh && turbo run db:migrate",
     "db:migrate:test": "./tools/scripts/ensure_postgres_up.sh -p 5441 -c parker_postgres_test -v parker_postgres_data_test && turbo run db:migrate:test",
-    "dev": "pnpm db:migrate && turbo run dev --parallel",
+    "dev": "turbo run dev --parallel",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run format",
     "generate": "turbo run generate",
     "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint",
-    "test": "pnpm db:migrate:test && turbo run test",
-    "test:watch": "pnpm db:migrate:test && turbo run test:watch"
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",

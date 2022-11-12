@@ -17,7 +17,7 @@ Install the following:
 - Docker Desktop
   - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
-After this, you can try running `pnpm install && pnpm generate && pnpm format && pnpm lint && pnpm test && pnpm dev` to ensure everything works.
+After this, you can try running `pnpm install && pnpm db:migrate && pnpm db:migrate:test && pnpm build && pnpm format && pnpm lint && pnpm test && pnpm dev` to ensure everything works.
 
 ## Dev Workflows
 
@@ -31,13 +31,25 @@ pnpm test --filter context-propagation
 
 ### Commands
 
-Run all apps in local development mode (will also ensure DB up, migrations run, etc.):
+Build everything (libraries, etc.):
+
+```bash
+pnpm build
+```
+
+Run DB migrations:
+
+```bash
+pnpm db:migrate && pnpm db:migrate:test
+```
+
+Run all apps in local development mode:
 
 ```bash
 pnpm dev
 ```
 
-Run all tests (will also ensure test DB up, migrations run, etc.):
+Run all tests:
 
 ```bash
 pnpm test

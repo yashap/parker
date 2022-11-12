@@ -7,15 +7,15 @@
   "scripts": {
     "build": "nest build",
     "clean": "rm -rf node_modules/ dist/",
-    "dev": "nest start --watch",
     "db:init": "../../tools/scripts/ensure_postgres_db.sh -d core && ../../tools/scripts/ensure_postgres_user.sh -u core -w core_password -d core",
     "db:init:test": "../../tools/scripts/ensure_postgres_db.sh -d core -c parker_postgres_test && ../../tools/scripts/ensure_postgres_user.sh -u core -w core_password -d core -c parker_postgres_test",
     "db:migrate": "pnpm db:init && DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:5440/core?schema=public' prisma migrate dev",
     "db:migrate:test": "pnpm db:init:test && DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:5441/core?schema=public' prisma migrate dev",
+    "dev": "nest start --watch",
     "format": "eslint . --ext .ts --fix",
     "generate": "prisma generate",
     "lint": "tsc --noEmit && eslint . --ext .ts",
-    "test": "jest src/",
+    "test": "LOG_LEVEL=off jest src/",
     "test:watch": "jest --watch src/"
   },
   "dependencies": {
@@ -23,8 +23,8 @@
     "@nestjs/core": "^9.1.6",
     "@nestjs/mapped-types": "^1.2.0",
     "@nestjs/platform-express": "^9.1.6",
-    "@parker/context-propagation": "workspace:*",
-    "@parker/nest-middleware": "workspace:*",
+    "@parker/logging": "workspace:*",
+    "@parker/nest-utils": "workspace:*",
     "@prisma/client": "^4.5.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",

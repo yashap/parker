@@ -25,7 +25,8 @@ describe(ContextPropagator.name, () => {
     }
   }
 
-  const sleep = (milliseconds: number): Promise<number> => new Promise((resolve) => setTimeout(resolve, milliseconds))
+  const sleep = (milliseconds: number): Promise<number> =>
+    new Promise((resolve) => setTimeout(resolve as () => void, milliseconds))
 
   it('propagates context within a continuation', () => {
     propagator.runWithContext({ foo: 'bar' }, () => {

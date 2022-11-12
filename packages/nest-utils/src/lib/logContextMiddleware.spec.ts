@@ -1,11 +1,13 @@
 import { LogData, LogContextPropagator } from '@parker/logging'
+import { Request, Response } from 'express'
 import { v4 as uuid } from 'uuid'
 import { logContextMiddleware } from './logContextMiddleware'
 
 describe(logContextMiddleware.name, () => {
-  const sleep = (milliseconds: number): Promise<number> => new Promise((resolve) => setTimeout(resolve, milliseconds))
+  const sleep = (milliseconds: number): Promise<number> =>
+    new Promise((resolve) => setTimeout(resolve as () => void, milliseconds))
 
-  it('sets a correlationId, method and path', async () => {
+  it('sets a correlationId', async () => {
     let contextWithinEndpoint: LogData = {}
 
     const request = {

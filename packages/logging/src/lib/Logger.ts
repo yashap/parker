@@ -1,8 +1,10 @@
+import { toString } from 'lodash'
 import winston from 'winston'
 import { LogContextPropagator } from './LogContextPropagator'
 import { LogData } from './LogData'
 
 export enum LogLevel {
+  Off = 'off',
   Error = 'error',
   Warn = 'warn',
   Info = 'info',
@@ -11,16 +13,24 @@ export enum LogLevel {
 }
 
 const levels: Record<LogLevel, number> = {
-  [LogLevel.Error]: 0,
-  [LogLevel.Warn]: 1,
-  [LogLevel.Info]: 2,
-  [LogLevel.Debug]: 3,
-  [LogLevel.Trace]: 4,
+  [LogLevel.Off]: 0,
+  [LogLevel.Error]: 1,
+  [LogLevel.Warn]: 2,
+  [LogLevel.Info]: 3,
+  [LogLevel.Debug]: 4,
+  [LogLevel.Trace]: 5,
+}
+
+enum AnsiColors {
+  Yellow = '\u001B[33m',
+  Cyan = '\u001B[36m',
 }
 
 const getLevel = (): LogLevel => {
   const defaultLogLevel = LogLevel.Info
   switch ((process.env['LOG_LEVEL'] ?? defaultLogLevel).toLowerCase()) {
+    case LogLevel.Off:
+      return LogLevel.Off
     case LogLevel.Error:
       return LogLevel.Error
     case LogLevel.Warn:
@@ -40,11 +50,28 @@ const getFormat = (): winston.Logform.Format => {
   if ((process.env['JSON_LOGS'] ?? '').toLowerCase() === 'true') {
     return winston.format.json()
   }
-  return winston.format.cli()
+  return winston.format.combine(
+    winston.format.colorize(),
+    winston.format.timestamp(),
+    winston.format.align(),
+    winston.format.printf((log) => {
+      const { timestamp, level, name, message, context, metadata, error } = log
+      const contextString =
+        context && Object.keys(context).length > 0
+          ? ` ${AnsiColors.Cyan}${JSON.stringify(context)}${AnsiColors.Cyan}`
+          : ''
+      const metadataString =
+        metadata && Object.keys(metadata).length > 0
+          ? ` ${AnsiColors.Yellow}${JSON.stringify(metadata)}${AnsiColors.Yellow}`
+          : ''
+      const errorString = error ? `\n  ${error.stack ? error.stack : toString(error)}` : ''
+      return `${timestamp} ${level} [${name}]: ${message}${contextString}${metadataString}${errorString}`
+    })
+  )
 }
 
-interface LogOptions {
-  error?: Error
+export interface Payload {
+  error?: unknown
   metadata?: LogData
 }
 
@@ -64,24 +91,24 @@ export class Logger {
     this.enabledLevelValue = levels[level]
   }
 
-  public error(message: string, options: LogOptions): void {
-    this.log(LogLevel.Error, message, options)
+  public error(message: string, payload?: Payload): void {
+    this.log(LogLevel.Error, message, payload)
   }
 
-  public warn(message: string, options: LogOptions): void {
-    this.log(LogLevel.Warn, message, options)
+  public warn(message: string, payload?: Payload): void {
+    this.log(LogLevel.Warn, message, payload)
   }
 
-  public info(message: string, options: LogOptions): void {
-    this.log(LogLevel.Info, message, options)
+  public info(message: string, payload?: Payload): void {
+    this.log(LogLevel.Info, message, payload)
   }
 
-  public debug(message: string, options: LogOptions): void {
-    this.log(LogLevel.Debug, message, options)
+  public debug(message: string, payload?: Payload): void {
+    this.log(LogLevel.Debug, message, payload)
   }
 
-  public trace(message: string, options: LogOptions): void {
-    this.log(LogLevel.Trace, message, options)
+  public trace(message: string, payload?: Payload): void {
+    this.log(LogLevel.Trace, message, payload)
   }
 
   /**
@@ -115,8 +142,8 @@ export class Logger {
     return levels[level] <= this.enabledLevelValue
   }
 
-  private log(level: LogLevel, message: string, options: LogOptions): void {
-    const { error, metadata } = options
+  private log(level: LogLevel, message: string, payload?: Payload): void {
+    const { error, metadata } = payload ?? {}
     const context = LogContextPropagator.getContext()
     const fullMetadata = { ...this.defaultMetadata, ...metadata }
     this.underlyingLogger.log({

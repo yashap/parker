@@ -1,5 +1,11 @@
 {
   "extends": "@parker/tsconfig/base.json",
-  "include": ["./src"],
-  "exclude": ["node_modules"]
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["src"]
 }
