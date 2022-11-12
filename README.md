@@ -17,7 +17,7 @@ Install the following:
 - Docker Desktop
   - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
-After this, you can try running `pnpm install && pnpm db:migrate && pnpm db:migrate:test && pnpm build && pnpm format && pnpm lint && pnpm test && pnpm dev` to ensure everything works.
+After this, you can try running `pnpm build:dev && pnpm test && pnpm dev` to ensure everything works.
 
 ## Dev Workflows
 
@@ -29,21 +29,25 @@ For any of the above commands, you can filter to a workspace (a library in `pack
 pnpm test --filter context-propagation
 ```
 
-### Commands
-
-Build everything (libraries, etc.):
+### Core Dev Workflow
 
 ```bash
-pnpm build
+# When starting work for the day, or after running git pull
+pnpm build:dev
+
+# To start developing in watch mode
+pnpm dev
 ```
 
-Run DB migrations:
+### Common Commands
+
+Build everything, start DBs, run migrations, lint, etc.:
 
 ```bash
-pnpm db:migrate && pnpm db:migrate:test
+pnpm build:dev
 ```
 
-Run all apps in local development mode:
+Run all apps in local development mode (with everything recompiling/reloading on changes):
 
 ```bash
 pnpm dev
@@ -53,18 +57,6 @@ Run all tests:
 
 ```bash
 pnpm test
-```
-
-Format the code:
-
-```bash
-pnpm format
-```
-
-Lint the code:
-
-```bash
-pnpm lint
 ```
 
 Install an external dependency (e.g. an npm package):
@@ -94,12 +86,6 @@ Install an internal dependency (e.g. depend on something in `packages/`):
 }
 ```
 
-Ensure all dependencies installed, turborepo symlinks setup, etc.:
-
-```bash
-pnpm install
-```
-
 Clear all build artifacts (`node_modules`, etc.):
 
 ```bash
@@ -107,12 +93,6 @@ pnpm clean
 
 # Or for a real "hard" version
 pnpm clean && rm pnpm-lock.yaml
-```
-
-Create production-ready builds of all apps and libraries:
-
-```bash
-pnpm build
 ```
 
 ### Adding a new app/package
