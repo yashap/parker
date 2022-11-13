@@ -16,7 +16,7 @@
     "generate": "prisma generate",
     "lint": "tsc --noEmit && eslint . --ext .ts",
     "test": "LOG_LEVEL=off jest src/",
-    "test:watch": "jest --watch src/"
+    "test:watch": "LOG_LEVEL=off jest --watch src/"
   },
   "dependencies": {
     "@nestjs/common": "^9.1.6",
