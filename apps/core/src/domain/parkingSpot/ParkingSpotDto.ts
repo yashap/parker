@@ -1,6 +1,6 @@
 import { OmitType, PartialType } from '@nestjs/mapped-types'
 import { IsUUID, ValidateNested } from 'class-validator'
-import { PointDto } from '../geography/PointDto'
+import { PointDto } from '../geography'
 import { ParkingSpot, ParkingSpotProps } from './ParkingSpot'
 
 export type ParkingSpotDtoProps = ParkingSpotProps
