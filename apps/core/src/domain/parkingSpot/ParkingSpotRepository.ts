@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { ParkingSpot as PrismaParkingSpot, Prisma } from '@prisma/client'
-import { isEmpty } from 'lodash'
+import { compact, isEmpty } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
 import { GeoJsonPoint, Point } from '../geography'
 import { ParkingSpot, ParkingSpotProps } from './ParkingSpot'
@@ -12,7 +12,7 @@ type UpdateParkingSpotInput = Partial<CreateParkingSpotInput>
 export class ParkingSpotRepository extends BaseRepository {
   public async create(payload: CreateParkingSpotInput): Promise<ParkingSpot> {
     const { location, ...otherPayload } = payload
-    return await this.$transaction(
+    return await this.prisma.$transaction(
       async (transaction) => {
         const prismaParkingSpot = await transaction.parkingSpot.create({ data: otherPayload })
         await this.updateLocation(transaction, prismaParkingSpot.id, location)
@@ -22,15 +22,43 @@ export class ParkingSpotRepository extends BaseRepository {
     )
   }
 
-  public async findById(id: string): Promise<ParkingSpot | undefined> {
-    return await this.$transaction(
-      async (transaction) => {
-        const prismaParkingSpot = await transaction.parkingSpot.findUnique({ where: { id } })
-        if (prismaParkingSpot === null) {
-          return undefined
-        }
-        const location = await this.getLocation(transaction, id)
+  public async getById(id: string): Promise<ParkingSpot | undefined> {
+    return (await this.getByIds([id]))[0]
+  }
+
+  public async getByIds(ids: string[]): Promise<ParkingSpot[]> {
+    if (ids.length === 0) {
+      return []
+    }
+    return await this.prisma.$transaction(async (transaction) => {
+      const [prismaParkingSpots, locationsMap] = await Promise.all([
+        transaction.parkingSpot.findMany({ where: { id: { in: ids } } }),
+        this.getLocations(transaction, ids),
+      ])
+      return prismaParkingSpots.map((prismaParkingSpot) => {
+        const location = locationsMap.get(prismaParkingSpot.id)!
         return ParkingSpotRepository.parkingSpotToDomain(prismaParkingSpot, location)
+      })
+    })
+  }
+
+  public async getParkingSpotsClosestToLocation(location: Point, count: number): Promise<ParkingSpot[]> {
+    return await this.prisma.$transaction(
+      async (transaction) => {
+        const { longitude, latitude } = location
+        const closestIds = await transaction.$queryRaw<Array<{ id: string }>>`
+          SELECT
+            "id"
+            , "location" <-> ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326) AS "distanceToPoint"
+          FROM
+            "ParkingSpot"
+          ORDER BY
+            "distanceToPoint" ASC
+          LIMIT
+            ${count}
+        `
+        const closestSpots = await Promise.all(closestIds.map(({ id }) => this.getById(id)))
+        return compact(closestSpots)
       },
       { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead }
     )
@@ -38,7 +66,7 @@ export class ParkingSpotRepository extends BaseRepository {
 
   public async update(id: string, updates: UpdateParkingSpotInput): Promise<ParkingSpot> {
     const { location, ...otherUpdates } = updates
-    return await this.$transaction(
+    return await this.prisma.$transaction(
       async (transaction) => {
         if (location) {
           await this.updateLocation(transaction, id, location)
@@ -46,7 +74,7 @@ export class ParkingSpotRepository extends BaseRepository {
         if (!isEmpty(otherUpdates)) {
           await transaction.parkingSpot.update({ where: { id }, data: updates })
         }
-        const parkingSpot = await this.findById(id) // TODO: no nested transaction
+        const parkingSpot = await this.getById(id) // TODO: no nested transaction
         if (!parkingSpot) {
           // TODO: centralize errors
           throw new InternalServerErrorException(`ParkingSpot ${id} not found`)
@@ -58,20 +86,32 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   public async delete(id: string): Promise<void> {
-    await this.parkingSpot.delete({ where: { id } })
+    await this.prisma.parkingSpot.delete({ where: { id } })
   }
 
-  private async getLocation(transaction: Prisma.TransactionClient, id: string): Promise<Point> {
-    const locations = await transaction.$queryRaw<
-      Array<{ locationJson: GeoJsonPoint }>
-    >`SELECT ST_AsGeoJSON("location")::JSONB AS "locationJson" FROM "ParkingSpot" WHERE "id" = UUID(${id})`
-    const location = locations[0]
-    if (location === undefined) {
-      // TODO: centralize errors
-      throw new InternalServerErrorException(`ParkingSpot ${id} did not have a location`)
+  private async getLocations(
+    transaction: Prisma.TransactionClient,
+    parkingSpotIds: string[]
+  ): Promise<Map<string, Point>> {
+    if (parkingSpotIds.length === 0) {
+      return new Map()
     }
-    const [longitude, latitude] = location.locationJson.coordinates
-    return { longitude, latitude }
+    const locations = await transaction.$queryRawUnsafe<Array<{ id: string; locationJson: GeoJsonPoint }>>(
+      `SELECT
+        "id"
+        , ST_AsGeoJSON("location")::JSONB AS "locationJson"
+        FROM
+          "ParkingSpot"
+        WHERE
+          "id" IN (${parkingSpotIds.map((id) => `UUID('${id}')`).join(', ')})
+      `
+    )
+    return new Map(
+      locations.map(({ id, locationJson }) => {
+        const [longitude, latitude] = locationJson.coordinates
+        return [id, { longitude, latitude }]
+      })
+    )
   }
 
   private async updateLocation(
