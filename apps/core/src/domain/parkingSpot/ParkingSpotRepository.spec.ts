@@ -19,8 +19,8 @@ describe(ParkingSpotRepository.name, () => {
     spot = await parkingSpotRepository.create({ ownerUserId: user.id, location: { longitude: 10, latitude: 20 } })
   })
 
-  describe('findById', () => {
-    it('should find a parking spot by id', async () => {
+  describe('getById', () => {
+    it('should get a parking spot by id', async () => {
       expect(await parkingSpotRepository.getById(spot.id)).toStrictEqual(spot)
     })
 
@@ -56,14 +56,19 @@ describe(ParkingSpotRepository.name, () => {
   })
 
   describe('getParkingSpotsClosestToLocation', () => {
-    it('should find the parking spots closest to a given location', async () => {
+    it('should get the parking spots closest to a given location', async () => {
+      // Create 20 spots
       const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
       const allSpots: ParkingSpot[] = await Promise.all(
         ints.map((i) => parkingSpotRepository.create({ ownerUserId: user.id, location: { longitude: i, latitude: i } }))
       )
+
+      // But we're only going to get the 5 closest to a given point
       const location: Point = { longitude: 10, latitude: 10 }
       const fiveClosestSpots = allSpots.filter((spot) => [8, 9, 10, 11, 12].includes(spot.location.longitude))
-      expect(fiveClosestSpots).toHaveLength(5) // Just make sure
+      expect(fiveClosestSpots).toHaveLength(5) // Make sure we didn't screw up the test setup
+
+      // Then get those 5 spots, verify they're the 5 closest
       const foundSpots = await parkingSpotRepository.getParkingSpotsClosestToLocation(location, 5)
       expect(orderBy(foundSpots, (spot) => spot.location.longitude)).toStrictEqual(fiveClosestSpots)
     })

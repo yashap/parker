@@ -43,6 +43,9 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   public async getParkingSpotsClosestToLocation(location: Point, count: number): Promise<ParkingSpot[]> {
+    if (count === 0) {
+      return []
+    }
     return await this.prisma.$transaction(
       async (transaction) => {
         const { longitude, latitude } = location

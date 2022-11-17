@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common'
 import { BaseController } from '../../http/BaseController'
 import { CreateParkingSpotDto, ParkingSpotDto, UpdateParkingSpotDto } from './ParkingSpotDto'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
@@ -16,9 +16,22 @@ export class ParkingSpotController extends BaseController {
   }
 
   @Get(':id')
-  public async findById(@Param('id', ParseUUIDPipe) id: string): Promise<ParkingSpotDto> {
+  public async getById(@Param('id', ParseUUIDPipe) id: string): Promise<ParkingSpotDto> {
     const parkingSpot = this.require(await this.parkingSpotRepository.getById(id))
     return ParkingSpotDto.buildFromDomain(parkingSpot)
+  }
+
+  @Get('closestToPoint')
+  public async getClosestToPoint(
+    @Query('longitude') longitude: number,
+    @Query('latitude') latitude: number,
+    @Query('count') count: number
+  ): Promise<ParkingSpotDto[]> {
+    const parkingSpots = await this.parkingSpotRepository.getParkingSpotsClosestToLocation(
+      { longitude, latitude },
+      count
+    )
+    return parkingSpots.map(ParkingSpotDto.buildFromDomain)
   }
 
   @Patch(':id')

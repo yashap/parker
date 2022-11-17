@@ -18,13 +18,13 @@ describe(UserController.name, () => {
     user1 = await userController.create({ fullName: 'Donald Duck' })
   })
 
-  describe('findById', () => {
-    it('should find a user by id', async () => {
-      expect(await userController.findById(user1.id)).toStrictEqual(user1)
+  describe('getById', () => {
+    it('should get a user by id', async () => {
+      expect(await userController.getById(user1.id)).toStrictEqual(user1)
     })
 
     it('should throw a not found error if the id is not found', async () => {
-      expect(userController.findById(uuid())).rejects.toBeInstanceOf(NotFoundException)
+      expect(userController.getById(uuid())).rejects.toBeInstanceOf(NotFoundException)
     })
   })
 })

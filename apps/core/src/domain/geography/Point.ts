@@ -1,6 +1,6 @@
 export interface Point {
-  latitude: number
   longitude: number
+  latitude: number
 }
 
 export type Longitude = number
