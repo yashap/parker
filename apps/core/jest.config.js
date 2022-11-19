@@ -63,7 +63,7 @@ module.exports = {
   // globalSetup: undefined,
 
   // A path to a module which exports an async function that is triggered once after all test suites
-  globalTeardown: '<rootDir>/src/test/jestHooks/globalTeardown.ts',
+  // globalTeardown: undefined,
 
   // A set of global variables that need to be available in all test environments
   // globals: {},
@@ -136,10 +136,10 @@ module.exports = {
   setupFiles: ['<rootDir>/src/test/jestHooks/setEnvVars.ts'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
+  setupFilesAfterEnv: ['<rootDir>/src/test/jestHooks/globalHooks.ts'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
-  // slowTestThreshold: 5,
+  slowTestThreshold: 5,
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],

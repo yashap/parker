@@ -2,7 +2,6 @@
 
 What am I planning to work on next?
 
-- Cleanup test teardown (DB clearing)
 - Create errors lib
 - Create a mega-simple "landlord" app, that lets you list a parking spot
   - Just a location to start (pricing, pics, hours, etc. can come later)

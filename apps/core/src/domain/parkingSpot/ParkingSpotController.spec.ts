@@ -1,6 +1,5 @@
 import { NotFoundException } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { PrismaClient } from '@prisma/client'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { Point } from '../geography'
@@ -10,22 +9,12 @@ import { ParkingSpotController } from './ParkingSpotController'
 import { ParkingSpotDto } from './ParkingSpotDto'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
-// TODO: move somewhere more general
-const resetDb = async (): Promise<void> => {
-  const client = new PrismaClient()
-  await client.$connect()
-  await client.parkingSpot.deleteMany({ where: {} })
-  await client.user.deleteMany({ where: {} })
-  await client.$disconnect()
-}
-
 describe(ParkingSpotController.name, () => {
   let userRepository: UserRepository
   let parkingSpotController: ParkingSpotController
   let user: User
 
   beforeEach(async () => {
-    await resetDb()
     const app = await Test.createTestingModule({
       controllers: [ParkingSpotController],
       providers: [ParkingSpotRepository, UserRepository],
