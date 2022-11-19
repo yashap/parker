@@ -21,7 +21,7 @@ After this, you can try running `pnpm post-sync && pnpm format && pnpm lint && p
 
 ## Dev Workflows
 
-All of the below commands can be run at the root of the repo, where they will use the root `package.json` scripts. For the most part, this will invoke some sort of `turbo run` command, to run them in all workspaces (all apps and packages). Alternately, you can also run `pnpm` commands from the various app/package subdirectories, which will in turn use their `package.json` scripts, but running via the root directory (and thus `turbo`) is generally better, as it takes advantage of `turborepo` caching.
+All `pnpm` commands can be run at the root of the repo, where they will use the root `package.json` scripts. For the most part, this will invoke some sort of `turbo run` command, to run them in all workspaces (all apps and packages). Alternately, you can also run `pnpm` commands from the various app/package subdirectories, which will in turn use their `package.json` scripts, but running via the root directory (and thus `turbo`) is generally better, as it takes advantage of `turborepo` caching.
 
 For any of the above commands, you can filter to a workspace (a library in `packages/` or an app in `apps/`) via `--filter`, e.g.:
 
@@ -42,27 +42,7 @@ pnpm dev
 pnpm format && pnpm test
 ```
 
-### Common Commands
-
-Build everything, start DBs, run migrations:
-
-```bash
-pnpm post-sync
-```
-
-Run all apps in local development mode (with everything recompiling/reloading on changes):
-
-```bash
-pnpm dev
-```
-
-Run all tests:
-
-```bash
-pnpm test
-```
-
-Install an external dependency (e.g. an npm package):
+### Install an external dependency (e.g. an npm package)
 
 ```bash
 # Add a package to a workspace
@@ -72,7 +52,7 @@ pnpm add <package> --filter <workspace>
 pnpm add -D <package> --filter <workspace>
 ```
 
-Install an internal dependency (e.g. depend on something in `packages/`):
+### Install an internal dependency (e.g. depend on something in `packages/`)
 
 ```bash
 # Add a dependency like this to your package.json
@@ -92,7 +72,7 @@ Install an internal dependency (e.g. depend on something in `packages/`):
 pnpm install
 ```
 
-Clear all build artifacts (`node_modules`, etc.):
+### Clear all build artifacts (`node_modules`, etc.)
 
 ```bash
 pnpm clean
