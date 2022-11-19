@@ -19,6 +19,7 @@ importers:
       '@nestjs/platform-express': ^9.1.6
       '@nestjs/schematics': ^9.0.3
       '@nestjs/testing': ^9.1.6
+      '@parker/errors': workspace:*
       '@parker/logging': workspace:*
       '@parker/nest-utils': workspace:*
       '@parker/tsconfig': workspace:*
@@ -46,6 +47,7 @@ importers:
       '@nestjs/core': 9.2.0_jfowmhmgk7kwjudosrpv7e7liy
       '@nestjs/mapped-types': 1.2.0_qdpnjncnmntjmcz6x55b5h3mje
       '@nestjs/platform-express': 9.2.0_pf2fb646rsvo5szivgkaevcpvi
+      '@parker/errors': link:../../packages/errors
       '@parker/logging': link:../../packages/logging
       '@parker/nest-utils': link:../../packages/nest-utils
       '@prisma/client': 4.6.1_prisma@4.6.1
@@ -187,6 +189,7 @@ importers:
     specifiers:
       '@nestjs/common': ^9.1.6
       '@nestjs/core': ^9.1.6
+      '@parker/errors': workspace:*
       '@parker/logging': workspace:*
       '@parker/tsconfig': workspace:*
       '@types/express': ^4.17.14
@@ -213,6 +216,7 @@ importers:
       tslib: 2.4.1
       uuid: 9.0.0
     devDependencies:
+      '@parker/errors': link:../errors
       '@parker/tsconfig': link:../tsconfig
       '@types/express': 4.17.14
       '@types/jest': 29.2.3

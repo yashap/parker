@@ -1,9 +1,9 @@
 import { NestInterceptor, ExecutionContext, CallHandler, HttpServer, HttpStatus } from '@nestjs/common'
+import { isServerError } from '@parker/errors'
 import { Logger, Payload } from '@parker/logging'
 import { Response } from 'express'
 import { Observable, throwError } from 'rxjs'
 import { catchError, tap } from 'rxjs/operators'
-import { isHttpException } from './isHttpException'
 
 export class HttpLoggingInterceptor implements NestInterceptor<unknown, unknown> {
   private logger: Logger = new Logger('HttpRequest')
@@ -21,7 +21,7 @@ export class HttpLoggingInterceptor implements NestInterceptor<unknown, unknown>
         this.logRequest(response.statusCode, method, path, Date.now() - startMs)
       }),
       catchError((error) => {
-        const status = isHttpException(error) ? error.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR
+        const status = isServerError(error) ? error.httpStatusCode : HttpStatus.INTERNAL_SERVER_ERROR
         this.logRequest(status, method, path, Date.now() - startMs, error)
         return throwError(() => error)
       })

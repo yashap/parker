@@ -17,7 +17,7 @@ export class ParkingSpotController extends BaseController {
 
   @Get(':id')
   public async getById(@Param('id', ParseUUIDPipe) id: string): Promise<ParkingSpotDto> {
-    const parkingSpot = this.require(await this.parkingSpotRepository.getById(id))
+    const parkingSpot = this.getEntityOrNotFound(await this.parkingSpotRepository.getById(id))
     return ParkingSpotDto.buildFromDomain(parkingSpot)
   }
 

@@ -1,5 +1,5 @@
-import { NotFoundException } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
+import { NotFoundError } from '@parker/errors'
 import { v4 as uuid } from 'uuid'
 import { UserController } from './UserController'
 import { UserDto } from './UserDto'
@@ -24,7 +24,7 @@ describe(UserController.name, () => {
     })
 
     it('should throw a not found error if the id is not found', async () => {
-      expect(userController.getById(uuid())).rejects.toBeInstanceOf(NotFoundException)
+      expect(userController.getById(uuid())).rejects.toBeInstanceOf(NotFoundError)
     })
   })
 })

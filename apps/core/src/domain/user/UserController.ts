@@ -6,7 +6,7 @@ import { UserRepository } from './UserRepository'
 @Controller('users')
 export class UserController extends BaseController {
   constructor(private readonly userRepository: UserRepository) {
-    super('user')
+    super('User')
   }
 
   @Post()
@@ -17,7 +17,7 @@ export class UserController extends BaseController {
 
   @Get(':id')
   public async getById(@Param('id', ParseUUIDPipe) id: string): Promise<UserDto> {
-    const user = this.require(await this.userRepository.getById(id))
+    const user = this.getEntityOrNotFound(await this.userRepository.getById(id))
     return UserDto.buildFromDomain(user)
   }
 

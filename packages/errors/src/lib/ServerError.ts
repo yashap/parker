@@ -1,7 +1,6 @@
 import ExtendableError from 'extendable-error'
 
 export interface ServerErrorDto<T = unknown> {
-  isParkerServerError: true
   message: string
   code: string
   subCode?: string
@@ -36,7 +35,6 @@ export abstract class ServerError<T = unknown> extends ExtendableError {
   // Transform this server error into a Data Transfer Object ()
   public toDto(): ServerErrorDto<T> {
     return {
-      isParkerServerError: this.isParkerServerError,
       message: this.message,
       code: this.code,
       ...(this.subCode ? { subCode: this.subCode } : {}),
@@ -79,7 +77,7 @@ export const isServerError = (error: unknown): error is ServerError => {
 
 export const isServerErrorDto = (error: unknown): error is ServerError => {
   const serverError = error as ServerErrorDto
-  return Boolean(serverError.isParkerServerError) && Boolean(serverError.message) && Boolean(serverError.code)
+  return Boolean(serverError.message) && Boolean(serverError.code)
 }
 
 export class InputValidationError<T = unknown> extends ServerError<T> {

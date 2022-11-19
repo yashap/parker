@@ -34,7 +34,6 @@ describe(ServerError.name, () => {
   describe('toDto', () => {
     it('converts a ServerError to a ServerErrorDto, with all optional fields populated', () => {
       const expected: ServerErrorDto<{ foo: string }> = {
-        isParkerServerError: true,
         message: 'Oh no',
         code: 'InternalServerError',
         subCode: 'DatabaseConnectionTimeout',
@@ -47,7 +46,6 @@ describe(ServerError.name, () => {
 
     it('converts a ServerError to a ServerErrorDto, with all optional fields missing', () => {
       const expected: ServerErrorDto = {
-        isParkerServerError: true,
         message: 'Oh no',
         code: 'InternalServerError',
       }
@@ -58,14 +56,12 @@ describe(ServerError.name, () => {
   describe(ServerError.fromDto.name, () => {
     it('converts a ServerErrorDto to a ServerError', () => {
       const internalServerErrorDto: ServerErrorDto<{ foo: string }> = {
-        isParkerServerError: true,
         message: 'Oh no',
         code: 'InternalServerError',
         subCode: 'DatabaseConnectionTimeout',
         metadata: { foo: 'bar' },
       }
       const notFoundErrorDto: ServerErrorDto = {
-        isParkerServerError: true,
         message: 'Oh no',
         code: 'NotFoundError',
       }

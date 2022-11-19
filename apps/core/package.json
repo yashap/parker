@@ -23,6 +23,7 @@
     "@nestjs/core": "^9.1.6",
     "@nestjs/mapped-types": "^1.2.0",
     "@nestjs/platform-express": "^9.1.6",
+    "@parker/errors": "workspace:*",
     "@parker/logging": "workspace:*",
     "@parker/nest-utils": "workspace:*",
     "@prisma/client": "^4.5.0",

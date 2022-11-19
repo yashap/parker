@@ -1,5 +1,5 @@
-import { NotFoundException } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
+import { NotFoundError } from '@parker/errors'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { Point } from '../geography'
@@ -34,7 +34,7 @@ describe(ParkingSpotController.name, () => {
     })
 
     it('should throw a not found error if the id is not found', async () => {
-      expect(parkingSpotController.getById(uuid())).rejects.toBeInstanceOf(NotFoundException)
+      expect(parkingSpotController.getById(uuid())).rejects.toBeInstanceOf(NotFoundError)
     })
   })
 

@@ -1,12 +1,11 @@
-import { NotFoundException } from '@nestjs/common'
+import { NotFoundError } from '@parker/errors'
 
 export abstract class BaseController {
   constructor(protected readonly entityName: string) {}
 
-  protected require<T>(maybeValue: T | undefined): T {
+  protected getEntityOrNotFound<T>(maybeValue: T | undefined): T {
     if (!maybeValue) {
-      // TODO: centralize errors into a library
-      throw new NotFoundException({ message: `${this.entityName} not found` })
+      throw new NotFoundError(`${this.entityName} not found`)
     }
     return maybeValue
   }

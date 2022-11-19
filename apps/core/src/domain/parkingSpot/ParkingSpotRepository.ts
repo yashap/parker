@@ -1,4 +1,5 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
+import { InternalServerError } from '@parker/errors'
 import { ParkingSpot as PrismaParkingSpot, Prisma } from '@prisma/client'
 import { compact, isEmpty } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
@@ -79,8 +80,7 @@ export class ParkingSpotRepository extends BaseRepository {
         }
         const parkingSpot = await this.getById(id) // TODO: no nested transaction
         if (!parkingSpot) {
-          // TODO: centralize errors
-          throw new InternalServerErrorException(`ParkingSpot ${id} not found`)
+          throw new InternalServerError(`ParkingSpot ${id} not found`)
         }
         return parkingSpot
       },
@@ -125,8 +125,7 @@ export class ParkingSpotRepository extends BaseRepository {
     const rowsModified =
       await transaction.$executeRaw`UPDATE "ParkingSpot" SET "location" = ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326) WHERE "id" = UUID(${id})`
     if (rowsModified < 1) {
-      // TODO: centralize errors
-      throw new InternalServerErrorException(`ParkingSpot ${id} not found`)
+      throw new InternalServerError(`ParkingSpot ${id} not found`)
     }
   }
 
