@@ -17,7 +17,7 @@ Install the following:
 - Docker Desktop
   - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
-After this, you can try running `pnpm build:dev && pnpm test && pnpm dev` to ensure everything works.
+After this, you can try running `pnpm post-sync && pnpm format && pnpm lint && pnpm test && pnpm dev` to ensure everything works.
 
 ## Dev Workflows
 
@@ -33,18 +33,21 @@ pnpm test --filter context-propagation
 
 ```bash
 # When starting work for the day, or after running git pull
-pnpm build:dev
+pnpm post-sync
 
 # To start developing in watch mode
 pnpm dev
+
+# Before you push
+pnpm format && pnpm test
 ```
 
 ### Common Commands
 
-Build everything, start DBs, run migrations, lint, etc.:
+Build everything, start DBs, run migrations:
 
 ```bash
-pnpm build:dev
+pnpm post-sync
 ```
 
 Run all apps in local development mode (with everything recompiling/reloading on changes):
@@ -84,6 +87,9 @@ Install an internal dependency (e.g. depend on something in `packages/`):
     ...
   }
 }
+
+# And then run
+pnpm install
 ```
 
 Clear all build artifacts (`node_modules`, etc.):

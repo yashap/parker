@@ -8,7 +8,6 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "build:dev": "pnpm install && pnpm db:migrate && pnpm db:migrate:test && pnpm build && pnpm format && pnpm lint",
     "clean": "pnpm db:clean && turbo run clean && rm -rf node_modules/",
     "db:clean": "docker rm -f -v parker_postgres_dev parker_postgres_test && docker volume rm -f parker_postgres_data_dev parker_postgres_data_test",
     "db:migrate": "./tools/scripts/ensure_postgres_up.sh && turbo run db:migrate",
@@ -17,6 +16,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run format",
     "generate": "turbo run generate",
     "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint",
+    "post-sync": "pnpm install && pnpm db:migrate && pnpm db:migrate:test && pnpm build",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch"
   },
