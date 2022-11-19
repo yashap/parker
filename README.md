@@ -72,7 +72,7 @@ pnpm add -D <package> --filter <workspace>
 pnpm install
 ```
 
-### Clear all build artifacts (`node_modules`, etc.)
+### Clear all build artifacts (`node_modules`, `dist`, etc.)
 
 ```bash
 pnpm clean
