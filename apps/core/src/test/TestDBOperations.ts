@@ -5,7 +5,7 @@ interface PrismaModel {
   deleteMany({ where: {} }): Promise<unknown>
 }
 
-export class TestDBOperations {
+export class TestDbOperations {
   private static client: PrismaClient = new PrismaClient()
   private static models: PrismaModel[] = [this.client.parkingSpot, this.client.user]
 
@@ -17,7 +17,7 @@ export class TestDBOperations {
     await this.client.$connect()
   }
 
-  public static async clearDB(): Promise<void> {
+  public static async clear(): Promise<void> {
     for (const model of this.models) {
       await model.deleteMany({ where: {} })
     }

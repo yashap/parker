@@ -97,16 +97,8 @@ pnpm clean && rm pnpm-lock.yaml
 
 ### Adding a new app/package
 
-For adding a new package, see `packages/context-propagation` as an example. Basically you should:
+For adding a new package, copy `packages/context-propagation` as an example.
 
-- Create a new directory inside `packages/`
-- Within this directory:
-  - Add a similar `.eslintrc.js`, `tsconfig.json` and `package.json` to `packages/context-propagation`
-  - Setup `jest` using [these instructions](https://kulshekhar.github.io/ts-jest/docs/getting-started/installation/)
-  - Add a main entrypoint for exports at `src/index.ts`
+For adding a new backend service, copy `src/apps/core` as an example.
 
-For adding a new backend service, same idea, but use `src/apps/core` as an example.
-
-For adding a new React web frontend, see TODO
-
-For adding a new React Native frontend, see TODO
+TODO: instructions for frontends

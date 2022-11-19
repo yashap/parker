@@ -21,7 +21,6 @@
     "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
-    "eslint-config-custom": "workspace:*",
     "prettier": "latest",
     "turbo": "latest"
   },
