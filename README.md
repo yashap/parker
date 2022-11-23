@@ -13,7 +13,8 @@ Install the following:
   - A package manager (similar to `npm`/`yarn`) that works particularly well with [Turborepo](https://turborepo.org/)
   - Fist, ensure you're using the right `node` version
     - From `parker` run `nvm use`
-  - `npm install -g pnpm`
+  - Then run `npm install -g pnpm`
+    - Note that it's only "global" to this particular npm version
 - Docker Desktop
   - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
@@ -21,9 +22,9 @@ After this, you can try running `pnpm post-sync && pnpm format && pnpm lint && p
 
 ## Dev Workflows
 
-All `pnpm` commands can be run at the root of the repo, where they will use the root `package.json` scripts. For the most part, this will invoke some sort of `turbo run` command, to run them in all workspaces (all apps and packages). Alternately, you can also run `pnpm` commands from the various app/package subdirectories, which will in turn use their `package.json` scripts, but running via the root directory (and thus `turbo`) is generally better, as it takes advantage of `turborepo` caching.
+All `pnpm` commands can be run at the root of the repo, where they will use the root `package.json` scripts. For the most part, this will invoke some sort of `turbo run` command, to run them in all workspaces (all backends, frontends and packages). Alternately, you can also run `pnpm` commands from the various app/package subdirectories, which will in turn use their `package.json` scripts, but running via the root directory (and thus `turbo`) is generally better, as it takes advantage of `turborepo` caching.
 
-For any of the above commands, you can filter to a workspace (a library in `packages/` or an app in `apps/`) via `--filter`, e.g.:
+For any of the above commands, you can filter to a workspace (a library in `packages/`, a backend in `backends/` or a frontend in `frontends/`) via `--filter`, e.g.:
 
 ```bash
 pnpm test --filter context-propagation
@@ -85,6 +86,6 @@ pnpm clean && rm pnpm-lock.yaml
 
 For adding a new package, copy `packages/context-propagation` as an example.
 
-For adding a new backend service, copy `src/apps/core` as an example.
+For adding a new backend service, copy `src/backends/core` as an example.
 
-TODO: instructions for frontends
+For adding a new React Native app, copy `src/frontends/landlord` as an example.
