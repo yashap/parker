@@ -4,11 +4,12 @@
   "private": true,
   "workspaces": [
     "backends/*",
+    "frontends/*",
     "packages/*"
   ],
   "scripts": {
     "build": "turbo run build",
-    "clean": "pnpm db:clean && turbo run clean && rm -rf node_modules/",
+    "clean": "yarn db:clean && turbo run clean && rm -rf node_modules/",
     "db:clean": "docker rm -f -v parker_postgres_dev parker_postgres_test && docker volume rm -f parker_postgres_data_dev parker_postgres_data_test",
     "db:migrate": "./tools/scripts/ensure_postgres_up.sh && turbo run db:migrate",
     "db:migrate:test": "./tools/scripts/ensure_postgres_up.sh -p 5441 -c parker_postgres_test -v parker_postgres_data_test && turbo run db:migrate:test",
@@ -16,7 +17,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run format",
     "generate": "turbo run generate",
     "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint",
-    "post-sync": "pnpm install && pnpm db:migrate && pnpm db:migrate:test && pnpm build",
+    "post-sync": "yarn install && yarn db:migrate && yarn db:migrate:test && yarn build",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch"
   },
@@ -28,5 +29,5 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "packageManager": "pnpm@7.14.1"
+  "packageManager": "yarn@1.22.17"
 }

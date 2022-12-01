@@ -1,0 +1,15 @@
+{
+  "extends": "@parker/tsconfig/base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "jsx": "react-native",
+    "lib": ["DOM", "ESNext"],
+    "module": "CommonJS",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["src"]
+}

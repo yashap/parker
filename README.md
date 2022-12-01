@@ -9,77 +9,77 @@ Install the following:
 - [nvm](https://github.com/nvm-sh/nvm)
   - For managing multiple node versions
   - Suggest setting up `nvm` to [auto-switch to the right node version on cd](https://github.com/nvm-sh/nvm#deeper-shell-integration)
-- [pnpm](https://pnpm.io/)
-  - A package manager (similar to `npm`/`yarn`) that works particularly well with [Turborepo](https://turborepo.org/)
+- [yarn](https://yarnpkg.com/)
+  - A package manager/command line tool, similar to `npm`
   - Fist, ensure you're using the right `node` version
     - From `parker` run `nvm use`
-  - Then run `npm install -g pnpm`
-    - Note that it's only "global" to this particular npm version
+  - Then run `corepack enable`
+    - `corepack` includes `yarn`, and ships with Node.js >=16.10, but you have to opt in to enabling it
 - Docker Desktop
   - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
-After this, you can try running `pnpm post-sync && pnpm format && pnpm lint && pnpm test && pnpm dev` to ensure everything works.
+After this, you can try running `yarn post-sync && yarn format && yarn lint && yarn test && yarn dev` to ensure everything works.
 
 ## Dev Workflows
 
-All `pnpm` commands can be run at the root of the repo, where they will use the root `package.json` scripts. For the most part, this will invoke some sort of `turbo run` command, to run them in all workspaces (all backends, frontends and packages). Alternately, you can also run `pnpm` commands from the various app/package subdirectories, which will in turn use their `package.json` scripts, but running via the root directory (and thus `turbo`) is generally better, as it takes advantage of `turborepo` caching.
+All `yarn` commands can be run at the root of the repo, where they will use the root `package.json` scripts. For the most part, this will invoke some sort of `turbo run` command, to run them in all workspaces (all backends, frontends and packages). Alternately, you can also run `yarn` commands from the various app/package subdirectories, which will in turn use their `package.json` scripts, but running via the root directory (and thus `turbo`) is generally better, as it takes advantage of `turborepo` caching.
 
-For any of the above commands, you can filter to a workspace (a library in `packages/`, a backend in `backends/` or a frontend in `frontends/`) via `--filter`, e.g.:
+For any of the above commands, you can run against a specific workspace (a library in `packages/`, a backend in `backends/` or a frontend in `frontends/`) via putting `workspace <workspace>` after `yarn` and before the command, e.g.:
 
 ```bash
-pnpm test --filter context-propagation
+yarn workspace @parker/context-propagation test
 ```
 
 ### Core Dev Workflow
 
 ```bash
 # When starting work for the day, or after running git pull
-pnpm post-sync
+yarn post-sync
 
 # To start developing in watch mode
-pnpm dev
+yarn dev
 
 # Before you push
-pnpm format && pnpm test
+yarn format && yarn test
 ```
 
 ### Install an external dependency (e.g. an npm package)
 
 ```bash
 # Add a package to a workspace
-pnpm add <package> --filter <workspace>
+yarn workspace <workspace> add <package>
 
 # Add a dev package to a workspace
-pnpm add -D <package> --filter <workspace>
+yarn workspace <workspace> add -D <package>
 ```
 
 ### Install an internal dependency (e.g. depend on something in `packages/`)
 
 ```bash
 # Add a dependency like this to your package.json
-"<package>": "workspace:*"
+"<package>": "*"
 
 # e.g. to make the @parker/core app depend on @parker/context-propagation
 {
   "name": "@parker/core",
   ...
   "dependencies": {
-    "@parker/context-propagation": "workspace:*",
+    "@parker/context-propagation": "*",
     ...
   }
 }
 
 # And then run
-pnpm install
+yarn install
 ```
 
 ### Clear all build artifacts (`node_modules`, `dist`, etc.)
 
 ```bash
-pnpm clean
+yarn clean
 
 # Or for a real "hard" version
-pnpm clean && rm pnpm-lock.yaml
+yarn clean && rm yarn.lock
 ```
 
 ### Adding a new app/package

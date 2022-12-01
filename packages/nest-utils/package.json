@@ -14,7 +14,7 @@
     "test:watch": "LOG_LEVEL=off jest --watch src/"
   },
   "dependencies": {
-    "@parker/logging": "workspace:*",
+    "@parker/logging": "*",
     "@nestjs/common": "^9.1.6",
     "@nestjs/core": "^9.1.6",
     "express": "^4.18.2",
@@ -24,16 +24,16 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@parker/errors": "workspace:*",
-    "@parker/tsconfig": "workspace:*",
+    "@parker/errors": "*",
+    "@parker/tsconfig": "*",
     "@types/express": "^4.17.14",
     "@types/jest": "^29.0.0",
     "@types/node": "^17.0.12",
     "@types/uuid": "^8.3.4",
     "eslint": "7.32.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint-config-custom": "*",
     "jest": "^29.0.3",
     "ts-jest": "^29.0.3",
-    "typescript": "^4.5.3"
+    "typescript": "^4.9.3"
   }
 }

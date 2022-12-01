@@ -15,6 +15,7 @@ module.exports = {
   ],
   ignorePatterns: ['**/dist/*'],
   rules: {
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'unused-imports/no-unused-imports': 'error',
     'unused-imports/no-unused-vars': [
       'warn',
@@ -35,5 +36,6 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    'import/ignore': ['react-native'],
   },
 }
