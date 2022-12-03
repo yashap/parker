@@ -1,5 +1,5 @@
+import { Point } from '@parker/geography'
 import { Record } from 'immutable'
-import { Point } from '../geography'
 
 export interface ParkingSpotProps {
   id: string

@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing'
 import { NotFoundError } from '@parker/errors'
+import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
-import { Point } from '../geography'
 import { User } from '../user/User'
 import { UserRepository } from '../user/UserRepository'
 import { ParkingSpotController } from './ParkingSpotController'
@@ -52,7 +52,7 @@ describe(ParkingSpotController.name, () => {
       expect(fiveClosestSpots).toHaveLength(5) // Make sure we didn't screw up the test setup
 
       // Then get those 5 spots, verify they're the 5 closest
-      const foundSpots = await parkingSpotController.getClosestToPoint(location.longitude, location.latitude, 5)
+      const foundSpots = (await parkingSpotController.getClosestToPoint(location.longitude, location.latitude, 5)).data
       expect(orderBy(foundSpots, (spot) => spot.location.longitude)).toStrictEqual(fiveClosestSpots)
     })
   })

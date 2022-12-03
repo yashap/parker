@@ -1,6 +1,6 @@
+import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
-import { Point } from '../geography'
 import { User } from '../user/User'
 import { UserRepository } from '../user/UserRepository'
 import { ParkingSpot } from './ParkingSpot'

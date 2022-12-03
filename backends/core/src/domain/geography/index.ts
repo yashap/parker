@@ -1,2 +1,2 @@
-export * from './Point'
+export * from './GeoJsonPoint'
 export * from './PointDto'

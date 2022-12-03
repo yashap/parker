@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InternalServerError } from '@parker/errors'
+import { Point } from '@parker/geography'
 import { ParkingSpot as PrismaParkingSpot, Prisma } from '@prisma/client'
 import { compact, isEmpty } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
-import { GeoJsonPoint, Point } from '../geography'
+import { GeoJsonPoint } from '../geography'
 import { ParkingSpot, ParkingSpotProps } from './ParkingSpot'
 
 type CreateParkingSpotInput = Omit<ParkingSpotProps, 'id'>

@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
-    "clean": "rm -rf node_modules/ dist/",
+    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
     "db:init": "../../tools/scripts/ensure_postgres_db.sh -d core && ../../tools/scripts/ensure_postgres_user.sh -u core -w core_password -d core",
     "db:init:test": "../../tools/scripts/ensure_postgres_db.sh -d core -c parker_postgres_test && ../../tools/scripts/ensure_postgres_user.sh -u core -w core_password -d core -c parker_postgres_test",
     "db:migrate": "yarn db:init && DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:5440/core?schema=public' prisma migrate dev",
@@ -24,6 +24,7 @@
     "@nestjs/mapped-types": "^1.2.0",
     "@nestjs/platform-express": "^9.1.6",
     "@parker/errors": "*",
+    "@parker/geography": "*",
     "@parker/logging": "*",
     "@parker/nest-utils": "*",
     "@prisma/client": "^4.5.0",

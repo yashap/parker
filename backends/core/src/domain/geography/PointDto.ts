@@ -1,5 +1,5 @@
+import { Point } from '@parker/geography'
 import { Max, Min } from 'class-validator'
-import { Point } from './Point'
 
 export type PointDtoProps = Point
 

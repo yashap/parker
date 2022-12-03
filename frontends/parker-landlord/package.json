@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf node_modules/ dist/",
+    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
     "dev": "yarn dev:ios",
     "dev:android": "expo start --android",
     "dev:ios": "expo start --ios",
@@ -12,8 +12,8 @@
     "eject": "expo eject",
     "format": "eslint . --ext .ts --fix",
     "lint": "tsc --noEmit && eslint . --ext .ts",
-    "test": "LOG_LEVEL=off jest src/ --runInBand",
-    "test:watch": "LOG_LEVEL=off jest --watch src/ --runInBand"
+    "test": "LOG_LEVEL=off jest src/ --runInBand --passWithNoTests",
+    "test:watch": "LOG_LEVEL=off jest src/ --watch --runInBand --passWithNoTests"
   },
   "dependencies": {
     "expo": "^47.0.8",

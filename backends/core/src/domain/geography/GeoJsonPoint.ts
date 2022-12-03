@@ -1,8 +1,3 @@
-export interface Point {
-  longitude: number
-  latitude: number
-}
-
 export type Longitude = number
 export type Latitude = number
 export interface GeoJsonPoint {

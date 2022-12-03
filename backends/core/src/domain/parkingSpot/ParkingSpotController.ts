@@ -26,12 +26,13 @@ export class ParkingSpotController extends BaseController {
     @Query('longitude') longitude: number,
     @Query('latitude') latitude: number,
     @Query('count') count: number
-  ): Promise<ParkingSpotDto[]> {
+  ): Promise<{ data: ParkingSpotDto[] }> {
     const parkingSpots = await this.parkingSpotRepository.getParkingSpotsClosestToLocation(
       { longitude, latitude },
       count
     )
-    return parkingSpots.map(ParkingSpotDto.buildFromDomain)
+    // TODO: proper pagination
+    return { data: parkingSpots.map(ParkingSpotDto.buildFromDomain) }
   }
 
   @Patch(':id')
