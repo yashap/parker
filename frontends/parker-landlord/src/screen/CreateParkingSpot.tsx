@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { CoreClientBuilder } from '../apiClient/CoreClientBuilder'
+import { AuthenticationStore } from '../store/AuthenticationStore'
 
-export const CreateParkingSpotScreen = () => {
+export const CreateParkingSpot = () => {
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
   return (
@@ -21,7 +23,17 @@ export const CreateParkingSpotScreen = () => {
         onChangeText={(newLongitude) => setLongitude(newLongitude)}
         defaultValue={longitude}
       />
-      <Button title='Submit' onPress={() => alert(`Lat: ${latitude} ; Long: ${longitude}`)} />
+      <Button
+        title='Submit'
+        onPress={async () => {
+          const coreClient = CoreClientBuilder.build()
+          const parkingSpot = await coreClient.parkingSpots.post({
+            location: { latitude: Number(latitude), longitude: Number(longitude) },
+            ownerUserId: AuthenticationStore.getAuthenticatedUser().id,
+          })
+          alert(`Parking spot created: ${JSON.stringify(parkingSpot)}`)
+        }}
+      />
     </View>
   )
 }

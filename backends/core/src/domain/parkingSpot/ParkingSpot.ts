@@ -1,11 +1,7 @@
-import { Point } from '@parker/geography'
+import { ParkingSpotDto } from '@parker/core-client'
 import { Record } from 'immutable'
 
-export interface ParkingSpotProps {
-  id: string
-  ownerUserId: string
-  location: Point
-}
+export type ParkingSpotProps = ParkingSpotDto
 
 export class ParkingSpot extends Record<ParkingSpotProps>({
   id: '',

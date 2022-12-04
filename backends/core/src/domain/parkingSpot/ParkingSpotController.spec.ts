@@ -6,8 +6,8 @@ import { v4 as uuid } from 'uuid'
 import { User } from '../user/User'
 import { UserRepository } from '../user/UserRepository'
 import { ParkingSpotController } from './ParkingSpotController'
-import { ParkingSpotDto } from './ParkingSpotDto'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
+import { ParkingSpotValidatingDto } from './ParkingSpotValidatingDto'
 
 describe(ParkingSpotController.name, () => {
   let userRepository: UserRepository
@@ -21,7 +21,7 @@ describe(ParkingSpotController.name, () => {
     }).compile()
     userRepository = app.get(UserRepository)
     parkingSpotController = app.get(ParkingSpotController)
-    user = await userRepository.create({ fullName: 'The Tick' })
+    user = await userRepository.create({ email: 'the.tick@example.com', fullName: 'The Tick' })
   })
 
   describe('getById', () => {
@@ -42,7 +42,7 @@ describe(ParkingSpotController.name, () => {
     it('should list the parking spots closest to a given point', async () => {
       // Create 20 spots
       const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
-      const allSpots: ParkingSpotDto[] = await Promise.all(
+      const allSpots: ParkingSpotValidatingDto[] = await Promise.all(
         ints.map((i) => parkingSpotController.create({ ownerUserId: user.id, location: { longitude: i, latitude: i } }))
       )
 

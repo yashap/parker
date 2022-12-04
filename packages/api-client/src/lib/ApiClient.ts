@@ -3,13 +3,22 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios'
 
 export interface ApiClientConfig {
   baseUrl: string
+  token?: string
 }
 
 export class ApiClient {
   constructor(private readonly axiosInstance: AxiosInstance) {}
 
-  public static build({ baseUrl }: ApiClientConfig): ApiClient {
-    return new ApiClient(axios.create({ baseURL: baseUrl, validateStatus: (status) => status < 400 }))
+  public static build({ baseUrl, token }: ApiClientConfig): ApiClient {
+    return new ApiClient(
+      axios.create({
+        baseURL: baseUrl,
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        validateStatus: (status) => status < 400,
+      })
+    )
   }
 
   public delete(path: string): Promise<void> {

@@ -1,8 +1,7 @@
 // Prisma schema file: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -14,6 +13,7 @@ model User {
   id        String   @id @default(dbgenerated("uuid_generate_v1()")) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  email     String
   fullName  String
 
   // Relations

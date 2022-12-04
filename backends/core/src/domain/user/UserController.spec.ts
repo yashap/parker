@@ -2,12 +2,12 @@ import { Test } from '@nestjs/testing'
 import { NotFoundError } from '@parker/errors'
 import { v4 as uuid } from 'uuid'
 import { UserController } from './UserController'
-import { UserDto } from './UserDto'
 import { UserRepository } from './UserRepository'
+import { UserValidatingDto } from './UserValidatingDto'
 
 describe(UserController.name, () => {
   let userController: UserController
-  let user1: UserDto
+  let user1: UserValidatingDto
 
   beforeEach(async () => {
     const app = await Test.createTestingModule({
@@ -15,7 +15,7 @@ describe(UserController.name, () => {
       providers: [UserRepository],
     }).compile()
     userController = app.get(UserController)
-    user1 = await userController.create({ fullName: 'Donald Duck' })
+    user1 = await userController.create({ email: 'donald.duck@example.com', fullName: 'Donald Duck' })
   })
 
   describe('getById', () => {

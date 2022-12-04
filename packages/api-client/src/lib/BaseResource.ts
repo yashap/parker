@@ -43,8 +43,8 @@ export abstract class BaseResource<
   }
 
   protected buildPost() {
-    return async (id: string, postBody: PostBody): Promise<ResourceDto> => {
-      return this.apiClient.post<ResourceDto, PostBody>(`${this.basePath}/${id}`, postBody)
+    return async (postBody: PostBody): Promise<ResourceDto> => {
+      return this.apiClient.post<ResourceDto, PostBody>(`${this.basePath}`, postBody)
     }
   }
 }

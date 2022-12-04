@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common'
 import { BaseController } from '../../http/BaseController'
-import { CreateUserDto, UserDto, UpdateUserDto } from './UserDto'
 import { UserRepository } from './UserRepository'
+import { CreateUserValidatingDto, UserValidatingDto, UpdateUserValidatingDto } from './UserValidatingDto'
 
 @Controller('users')
 export class UserController extends BaseController {
@@ -10,21 +10,24 @@ export class UserController extends BaseController {
   }
 
   @Post()
-  public async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+  public async create(@Body() createUserDto: CreateUserValidatingDto): Promise<UserValidatingDto> {
     const user = await this.userRepository.create({ ...createUserDto })
-    return UserDto.buildFromDomain(user)
+    return UserValidatingDto.buildFromDomain(user)
   }
 
   @Get(':id')
-  public async getById(@Param('id', ParseUUIDPipe) id: string): Promise<UserDto> {
+  public async getById(@Param('id', ParseUUIDPipe) id: string): Promise<UserValidatingDto> {
     const user = this.getEntityOrNotFound(await this.userRepository.getById(id))
-    return UserDto.buildFromDomain(user)
+    return UserValidatingDto.buildFromDomain(user)
   }
 
   @Patch(':id')
-  public async update(@Param('id', ParseUUIDPipe) id: string, @Body() updateUserDto: UpdateUserDto): Promise<UserDto> {
+  public async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdateUserValidatingDto
+  ): Promise<UserValidatingDto> {
     const updatedUser = await this.userRepository.update(id, { ...updateUserDto })
-    return UserDto.buildFromDomain(updatedUser)
+    return UserValidatingDto.buildFromDomain(updatedUser)
   }
 
   @Delete(':id')

@@ -8,7 +8,7 @@ describe(UserRepository.name, () => {
 
   beforeEach(async () => {
     userRepository = new UserRepository()
-    user = await userRepository.create({ fullName: 'The Tick' })
+    user = await userRepository.create({ email: 'the.tick@example.com', fullName: 'The Tick' })
   })
 
   describe('getById', () => {

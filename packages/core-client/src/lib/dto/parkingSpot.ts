@@ -7,6 +7,6 @@ export interface ParkingSpotDto {
 }
 
 // TODO: also exclude ownerUserId once that's inferred from the auth token
-export type CreateParkingSpotDto = Exclude<ParkingSpotDto, 'id'>
+export type CreateParkingSpotDto = Omit<ParkingSpotDto, 'id'>
 
-export type UpdateParkingSpotDto = Exclude<CreateParkingSpotDto, 'ownerUserId'>
+export type UpdateParkingSpotDto = Partial<Omit<CreateParkingSpotDto, 'ownerUserId'>>
