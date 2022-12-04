@@ -1,39 +1,27 @@
+import { ApiClient, BaseListQueryParams, BaseResource, ListResponse } from '@parker/api-client'
 import { Point } from '@parker/geography'
-import { AxiosInstance } from 'axios'
 import { CreateParkingSpotDto, ParkingSpotDto, UpdateParkingSpotDto } from '../dto'
 
-export class ParkingSpotResource {
-  private readonly basePath: string = '/core/parkingSpots'
-
-  constructor(private readonly axiosInstance: AxiosInstance) {}
-
-  public async delete(id: string): Promise<void> {
-    await this.axiosInstance.delete(`${this.basePath}/${id}`)
+export class ParkingSpotResource extends BaseResource<
+  ParkingSpotDto,
+  BaseListQueryParams,
+  CreateParkingSpotDto,
+  UpdateParkingSpotDto
+> {
+  constructor(apiClient: ApiClient) {
+    super(apiClient, '/core/parkingSpots')
   }
 
-  public async get(id: string): Promise<ParkingSpotDto | undefined> {
-    const parkingSpot = await this.axiosInstance.get<ParkingSpotDto>(`${this.basePath}/${id}`)
-    return parkingSpot.data
-  }
+  public delete = this.buildDelete()
+  public get = this.buildGet()
+  public patch = this.buildPatch()
+  public post = this.buildPost()
 
-  public async listClosestToPoint(point: Point, count: number): Promise<ParkingSpotDto> {
-    const parkingSpot = await this.axiosInstance.get<ParkingSpotDto>(`${this.basePath}/closestToPoint`, {
-      params: {
-        latitude: point.latitude,
-        longitude: point.longitude,
-        count,
-      },
+  public async listClosestToPoint(point: Point, limit: number): Promise<ListResponse<ParkingSpotDto>> {
+    return this.apiClient.get<ListResponse<ParkingSpotDto>>(`${this.basePath}/closestToPoint`, {
+      latitude: point.latitude,
+      longitude: point.longitude,
+      limit,
     })
-    return parkingSpot.data
-  }
-
-  public async patch(updateParkingSpotPayload: UpdateParkingSpotDto): Promise<ParkingSpotDto> {
-    const parkingSpot = await this.axiosInstance.patch<ParkingSpotDto>(this.basePath, updateParkingSpotPayload)
-    return parkingSpot.data
-  }
-
-  public async post(createParkingSpotPayload: CreateParkingSpotDto): Promise<ParkingSpotDto> {
-    const parkingSpot = await this.axiosInstance.post<ParkingSpotDto>(this.basePath, createParkingSpotPayload)
-    return parkingSpot.data
   }
 }

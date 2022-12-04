@@ -44,8 +44,8 @@ export class ParkingSpotRepository extends BaseRepository {
     })
   }
 
-  public async getParkingSpotsClosestToLocation(location: Point, count: number): Promise<ParkingSpot[]> {
-    if (count === 0) {
+  public async listParkingSpotsClosestToLocation(location: Point, limit: number): Promise<ParkingSpot[]> {
+    if (limit === 0) {
       return []
     }
     return await this.prisma.$transaction(
@@ -60,7 +60,7 @@ export class ParkingSpotRepository extends BaseRepository {
           ORDER BY
             "distanceToPoint" ASC
           LIMIT
-            ${count}
+            ${limit}
         `
         const closestSpots = await Promise.all(closestIds.map(({ id }) => this.getById(id)))
         return compact(closestSpots)

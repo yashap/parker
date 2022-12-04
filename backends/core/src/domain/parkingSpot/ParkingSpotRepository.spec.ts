@@ -55,8 +55,8 @@ describe(ParkingSpotRepository.name, () => {
     })
   })
 
-  describe('getParkingSpotsClosestToLocation', () => {
-    it('should get the parking spots closest to a given location', async () => {
+  describe('listParkingSpotsClosestToLocation', () => {
+    it('should list the parking spots closest to a given location', async () => {
       // Create 20 spots
       const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
       const allSpots: ParkingSpot[] = await Promise.all(
@@ -69,7 +69,7 @@ describe(ParkingSpotRepository.name, () => {
       expect(fiveClosestSpots).toHaveLength(5) // Make sure we didn't screw up the test setup
 
       // Then get those 5 spots, verify they're the 5 closest
-      const foundSpots = await parkingSpotRepository.getParkingSpotsClosestToLocation(location, 5)
+      const foundSpots = await parkingSpotRepository.listParkingSpotsClosestToLocation(location, 5)
       expect(orderBy(foundSpots, (spot) => spot.location.longitude)).toStrictEqual(fiveClosestSpots)
     })
   })

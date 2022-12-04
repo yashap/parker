@@ -38,8 +38,8 @@ describe(ParkingSpotController.name, () => {
     })
   })
 
-  describe('closestToPoint', () => {
-    it('should get the parking spots closest to a given point', async () => {
+  describe('listClosestToPoint', () => {
+    it('should list the parking spots closest to a given point', async () => {
       // Create 20 spots
       const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
       const allSpots: ParkingSpotDto[] = await Promise.all(
@@ -52,7 +52,7 @@ describe(ParkingSpotController.name, () => {
       expect(fiveClosestSpots).toHaveLength(5) // Make sure we didn't screw up the test setup
 
       // Then get those 5 spots, verify they're the 5 closest
-      const foundSpots = (await parkingSpotController.getClosestToPoint(location.longitude, location.latitude, 5)).data
+      const foundSpots = (await parkingSpotController.listClosestToPoint(location.longitude, location.latitude, 5)).data
       expect(orderBy(foundSpots, (spot) => spot.location.longitude)).toStrictEqual(fiveClosestSpots)
     })
   })

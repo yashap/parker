@@ -1,5 +1,5 @@
 {
-  "name": "@parker/core-client",
+  "name": "@parker/api-client",
   "version": "0.0.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -10,12 +10,12 @@
     "dev": "tsc -w",
     "format": "eslint . --ext .ts --fix",
     "lint": "tsc --noEmit && eslint . --ext .ts",
-    "test": "LOG_LEVEL=off jest src/ --passWithNoTests",
-    "test:watch": "LOG_LEVEL=off jest --watch src/ --passWithNoTests"
+    "test": "LOG_LEVEL=off jest src/",
+    "test:watch": "LOG_LEVEL=off jest --watch src/"
   },
   "dependencies": {
-    "@parker/api-client": "*",
-    "@parker/geography": "*",
+    "@parker/errors": "*",
+    "axios": "^1.2.0",
     "tslib": "^2.4.0"
   },
   "devDependencies": {

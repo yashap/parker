@@ -22,14 +22,14 @@ export class ParkingSpotController extends BaseController {
   }
 
   @Get('closestToPoint')
-  public async getClosestToPoint(
+  public async listClosestToPoint(
     @Query('longitude') longitude: number,
     @Query('latitude') latitude: number,
-    @Query('count') count: number
+    @Query('limit') limit: number
   ): Promise<{ data: ParkingSpotDto[] }> {
-    const parkingSpots = await this.parkingSpotRepository.getParkingSpotsClosestToLocation(
+    const parkingSpots = await this.parkingSpotRepository.listParkingSpotsClosestToLocation(
       { longitude, latitude },
-      count
+      limit
     )
     // TODO: proper pagination
     return { data: parkingSpots.map(ParkingSpotDto.buildFromDomain) }
