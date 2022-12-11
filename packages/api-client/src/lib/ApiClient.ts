@@ -1,5 +1,5 @@
 import { ServerError } from '@parker/errors'
-import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosResponse, isAxiosError } from 'axios'
 
 export interface ApiClientConfig {
   baseUrl: string
@@ -53,7 +53,7 @@ export class ApiClient {
     try {
       return await callback()
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         const errorDto = error.response?.data ?? error
         const status = error.status ?? error.response?.status ?? 500
         throw ServerError.fromDto(errorDto, status)

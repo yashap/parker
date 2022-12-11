@@ -1,0 +1,21 @@
+{
+  "name": "@parker/keycloak",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "build": "echo 'TODO'",
+    "clean": "echo 'TODO'",
+    "db:init": "echo 'TODO'",
+    "db:init:test": "echo 'TODO'",
+    "db:migrate": "echo 'TODO'",
+    "db:migrate:test": "echo 'TODO'",
+    "dev": "docker run -p 3502:8080 -e KEYCLOAK_ADMIN=dev_admin -e KEYCLOAK_ADMIN_PASSWORD=dev_admin quay.io/keycloak/keycloak:20.0.1 start-dev",
+    "open:admin": "open http://localhost:3502/admin",
+    "open:account-console": "open http://localhost:3502/realms/parker/account",
+    "format": "echo 'TODO'",
+    "generate": "echo 'TODO'",
+    "lint": "echo 'TODO'",
+    "test": "echo 'TODO'",
+    "test:watch": "echo 'TODO'"
+  }
+}

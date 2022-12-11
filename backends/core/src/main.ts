@@ -24,4 +24,4 @@ const bootstrap = async (serviceName: string, port: number): Promise<void> => {
   await NestAppRunner.run(app, serviceName, port)
 }
 
-bootstrap('core', Number(process.env['PORT'] ?? 3333))
+bootstrap('core', Number(process.env['PORT'] ?? 3501))
