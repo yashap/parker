@@ -1,7 +1,7 @@
 import { NestInterceptor, ExecutionContext, CallHandler, HttpServer, HttpStatus } from '@nestjs/common'
 import { isServerError } from '@parker/errors'
 import { Logger, Payload } from '@parker/logging'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import { Observable, throwError } from 'rxjs'
 import { catchError, tap } from 'rxjs/operators'
 
@@ -12,7 +12,7 @@ export class HttpLoggingInterceptor implements NestInterceptor<unknown, unknown>
 
   public intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const startMs = Date.now()
-    const request = context.switchToHttp().getRequest()
+    const request = context.switchToHttp().getRequest<Request>()
     const response = context.switchToHttp().getResponse<Response>()
     const method = this.server.getRequestMethod?.(request) ?? 'unknownMethod'
     const path = this.server.getRequestUrl?.(request) ?? 'unknownPath'

@@ -6,6 +6,7 @@ CREATE TABLE "User" (
     "id" UUID NOT NULL DEFAULT uuid_generate_v1(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "email" TEXT NOT NULL,
     "fullName" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")

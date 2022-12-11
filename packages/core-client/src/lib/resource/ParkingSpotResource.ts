@@ -9,7 +9,7 @@ export class ParkingSpotResource extends BaseResource<
   UpdateParkingSpotDto
 > {
   constructor(apiClient: ApiClient) {
-    super(apiClient, '/core/parkingSpots')
+    super(apiClient, 'parkingSpots')
   }
 
   public delete = this.buildDelete()
