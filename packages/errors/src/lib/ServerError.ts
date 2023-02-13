@@ -86,10 +86,18 @@ export class InputValidationError<T = unknown> extends ServerError<T> {
   }
 }
 
+export const isInputValidationError = <T = unknown>(error: unknown): error is InputValidationError<T> => {
+  return isServerError(error) && error.code === InputValidationError.name
+}
+
 export class NotFoundError<T = unknown> extends ServerError<T> {
   constructor(message: string, subCode?: string, internalMessage?: string, metadata?: T) {
     super(404, message, subCode, internalMessage, metadata)
   }
+}
+
+export const isNotFoundError = <T = unknown>(error: unknown): error is NotFoundError<T> => {
+  return isServerError(error) && error.code === NotFoundError.name
 }
 
 export class InternalServerError<T = unknown> extends ServerError<T> {
@@ -98,8 +106,16 @@ export class InternalServerError<T = unknown> extends ServerError<T> {
   }
 }
 
+export const isInternalServerError = <T = unknown>(error: unknown): error is InternalServerError<T> => {
+  return isServerError(error) && error.code === InternalServerError.name
+}
+
 export class UnknownError<T = unknown> extends ServerError<T> {
   constructor(message: string, subCode?: string, internalMessage?: string, metadata?: T) {
     super(500, message, subCode, internalMessage, metadata)
   }
+}
+
+export const isUnknownError = <T = unknown>(error: unknown): error is UnknownError<T> => {
+  return isServerError(error) && error.code === UnknownError.name
 }

@@ -11,7 +11,7 @@ info:
 servers:
   - url: 'http://localhost:3501'
 paths:
-  '/users/{id}':
+  '/core/users/{id}':
     parameters:
       - schema:
           type: string
@@ -65,7 +65,7 @@ paths:
         '204':
           description: User deleted
       description: Delete a user.
-  /users:
+  /core/users:
     post:
       summary: Create New User
       operationId: post-users
@@ -84,7 +84,7 @@ paths:
         description: Post the necessary fields for the API to create a new user.
       description: Create a new user.
     parameters: []
-  '/parkingSpots/{id}':
+  '/core/parkingSpots/{id}':
     parameters:
       - schema:
           type: string
@@ -127,7 +127,7 @@ paths:
         '204':
           description: Parking spot deleted
       description: Delete a parking spot.
-  /parkingSpots:
+  /core/parkingSpots:
     post:
       summary: ''
       operationId: post-parkingSpots
@@ -144,7 +144,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateParkingSpotRequest'
-  /parkingSpots/closestToPoint:
+    parameters: []
+  /core/parkingSpots/closestToPoint:
     get:
       summary: Your GET endpoint
       tags: []

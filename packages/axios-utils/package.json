@@ -1,5 +1,5 @@
 {
-  "name": "@parker/core-client",
+  "name": "@parker/axios-utils",
   "version": "0.0.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,13 +9,12 @@
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
     "dev": "tsc -w",
     "format": "eslint . --ext .ts --fix",
-    "generate": "npx openapi-generator-cli generate -i=core-service.yaml -g=typescript-axios -o=src/generated --model-name-suffix=Dto --additional-properties=withSeparateModelsAndApi=true,apiPackage=api,modelPackage=model",
     "lint": "tsc --noEmit && eslint . --ext .ts"
   },
   "dependencies": {
-    "@openapitools/openapi-generator-cli": "^2.5.2",
-    "@parker/axios-utils": "*",
-    "axios": "^1.3.2"
+    "@parker/errors": "*",
+    "axios": "^1.3.2",
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
     "@parker/tsconfig": "*",

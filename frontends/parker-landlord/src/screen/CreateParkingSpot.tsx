@@ -27,11 +27,10 @@ export const CreateParkingSpot = () => {
         title='Submit'
         onPress={async () => {
           const coreClient = CoreClientBuilder.build()
-          const response = await coreClient.postParkingSpots({
+          const parkingSpot = await coreClient.createParkingSpot({
             location: { latitude: Number(latitude), longitude: Number(longitude) },
             ownerUserId: AuthenticationStore.getAuthenticatedUser().id,
           })
-          const parkingSpot = response.data
           alert(`Parking spot created: ${JSON.stringify(parkingSpot)}`)
         }}
       />

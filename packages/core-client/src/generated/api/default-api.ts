@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import type { Configuration } from './configuration'
+import type { Configuration } from '../configuration'
 import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios'
 import globalAxios from 'axios'
 // Some imports not used depending on template conditions
@@ -28,189 +28,23 @@ import {
   serializeDataIfNeeded,
   toPathString,
   createRequestFunction,
-} from './common'
-import type { RequestArgs } from './base'
+} from '../common'
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base'
-
-/**
- * Payload to create a parking spot
- * @export
- * @interface CreateParkingSpotRequestDto
- */
-export interface CreateParkingSpotRequestDto {
-  /**
-   *
-   * @type {string}
-   * @memberof CreateParkingSpotRequestDto
-   */
-  ownerUserId: string
-  /**
-   *
-   * @type {PointDto}
-   * @memberof CreateParkingSpotRequestDto
-   */
-  location: PointDto
-}
-/**
- *
- * @export
- * @interface CreateUserRequestDto
- */
-export interface CreateUserRequestDto {
-  /**
-   *
-   * @type {string}
-   * @memberof CreateUserRequestDto
-   */
-  fullName: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateUserRequestDto
-   */
-  email: string
-}
-/**
- *
- * @export
- * @interface ListParkingSpotsResponseDto
- */
-export interface ListParkingSpotsResponseDto {
-  /**
-   *
-   * @type {Array<ParkingSpotDto>}
-   * @memberof ListParkingSpotsResponseDto
-   */
-  data: Array<ParkingSpotDto>
-  /**
-   *
-   * @type {PaginationDto}
-   * @memberof ListParkingSpotsResponseDto
-   */
-  pagination: PaginationDto
-}
-/**
- * Pagination response
- * @export
- * @interface PaginationDto
- */
-export interface PaginationDto {
-  /**
-   * Can be used to fetch the next page.
-   * @type {string}
-   * @memberof PaginationDto
-   */
-  next?: string
-  /**
-   * Can be used to fetch the previous page.
-   * @type {string}
-   * @memberof PaginationDto
-   */
-  previous?: string
-}
-/**
- * A parking spot
- * @export
- * @interface ParkingSpotDto
- */
-export interface ParkingSpotDto {
-  /**
-   *
-   * @type {string}
-   * @memberof ParkingSpotDto
-   */
-  id: string
-  /**
-   *
-   * @type {string}
-   * @memberof ParkingSpotDto
-   */
-  ownerUserId: string
-  /**
-   *
-   * @type {PointDto}
-   * @memberof ParkingSpotDto
-   */
-  location: PointDto
-}
-/**
- * A geographic point (latitude/longitude coordinate)
- * @export
- * @interface PointDto
- */
-export interface PointDto {
-  /**
-   *
-   * @type {number}
-   * @memberof PointDto
-   */
-  latitude: number
-  /**
-   *
-   * @type {number}
-   * @memberof PointDto
-   */
-  longitude: number
-}
-/**
- *
- * @export
- * @interface UpdateParkingSpotRequestDto
- */
-export interface UpdateParkingSpotRequestDto {
-  /**
-   *
-   * @type {PointDto}
-   * @memberof UpdateParkingSpotRequestDto
-   */
-  location?: PointDto
-}
-/**
- *
- * @export
- * @interface UpdateUserRequestDto
- */
-export interface UpdateUserRequestDto {
-  /**
-   *
-   * @type {string}
-   * @memberof UpdateUserRequestDto
-   */
-  fullName?: string
-  /**
-   *
-   * @type {string}
-   * @memberof UpdateUserRequestDto
-   */
-  email?: string
-}
-/**
- * A user
- * @export
- * @interface UserDto
- */
-export interface UserDto {
-  /**
-   *
-   * @type {string}
-   * @memberof UserDto
-   */
-  id: string
-  /**
-   *
-   * @type {string}
-   * @memberof UserDto
-   */
-  fullName: string
-  /**
-   *
-   * @type {string}
-   * @memberof UserDto
-   */
-  email: string
-}
-
+import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base'
+// @ts-ignore
+import { CreateParkingSpotRequestDto } from '../model'
+// @ts-ignore
+import { CreateUserRequestDto } from '../model'
+// @ts-ignore
+import { ListParkingSpotsResponseDto } from '../model'
+// @ts-ignore
+import { ParkingSpotDto } from '../model'
+// @ts-ignore
+import { UpdateParkingSpotRequestDto } from '../model'
+// @ts-ignore
+import { UpdateUserRequestDto } from '../model'
+// @ts-ignore
+import { UserDto } from '../model'
 /**
  * DefaultApi - axios parameter creator
  * @export
@@ -227,7 +61,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     deleteParkingSpotsId: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists('deleteParkingSpotsId', 'id', id)
-      const localVarPath = `/parkingSpots/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
+      const localVarPath = `/core/parkingSpots/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -258,7 +92,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     deleteUsersId: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists('deleteUsersId', 'id', id)
-      const localVarPath = `/users/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
+      const localVarPath = `/core/users/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -300,7 +134,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
       assertParamExists('getParkingSpotsClosestToPoint', 'longitude', longitude)
       // verify required parameter 'limit' is not null or undefined
       assertParamExists('getParkingSpotsClosestToPoint', 'limit', limit)
-      const localVarPath = `/parkingSpots/closestToPoint`
+      const localVarPath = `/core/parkingSpots/closestToPoint`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -343,7 +177,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     getParkingSpotsId: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists('getParkingSpotsId', 'id', id)
-      const localVarPath = `/parkingSpots/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
+      const localVarPath = `/core/parkingSpots/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -374,7 +208,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     getUsersId: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists('getUsersId', 'id', id)
-      const localVarPath = `/users/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
+      const localVarPath = `/core/users/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -410,7 +244,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists('patchParkingSpotsId', 'id', id)
-      const localVarPath = `/parkingSpots/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
+      const localVarPath = `/core/parkingSpots/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -453,7 +287,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists('patchUsersId', 'id', id)
-      const localVarPath = `/users/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
+      const localVarPath = `/core/users/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)))
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -488,7 +322,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
       createParkingSpotRequestDto?: CreateParkingSpotRequestDto,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      const localVarPath = `/parkingSpots`
+      const localVarPath = `/core/parkingSpots`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -527,7 +361,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
       createUserRequestDto?: CreateUserRequestDto,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      const localVarPath = `/users`
+      const localVarPath = `/core/users`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
