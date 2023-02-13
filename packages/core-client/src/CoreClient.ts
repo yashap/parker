@@ -14,7 +14,7 @@ import {
 } from './generated'
 
 export class CoreClient {
-  private client
+  private client: ReturnType<typeof DefaultApiFactory>
 
   public constructor(axiosInstance: AxiosInstance) {
     this.client = DefaultApiFactory(
