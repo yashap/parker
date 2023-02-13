@@ -1,4 +1,4 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common'
+import { INestApplication } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { HttpExceptionFilter } from './HttpExceptionFilter'
 import { HttpLoggingInterceptor } from './HttpLoggingInterceptor'
@@ -12,12 +12,6 @@ export class NestAppBuilder {
     })
     app.setGlobalPrefix(serviceName)
     app.use(logContextMiddleware)
-    app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-        whitelist: true,
-      })
-    )
     const httpAdapter = app.getHttpAdapter()
     app.useGlobalFilters(new HttpExceptionFilter(httpAdapter))
     app.useGlobalInterceptors(new HttpLoggingInterceptor(httpAdapter))

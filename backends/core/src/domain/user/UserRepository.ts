@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { User as PrismaUser } from '@prisma/client'
+import { pick } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
-import { User, UserProps } from './User'
+import { User } from './User'
 
-type CreateUserInput = Omit<UserProps, 'id'>
+type CreateUserInput = Omit<User, 'id'>
 type UpdateUserInput = Partial<CreateUserInput>
 
 @Injectable()
@@ -31,7 +32,6 @@ export class UserRepository extends BaseRepository {
   }
 
   private static userToDomain(prismaUser: PrismaUser): User {
-    const user = new User({ ...prismaUser })
-    return user
+    return pick(prismaUser, ['id', 'fullName', 'email'])
   }
 }

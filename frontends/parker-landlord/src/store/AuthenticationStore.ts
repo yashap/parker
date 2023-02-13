@@ -7,8 +7,10 @@ export class AuthenticationStore {
   private static token: string | undefined
 
   public static async login(email: string, _password: string): Promise<void> {
+    // TODO: stop creating a user during the login flow, once I have real user registration, auth, etc.
     const coreClient = UnauthenticatedCoreClientBuilder.build()
-    const user = await coreClient.users.post({ fullName: 'Fake Name', email })
+    const userResponse = await coreClient.postUsers({ fullName: 'Fake Name', email })
+    const user = userResponse.data // TODO: move all error mapping, etc. into client, hide the Axios response
     this.authenticatedUser = user
     // TODO: real token
     this.token = user.id

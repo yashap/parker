@@ -1,13 +1,13 @@
 import { Test } from '@nestjs/testing'
+import { UserDto } from '@parker/core-client'
 import { NotFoundError } from '@parker/errors'
 import { v4 as uuid } from 'uuid'
 import { UserController } from './UserController'
 import { UserRepository } from './UserRepository'
-import { UserValidatingDto } from './UserValidatingDto'
 
 describe(UserController.name, () => {
   let userController: UserController
-  let user1: UserValidatingDto
+  let user1: UserDto
 
   beforeEach(async () => {
     const app = await Test.createTestingModule({

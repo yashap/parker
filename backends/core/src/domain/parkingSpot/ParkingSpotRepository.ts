@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common'
 import { InternalServerError } from '@parker/errors'
 import { Point } from '@parker/geography'
 import { ParkingSpot as PrismaParkingSpot, Prisma } from '@prisma/client'
-import { compact, isEmpty } from 'lodash'
+import { compact, isEmpty, pick } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
 import { GeoJsonPoint } from '../geography'
-import { ParkingSpot, ParkingSpotProps } from './ParkingSpot'
+import { ParkingSpot } from './ParkingSpot'
 
-type CreateParkingSpotInput = Omit<ParkingSpotProps, 'id'>
+type CreateParkingSpotInput = Omit<ParkingSpot, 'id'>
 type UpdateParkingSpotInput = Partial<CreateParkingSpotInput>
 
 @Injectable()
@@ -131,6 +131,6 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   private static parkingSpotToDomain(prismaParkingSpot: PrismaParkingSpot, location: Point): ParkingSpot {
-    return new ParkingSpot({ ...prismaParkingSpot, location })
+    return { ...pick(prismaParkingSpot, ['id', 'ownerUserId']), location }
   }
 }

@@ -1,11 +1,7 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import { CreateParkingSpotRequestDto, UpdateParkingSpotRequestDto, ParkingSpotDto } from '@parker/core-client'
 import { BaseController } from '../../http/BaseController'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
-import {
-  CreateParkingSpotValidatingDto,
-  ParkingSpotValidatingDto,
-  UpdateParkingSpotValidatingDto,
-} from './ParkingSpotValidatingDto'
 
 @Controller('parkingSpots')
 export class ParkingSpotController extends BaseController {
@@ -14,15 +10,13 @@ export class ParkingSpotController extends BaseController {
   }
 
   @Post()
-  public async create(@Body() createParkingSpotDto: CreateParkingSpotValidatingDto): Promise<ParkingSpotValidatingDto> {
-    const parkingSpot = await this.parkingSpotRepository.create({ ...createParkingSpotDto })
-    return ParkingSpotValidatingDto.buildFromDomain(parkingSpot)
+  public async create(@Body() createParkingSpotDto: CreateParkingSpotRequestDto): Promise<ParkingSpotDto> {
+    return this.parkingSpotRepository.create({ ...createParkingSpotDto })
   }
 
   @Get(':id')
-  public async getById(@Param('id', ParseUUIDPipe) id: string): Promise<ParkingSpotValidatingDto> {
-    const parkingSpot = this.getEntityOrNotFound(await this.parkingSpotRepository.getById(id))
-    return ParkingSpotValidatingDto.buildFromDomain(parkingSpot)
+  public async getById(@Param('id') id: string): Promise<ParkingSpotDto> {
+    return this.getEntityOrNotFound(await this.parkingSpotRepository.getById(id))
   }
 
   @Get('closestToPoint')
@@ -30,22 +24,21 @@ export class ParkingSpotController extends BaseController {
     @Query('longitude') longitude: number,
     @Query('latitude') latitude: number,
     @Query('limit') limit: number
-  ): Promise<{ data: ParkingSpotValidatingDto[] }> {
+  ): Promise<{ data: ParkingSpotDto[] }> {
     const parkingSpots = await this.parkingSpotRepository.listParkingSpotsClosestToLocation(
       { longitude, latitude },
       limit
     )
     // TODO: proper pagination
-    return { data: parkingSpots.map(ParkingSpotValidatingDto.buildFromDomain) }
+    return { data: parkingSpots }
   }
 
   @Patch(':id')
   public async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateParkingSpotDto: UpdateParkingSpotValidatingDto
-  ): Promise<ParkingSpotValidatingDto> {
-    const updatedParkingSpot = await this.parkingSpotRepository.update(id, { ...updateParkingSpotDto })
-    return ParkingSpotValidatingDto.buildFromDomain(updatedParkingSpot)
+    @Param('id') id: string,
+    @Body() updateParkingSpotDto: UpdateParkingSpotRequestDto
+  ): Promise<ParkingSpotDto> {
+    return await this.parkingSpotRepository.update(id, { ...updateParkingSpotDto })
   }
 
   @Delete(':id')

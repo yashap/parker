@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing'
+import { ParkingSpotDto } from '@parker/core-client'
 import { NotFoundError } from '@parker/errors'
 import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'
@@ -7,7 +8,6 @@ import { User } from '../user/User'
 import { UserRepository } from '../user/UserRepository'
 import { ParkingSpotController } from './ParkingSpotController'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
-import { ParkingSpotValidatingDto } from './ParkingSpotValidatingDto'
 
 describe(ParkingSpotController.name, () => {
   let userRepository: UserRepository
@@ -42,7 +42,7 @@ describe(ParkingSpotController.name, () => {
     it('should list the parking spots closest to a given point', async () => {
       // Create 20 spots
       const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
-      const allSpots: ParkingSpotValidatingDto[] = await Promise.all(
+      const allSpots: ParkingSpotDto[] = await Promise.all(
         ints.map((i) => parkingSpotController.create({ ownerUserId: user.id, location: { longitude: i, latitude: i } }))
       )
 

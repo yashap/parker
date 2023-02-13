@@ -1,5 +1,4 @@
 export * from './ParkingSpot'
 export * from './ParkingSpotController'
-export * from './ParkingSpotValidatingDto'
 export * from './ParkingSpotModule'
 export * from './ParkingSpotRepository'

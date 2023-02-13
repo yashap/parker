@@ -33,7 +33,7 @@ yarn workspace @parker/context-propagation test
 ### Core Dev Workflow
 
 ```bash
-# When starting work for the day, or after running git pull
+# When starting work for the day, or after running git pull. Installs dependencies, migrates local DBs, builds everything, etc.
 yarn post-sync
 
 # To start developing in watch mode
@@ -41,9 +41,14 @@ yarn dev
 
 # Before you push
 yarn format && yarn test
+
+# Run code generation (after changing OAS, DB schema, etc.)
+yarn generate && yarn format && yarn build
 ```
 
-### Install an external dependency (e.g. an npm package)
+### Install Dependencies
+
+**Install an external dependency (e.g. an npm package)**
 
 ```bash
 # Add a package to a workspace
@@ -53,7 +58,7 @@ yarn workspace <workspace> add <package>
 yarn workspace <workspace> add -D <package>
 ```
 
-### Install an internal dependency (e.g. depend on something in `packages/`)
+**Install an internal dependency (e.g. depend on something in `packages/`)**
 
 ```bash
 # Add a dependency like this to your package.json
@@ -84,8 +89,6 @@ yarn clean && rm yarn.lock
 
 ### Adding a new app/package
 
-For adding a new package, copy `packages/context-propagation` as an example.
-
-For adding a new backend service, copy `src/backends/core` as an example.
-
-For adding a new React Native app, copy `src/frontends/landlord` as an example.
+- For adding a new package, copy `packages/context-propagation` as an example
+- For adding a new backend service, copy `src/backends/core` as an example
+- For adding a new React Native app, copy `src/frontends/landlord` as an example

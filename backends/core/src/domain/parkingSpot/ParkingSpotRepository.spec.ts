@@ -77,9 +77,10 @@ describe(ParkingSpotRepository.name, () => {
   describe('update', () => {
     it('should update a parking spot', async () => {
       await parkingSpotRepository.update(spot.id, { location: { longitude: -100, latitude: 100 } })
-      expect(await parkingSpotRepository.getById(spot.id)).toEqual(
-        spot.set('location', { longitude: -100, latitude: 100 })
-      )
+      expect(await parkingSpotRepository.getById(spot.id)).toEqual({
+        ...spot,
+        location: { longitude: -100, latitude: 100 },
+      })
     })
   })
 
