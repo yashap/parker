@@ -7,7 +7,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
-    "dev": "tsc -w",
     "format": "eslint . --ext .ts --fix",
     "lint": "tsc --noEmit && eslint . --ext .ts"
   },

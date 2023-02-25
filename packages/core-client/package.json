@@ -7,7 +7,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
-    "dev": "tsc -w",
     "format": "eslint . --ext .ts --fix",
     "generate": "npx openapi-generator-cli generate -i=core-service.yaml -g=typescript-axios -o=src/generated --model-name-suffix=Dto --additional-properties=withSeparateModelsAndApi=true,apiPackage=api,modelPackage=model",
     "lint": "tsc --noEmit && eslint . --ext .ts"
