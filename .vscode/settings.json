@@ -1,9 +1,11 @@
 {
   "cSpell.words": [
+    "codegen",
     "corepack",
     "frontends",
     "Keycloak",
     "Kratos",
+    "kysely",
     "Logform",
     "nestjs",
     "nextjs",
