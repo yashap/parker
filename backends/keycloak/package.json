@@ -1,7 +1,7 @@
 {
   "name": "@parker/keycloak",
   "version": "0.0.1",
-  "license": "MIT",
+  "private": true,
   "scripts": {
     "build": "echo 'TODO'",
     "clean": "echo 'TODO'",

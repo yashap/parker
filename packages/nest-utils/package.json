@@ -1,9 +1,9 @@
 {
   "name": "@parker/nest-utils",
   "version": "0.0.1",
+  "private": true,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "license": "MIT",
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
