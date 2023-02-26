@@ -18,7 +18,7 @@ Install the following:
 - Docker Desktop
   - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 
-After this, you can try running `yarn post-sync && yarn format && yarn lint && yarn test && yarn dev` to ensure everything works.
+After this, you can try running `yarn post-sync && yarn generate && yarn format && yarn lint && yarn test && yarn dev` to ensure everything works.
 
 ## Dev Workflows
 
@@ -43,7 +43,7 @@ yarn dev
 yarn format && yarn test
 
 # Run code generation (after changing OAS, DB schema, etc.)
-yarn generate && yarn format && yarn build
+yarn generate
 ```
 
 ### Install Dependencies

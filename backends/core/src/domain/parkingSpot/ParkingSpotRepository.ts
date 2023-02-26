@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { Point } from '@parker/geography'
 import { Selectable, sql } from 'kysely'
-import { ParkingSpot as ParkingSpotDao } from 'kysely-codegen'
 import { BaseRepository } from '../../db/BaseRepository'
+import { ParkingSpot as ParkingSpotDao } from '../../db/generated/db'
 import { GeoJsonPoint, toPoint } from '../geography'
 import { ParkingSpot } from './ParkingSpot'
 

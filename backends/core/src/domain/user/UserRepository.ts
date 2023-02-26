@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { Selectable } from 'kysely'
-import { User as UserDao } from 'kysely-codegen'
 import { pick } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
+import { User as UserDao } from '../../db/generated/db'
 import { User } from './User'
 
 type CreateUserInput = Omit<User, 'id'>

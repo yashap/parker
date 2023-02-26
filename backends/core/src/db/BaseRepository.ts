@@ -1,7 +1,7 @@
 import { Point } from '@parker/geography'
 import { Kysely, PostgresDialect, RawBuilder, sql } from 'kysely'
-import { DB } from 'kysely-codegen'
 import { Pool } from 'pg'
+import { DB } from './generated/db'
 
 export abstract class BaseRepository {
   // Ensure just one DB connection for the app

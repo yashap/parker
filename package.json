@@ -7,12 +7,6 @@
       "backends/*",
       "frontends/*",
       "packages/*"
-    ],
-    "nohoist": [
-      "**/kysely",
-      "**/kysely/**",
-      "**/kysely-codegen",
-      "**/kysely-codegen/**"
     ]
   },
   "scripts": {
@@ -23,7 +17,7 @@
     "db:migrate:test": "./tools/scripts/ensure_postgres_up.sh -p 5441 -c parker_postgres_test -v parker_postgres_data_test && turbo run db:migrate:test",
     "dev": "turbo run dev --parallel",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run format",
-    "generate": "turbo run generate && yarn format",
+    "generate": "turbo run generate && yarn format && yarn build",
     "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint",
     "post-sync": "yarn install && yarn db:migrate && yarn db:migrate:test && yarn build",
     "test": "turbo run test",

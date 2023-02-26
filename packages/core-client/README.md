@@ -13,4 +13,4 @@ Writing OAS by hand is tedious and error prone, so we use a GUI editor.
 - Add/edit/delete endpoints, models, etc.
   - Note, we give everything a named model, vs. defining models inline, as this is better for code generation
 
-Once you've make your changes, run `yarn generate && yarn format && yarn build` from the Parker repository root, to generate this client, and any other generated code. This will change the generated code in `src/generated`. We lightly wrap the generated client via `src/CoreClient`, so after you run code generation, you should also update `src/CoreClient` to reflect any changes (new endpoints, etc.).
+Once you've make your changes, run `yarn generate` from the Parker repository root, to generate this client, and any other generated code. This will change the generated code in `src/generated`. We lightly wrap the generated client via `src/CoreClient`, so after you run code generation, you should also update `src/CoreClient` to reflect any changes (new endpoints, etc.).
