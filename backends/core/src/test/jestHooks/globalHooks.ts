@@ -1,14 +1,13 @@
-import { TestDbOperations } from '../TestDbOperations'
+import { TestDbTeardown } from '../TestDbTeardown'
 
 beforeAll(async () => {
-  await TestDbOperations.connect()
-  await TestDbOperations.clear()
+  await new TestDbTeardown().clear()
 })
 
 afterEach(async () => {
-  await TestDbOperations.clear()
+  await new TestDbTeardown().clear()
 })
 
 afterAll(async () => {
-  await TestDbOperations.disconnect()
+  await new TestDbTeardown().disconnect()
 })

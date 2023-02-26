@@ -2,6 +2,8 @@
   "cSpell.words": [
     "codegen",
     "corepack",
+    "Daos",
+    "Dtos",
     "frontends",
     "Keycloak",
     "Kratos",
@@ -12,6 +14,7 @@
     "openapi",
     "openapitools",
     "SRID",
+    "toplevel",
     "turborepo",
     "unmocked"
   ],
