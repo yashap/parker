@@ -13,7 +13,7 @@
     "db:migrate:test": "yarn db:init:test && DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:5441/core?schema=public' prisma migrate dev",
     "dev": "nest start --watch",
     "format": "eslint . --ext .ts --fix",
-    "generate": "kysely-codegen --dialect postgres --out-file \"$(git rev-parse --show-toplevel)/backends/core/src/db/generated/db.ts\"",
+    "generate": "kysely-codegen --dialect postgres --exclude-pattern '(spatial_ref_sys|_prisma_migrations)' --out-file \"$(git rev-parse --show-toplevel)/backends/core/src/db/generated/db.ts\"",
     "lint": "tsc --noEmit && eslint . --ext .ts",
     "test": "LOG_LEVEL=off jest src/ --runInBand",
     "test:watch": "LOG_LEVEL=off jest --watch src/ --runInBand"
