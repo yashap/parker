@@ -17,6 +17,8 @@ Install the following:
     - `corepack` includes `yarn`, and ships with Node.js >=16.10, but you have to opt in to enabling it
 - Docker Desktop
   - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
+- XCode
+  - Ensure XCode is installed, with command line tools (necessary for running iOS Simulator)
 
 After this, you can try running `yarn post-sync && yarn generate && yarn format && yarn lint && yarn test && yarn dev` to ensure everything works.
 

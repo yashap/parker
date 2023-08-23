@@ -11,6 +11,7 @@ coverage
 # build
 out/
 build/
+web-build/
 dist/
 
 # misc

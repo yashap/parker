@@ -9,4 +9,5 @@ What am I planning to work on next?
   - Also hack users to start
 - Setup proper accounts
   - Using something like Keycloak or Ory Kratos
+- Eliminate Prisma (which is now migrations only), add new migrations
 - Convert errors created by NestJS pipes to be nice Parker errors
