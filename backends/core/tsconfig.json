@@ -8,5 +8,5 @@
     "baseUrl": "./"
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["src"]
+  "include": ["src", "src/migrations/20230825195436-initial-migration.js"]
 }

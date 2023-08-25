@@ -8,10 +8,10 @@
     "clean": {
       "cache": false
     },
-    "db:migrate": {
+    "db:migrate-up": {
       "cache": false
     },
-    "db:migrate:test": {
+    "db:migrate-up:test": {
       "cache": false
     },
     "dev": {

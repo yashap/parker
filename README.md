@@ -54,6 +54,7 @@ yarn generate
 
 ```bash
 # Add a package to a workspace
+# Note: the workspace name is the name of the package in the package.json
 yarn workspace <workspace> add <package>
 
 # Add a dev package to a workspace

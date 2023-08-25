@@ -2,7 +2,6 @@
 
 What am I planning to work on next?
 
-- Finish Nest controller tests
 - Eliminate Prisma (which is now migrations only), add new migrations
 - Setup proper accounts
   - Using something like Keycloak or Ory Kratos
