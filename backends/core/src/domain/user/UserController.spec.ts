@@ -1,11 +1,9 @@
 import { INestApplication } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
 import { SupertestInstance } from '@parker/api-client-utils'
 import { CoreClient, UserDto } from '@parker/core-client'
-import { NestAppBuilder } from '@parker/nest-utils'
 import { v4 as uuid } from 'uuid'
+import { buildTestApp } from '../../test/buildTestApp'
 import { UserController } from './UserController'
-import { UserModule } from './UserModule'
 
 describe(UserController.name, () => {
   let app: INestApplication
@@ -13,15 +11,7 @@ describe(UserController.name, () => {
   let user: UserDto
 
   beforeEach(async () => {
-    // Create the app
-    const moduleRef = await Test.createTestingModule({
-      imports: [UserModule],
-    }).compile()
-    app = moduleRef.createNestApplication()
-    NestAppBuilder.addMiddleware(app)
-    await app.init()
-
-    // Create a client that will call the app
+    app = await buildTestApp()
     coreClient = new CoreClient(new SupertestInstance(app.getHttpServer()))
 
     // Setup test data

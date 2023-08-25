@@ -1,14 +1,11 @@
 import { INestApplication } from '@nestjs/common'
-import { Test } from '@nestjs/testing'
 import { SupertestInstance } from '@parker/api-client-utils'
 import { CoreClient, ParkingSpotDto, UserDto } from '@parker/core-client'
 import { Point } from '@parker/geography'
-import { NestAppBuilder } from '@parker/nest-utils'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
-import { UserModule } from '../user'
+import { buildTestApp } from '../../test/buildTestApp'
 import { ParkingSpotController } from './ParkingSpotController'
-import { ParkingSpotModule } from './ParkingSpotModule'
 
 describe(ParkingSpotController.name, () => {
   let app: INestApplication
@@ -16,15 +13,7 @@ describe(ParkingSpotController.name, () => {
   let user: UserDto
 
   beforeEach(async () => {
-    // Create the app
-    const moduleRef = await Test.createTestingModule({
-      imports: [ParkingSpotModule, UserModule],
-    }).compile()
-    app = moduleRef.createNestApplication()
-    NestAppBuilder.addMiddleware(app)
-    await app.init()
-
-    // Create a client that will call the app
+    app = await buildTestApp()
     coreClient = new CoreClient(new SupertestInstance(app.getHttpServer()))
 
     // Setup test data
