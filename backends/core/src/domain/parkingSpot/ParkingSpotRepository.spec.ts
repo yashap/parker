@@ -76,16 +76,17 @@ describe(ParkingSpotRepository.name, () => {
 
   describe('update', () => {
     it('should update a parking spot', async () => {
-      await parkingSpotRepository.update(spot.id, { location: { longitude: -100, latitude: 100 } })
+      await parkingSpotRepository.update(spot.id, { location: { longitude: -50, latitude: 50 } })
       expect(await parkingSpotRepository.getById(spot.id)).toEqual({
         ...spot,
-        location: { longitude: -100, latitude: 100 },
+        location: { longitude: -50, latitude: 50 },
       })
     })
   })
 
   describe('delete', () => {
     it('should delete a parking spot', async () => {
+      expect(await parkingSpotRepository.getById(spot.id)).toBeDefined()
       await parkingSpotRepository.delete(spot.id)
       expect(await parkingSpotRepository.getById(spot.id)).toBeUndefined()
     })

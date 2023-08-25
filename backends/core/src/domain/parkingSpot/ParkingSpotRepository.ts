@@ -56,9 +56,9 @@ export class ParkingSpotRepository extends BaseRepository {
     return parkingSpotDaos.map((dao) => ParkingSpotRepository.parkingSpotToDomain(dao))
   }
 
-  public async update(id: string, updates: UpdateParkingSpotInput): Promise<ParkingSpot> {
-    const { location, ...rest } = updates
-    const userDao = await this.db
+  public async update(id: string, update: UpdateParkingSpotInput): Promise<ParkingSpot> {
+    const { location, ...rest } = update
+    const parkingSpotDao = await this.db
       .updateTable('ParkingSpot')
       .set({
         ...rest,
@@ -68,7 +68,7 @@ export class ParkingSpotRepository extends BaseRepository {
       .where('id', '=', id)
       .returning(['id', 'ownerUserId', this.pointFieldToGeoJson('location').as('location')])
       .executeTakeFirstOrThrow()
-    return ParkingSpotRepository.parkingSpotToDomain(userDao)
+    return ParkingSpotRepository.parkingSpotToDomain(parkingSpotDao)
   }
 
   public async delete(id: string): Promise<void> {

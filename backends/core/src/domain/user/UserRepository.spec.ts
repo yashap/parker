@@ -30,6 +30,7 @@ describe(UserRepository.name, () => {
 
   describe('delete', () => {
     it('should delete a user', async () => {
+      expect(await userRepository.getById(user.id)).toBeDefined()
       await userRepository.delete(user.id)
       expect(await userRepository.getById(user.id)).toBeUndefined()
     })

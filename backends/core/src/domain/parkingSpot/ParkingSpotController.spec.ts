@@ -5,33 +5,36 @@ import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { buildTestApp } from '../../test/buildTestApp'
+import { TestDbTeardown } from '../../test/TestDbTeardown'
 import { ParkingSpotController } from './ParkingSpotController'
 
 describe(ParkingSpotController.name, () => {
   let app: INestApplication
   let coreClient: CoreClient
   let user: UserDto
+  let parkingSpot: ParkingSpotDto
 
   beforeEach(async () => {
     app = await buildTestApp()
     coreClient = new CoreClient(new SupertestInstance(app.getHttpServer()))
 
-    // Setup test data
+    // Setup test user
     const userPostBody = { email: 'donald.duck@example.com', fullName: 'Donald Duck' }
     user = await coreClient.users.create(userPostBody)
     const { id: userId, ...otherUserData } = user
     expect(userId).toBeDefined()
     expect(otherUserData).toStrictEqual(userPostBody)
+
+    // Setup test parking spot
+    const parkingSpotPostBody = { ownerUserId: user.id, location: { longitude: 10, latitude: 20 } }
+    parkingSpot = await coreClient.parkingSpots.create(parkingSpotPostBody)
+    const { id: parkingSpotId, ...otherParkingSpotData } = parkingSpot
+    expect(parkingSpotId).toBeDefined()
+    expect(otherParkingSpotData).toStrictEqual(parkingSpotPostBody)
   })
 
   describe('getById', () => {
     it('should get a parking spot by id', async () => {
-      const parkingSpotPostBody = { ownerUserId: user.id, location: { longitude: 10, latitude: 20 } }
-      const parkingSpot = await coreClient.parkingSpots.create(parkingSpotPostBody)
-      const { id: parkingSpotId, ...otherParkingSpotData } = parkingSpot
-      expect(parkingSpotId).toBeDefined()
-      expect(otherParkingSpotData).toStrictEqual(parkingSpotPostBody)
-
       const maybeParkingSpot = await coreClient.parkingSpots.get(parkingSpot.id)
       expect(maybeParkingSpot).toStrictEqual(parkingSpot)
     })
@@ -42,10 +45,29 @@ describe(ParkingSpotController.name, () => {
     })
   })
 
-  // TODO: test update, delete
+  describe('update', () => {
+    it('should update a parking spot', async () => {
+      const update = { location: { longitude: 2, latitude: 3 } }
+      const maybeParkingSpot = await coreClient.parkingSpots.update(parkingSpot.id, update)
+      expect(maybeParkingSpot).toStrictEqual({ ...parkingSpot, ...update })
+    })
+  })
+
+  describe('delete', () => {
+    it('should delete a parking spot', async () => {
+      let maybeParkingSpot = await coreClient.parkingSpots.get(parkingSpot.id)
+      expect(maybeParkingSpot).toBeDefined()
+      await coreClient.parkingSpots.delete(parkingSpot.id)
+      maybeParkingSpot = await coreClient.parkingSpots.get(parkingSpot.id)
+      expect(maybeParkingSpot).toBeUndefined()
+    })
+  })
 
   describe('listClosestToPoint', () => {
     it('should list the parking spots closest to a given point', async () => {
+      // We prefer to setup this test from scratch
+      await new TestDbTeardown().clearTable('ParkingSpot')
+
       // Create 20 spots
       const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
       const allSpots: ParkingSpotDto[] = await Promise.all(

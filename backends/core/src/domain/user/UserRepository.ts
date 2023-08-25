@@ -24,11 +24,11 @@ export class UserRepository extends BaseRepository {
     return userDao ? UserRepository.userToDomain(userDao) : undefined
   }
 
-  public async update(id: string, updates: UpdateUserInput): Promise<User> {
+  public async update(id: string, update: UpdateUserInput): Promise<User> {
     const userDao = await this.db
       .updateTable('User')
       .set({
-        ...updates,
+        ...update,
         ...this.updatedAt(),
       })
       .where('id', '=', id)

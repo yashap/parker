@@ -15,8 +15,8 @@
     "format": "eslint . --ext .ts --fix",
     "generate": "kysely-codegen --dialect postgres --exclude-pattern '(spatial_ref_sys|_prisma_migrations)' --out-file \"$(git rev-parse --show-toplevel)/backends/core/src/db/generated/db.ts\"",
     "lint": "tsc --noEmit && eslint . --ext .ts",
-    "test": "LOG_LEVEL=off jest src/ --runInBand",
-    "test:watch": "LOG_LEVEL=off jest --watch src/ --runInBand"
+    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest src/ --runInBand",
+    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --watch src/ --runInBand"
   },
   "dependencies": {
     "@nestjs/common": "^9.1.6",

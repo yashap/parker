@@ -50,18 +50,15 @@ export abstract class ServerError<T = unknown> extends ExtendableError {
         return new NotFoundError(dto.message, dto.subCode, undefined, dto.metadata)
       } else if (statusCode === 500 && dto.code === InternalServerError.name) {
         return new InternalServerError(dto.message, dto.subCode, undefined, dto.metadata)
-      } else {
-        return new UnknownError(dto.message, dto.subCode ?? 'UnknownSubCode', undefined, dto.metadata)
+      } else if (dto.code === UnknownError.name) {
+        return new UnknownError(dto.message, dto.subCode, undefined, dto.metadata)
       }
-    } else {
-      const unknownError = dto as Partial<ServerErrorDto>
-      return new UnknownError(
-        unknownError.message ?? `UnexpectedError: ${JSON.stringify(unknownError)}`,
-        unknownError.subCode,
-        undefined,
-        unknownError.metadata
-      )
     }
+    const error = dto as Partial<ServerErrorDto>
+    const message = `Unexpected response body [status: ${statusCode}] [message: ${
+      error.message
+    }] [body: ${JSON.stringify(error)}]`
+    return new UnknownError(message, error.subCode, undefined, error.metadata)
   }
 }
 
@@ -82,7 +79,7 @@ export const isServerErrorDto = (error: unknown): error is ServerError => {
 
 export class InputValidationError<T = unknown> extends ServerError<T> {
   constructor(message: string, subCode?: string, internalMessage?: string, metadata?: T) {
-    super(500, message, subCode, internalMessage, metadata)
+    super(400, message, subCode, internalMessage, metadata)
   }
 }
 

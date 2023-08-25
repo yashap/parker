@@ -44,8 +44,9 @@ describe(UserController.name, () => {
 
   describe('delete', () => {
     it('should delete a user', async () => {
+      let maybeUser = await coreClient.users.get(user.id)
       await coreClient.users.delete(user.id)
-      const maybeUser = await coreClient.users.get(user.id)
+      maybeUser = await coreClient.users.get(user.id)
       expect(maybeUser).toBeUndefined()
     })
   })

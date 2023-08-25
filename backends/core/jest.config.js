@@ -1,7 +1,4 @@
-/*
- * For a detailed explanation regarding each configuration property, visit:
- * https://jestjs.io/docs/configuration
- */
+// Jest config: https://jestjs.io/docs/configuration
 
 // eslint-disable-next-line no-undef
 module.exports = {
@@ -16,12 +13,6 @@ module.exports = {
 
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: 'v8',
-
-  // A path to a module which exports an async function that is triggered once before all test suites
-  // globalSetup: undefined,
-
-  // A path to a module which exports an async function that is triggered once after all test suites
-  // globalTeardown: undefined,
 
   // A preset that is used as a base for Jest's configuration
   preset: 'ts-jest',
