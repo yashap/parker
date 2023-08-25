@@ -9,7 +9,7 @@ export class AuthenticationStore {
   public static async login(email: string, _password: string): Promise<void> {
     // TODO: stop creating a user during the login flow, once I have real user registration, auth, etc.
     const coreClient = UnauthenticatedCoreClientBuilder.build()
-    const user = await coreClient.createUser({ fullName: 'Fake Name', email })
+    const user = await coreClient.users.create({ fullName: 'Fake Name', email })
     this.authenticatedUser = user
     // TODO: real token
     this.token = user.id

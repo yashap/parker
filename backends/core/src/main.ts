@@ -14,7 +14,7 @@ import { UserModule } from './domain/user'
 class AppModule {}
 
 const bootstrap = async (serviceName: string, port: number): Promise<void> => {
-  const app = await NestAppBuilder.build(serviceName, AppModule)
+  const app = await NestAppBuilder.build(AppModule)
   await NestAppRunner.run(app, serviceName, port)
 }
 

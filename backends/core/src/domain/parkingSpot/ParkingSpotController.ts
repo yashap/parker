@@ -1,48 +1,56 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
-import { CreateParkingSpotRequestDto, UpdateParkingSpotRequestDto, ParkingSpotDto } from '@parker/core-client'
+import { Controller } from '@nestjs/common'
+import { contract } from '@parker/core-client'
+import { TsRestHandler, tsRestHandler } from '@ts-rest/nest'
 import { BaseController } from '../../http/BaseController'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
-@Controller('parkingSpots')
+@Controller()
 export class ParkingSpotController extends BaseController {
   constructor(private readonly parkingSpotRepository: ParkingSpotRepository) {
     super('ParkingSpot')
   }
 
-  @Post()
-  public async create(@Body() createParkingSpotDto: CreateParkingSpotRequestDto): Promise<ParkingSpotDto> {
-    return this.parkingSpotRepository.create({ ...createParkingSpotDto })
+  @TsRestHandler(contract.parkingSpots.listClosestToPoint)
+  public async listClosestToPoint() {
+    return tsRestHandler(contract.parkingSpots.listClosestToPoint, async ({ query }) => {
+      const { longitude, latitude, limit } = query
+      const parkingSpots = await this.parkingSpotRepository.listParkingSpotsClosestToLocation(
+        { longitude, latitude },
+        limit
+      )
+      return { status: 200, body: { data: parkingSpots, pagination: {} } }
+    })
   }
 
-  @Get(':id')
-  public async getById(@Param('id') id: string): Promise<ParkingSpotDto> {
-    return this.getEntityOrNotFound(await this.parkingSpotRepository.getById(id))
+  @TsRestHandler(contract.parkingSpots.post)
+  public async create() {
+    return tsRestHandler(contract.parkingSpots.post, async ({ body }) => {
+      const parkingSpot = await this.parkingSpotRepository.create(body)
+      return { status: 201, body: parkingSpot }
+    })
   }
 
-  @Get('closestToPoint')
-  public async listClosestToPoint(
-    @Query('longitude') longitude: number,
-    @Query('latitude') latitude: number,
-    @Query('limit') limit: number
-  ): Promise<{ data: ParkingSpotDto[] }> {
-    const parkingSpots = await this.parkingSpotRepository.listParkingSpotsClosestToLocation(
-      { longitude, latitude },
-      limit
-    )
-    // TODO: proper pagination
-    return { data: parkingSpots }
+  @TsRestHandler(contract.parkingSpots.get)
+  public async getById() {
+    return tsRestHandler(contract.parkingSpots.get, async ({ params: { id } }) => {
+      const maybeParkingSpot = await this.parkingSpotRepository.getById(id)
+      return { status: 200, body: this.getEntityOrNotFound(maybeParkingSpot) }
+    })
   }
 
-  @Patch(':id')
-  public async update(
-    @Param('id') id: string,
-    @Body() updateParkingSpotDto: UpdateParkingSpotRequestDto
-  ): Promise<ParkingSpotDto> {
-    return await this.parkingSpotRepository.update(id, { ...updateParkingSpotDto })
+  @TsRestHandler(contract.parkingSpots.patch)
+  public async update() {
+    return tsRestHandler(contract.parkingSpots.patch, async ({ params: { id }, body }) => {
+      const parkingSpot = await this.parkingSpotRepository.update(id, body)
+      return { status: 200, body: parkingSpot }
+    })
   }
 
-  @Delete(':id')
-  public async delete(@Param('id') id: string): Promise<void> {
-    await this.parkingSpotRepository.delete(id)
+  @TsRestHandler(contract.parkingSpots.delete)
+  public async delete() {
+    return tsRestHandler(contract.parkingSpots.delete, async ({ params: { id } }) => {
+      await this.parkingSpotRepository.delete(id)
+      return { status: 204, body: undefined }
+    })
   }
 }

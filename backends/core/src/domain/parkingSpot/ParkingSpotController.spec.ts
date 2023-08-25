@@ -1,58 +1,81 @@
+import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { ParkingSpotDto } from '@parker/core-client'
-import { NotFoundError } from '@parker/errors'
+import { SupertestInstance } from '@parker/api-client-utils'
+import { CoreClient, ParkingSpotDto, UserDto } from '@parker/core-client'
 import { Point } from '@parker/geography'
+import { NestAppBuilder } from '@parker/nest-utils'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
-import { User } from '../user/User'
-import { UserRepository } from '../user/UserRepository'
+import { UserModule } from '../user'
 import { ParkingSpotController } from './ParkingSpotController'
-import { ParkingSpotRepository } from './ParkingSpotRepository'
+import { ParkingSpotModule } from './ParkingSpotModule'
 
 describe(ParkingSpotController.name, () => {
-  let userRepository: UserRepository
-  let parkingSpotController: ParkingSpotController
-  let user: User
+  let app: INestApplication
+  let coreClient: CoreClient
+  let user: UserDto
 
   beforeEach(async () => {
-    const app = await Test.createTestingModule({
-      controllers: [ParkingSpotController],
-      providers: [ParkingSpotRepository, UserRepository],
+    // Create the app
+    const moduleRef = await Test.createTestingModule({
+      imports: [ParkingSpotModule, UserModule],
     }).compile()
-    userRepository = app.get(UserRepository)
-    parkingSpotController = app.get(ParkingSpotController)
-    user = await userRepository.create({ email: 'the.tick@example.com', fullName: 'The Tick' })
+    app = moduleRef.createNestApplication()
+    NestAppBuilder.addMiddleware(app)
+    await app.init()
+
+    // Create a client that will call the app
+    coreClient = new CoreClient(new SupertestInstance(app.getHttpServer()))
+
+    // Setup test data
+    const userPostBody = { email: 'donald.duck@example.com', fullName: 'Donald Duck' }
+    user = await coreClient.users.create(userPostBody)
+    const { id: userId, ...otherUserData } = user
+    expect(userId).toBeDefined()
+    expect(otherUserData).toStrictEqual(userPostBody)
   })
 
   describe('getById', () => {
     it('should get a parking spot by id', async () => {
-      const spot = await parkingSpotController.create({
-        ownerUserId: user.id,
-        location: { longitude: 10, latitude: 20 },
-      })
-      expect(await parkingSpotController.getById(spot.id)).toStrictEqual(spot)
+      const parkingSpotPostBody = { ownerUserId: user.id, location: { longitude: 10, latitude: 20 } }
+      const parkingSpot = await coreClient.parkingSpots.create(parkingSpotPostBody)
+      const { id: parkingSpotId, ...otherParkingSpotData } = parkingSpot
+      expect(parkingSpotId).toBeDefined()
+      expect(otherParkingSpotData).toStrictEqual(parkingSpotPostBody)
+
+      const maybeParkingSpot = await coreClient.parkingSpots.get(parkingSpot.id)
+      expect(maybeParkingSpot).toStrictEqual(parkingSpot)
     })
 
-    it('should throw a not found error if the id is not found', async () => {
-      expect(parkingSpotController.getById(uuid())).rejects.toBeInstanceOf(NotFoundError)
+    it('should verify that a parking spot does not exist', async () => {
+      const maybeParkingSpot = await coreClient.parkingSpots.get(uuid())
+      expect(maybeParkingSpot).toBeUndefined()
     })
   })
+
+  // TODO: test update, delete
 
   describe('listClosestToPoint', () => {
     it('should list the parking spots closest to a given point', async () => {
       // Create 20 spots
       const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
       const allSpots: ParkingSpotDto[] = await Promise.all(
-        ints.map((i) => parkingSpotController.create({ ownerUserId: user.id, location: { longitude: i, latitude: i } }))
+        ints.map((i) =>
+          coreClient.parkingSpots.create({ ownerUserId: user.id, location: { longitude: i, latitude: i } })
+        )
       )
-
       // But we're only going to get the 5 closest to a given point
       const location: Point = { longitude: 10, latitude: 10 }
       const fiveClosestSpots = allSpots.filter((spot) => [8, 9, 10, 11, 12].includes(spot.location.longitude))
       expect(fiveClosestSpots).toHaveLength(5) // Make sure we didn't screw up the test setup
-
       // Then get those 5 spots, verify they're the 5 closest
-      const foundSpots = (await parkingSpotController.listClosestToPoint(location.longitude, location.latitude, 5)).data
+      const foundSpots = (
+        await coreClient.parkingSpots.listClosestToPoint({
+          longitude: location.longitude,
+          latitude: location.latitude,
+          limit: 5,
+        })
+      ).data
       expect(orderBy(foundSpots, (spot) => spot.location.longitude)).toStrictEqual(fiveClosestSpots)
     })
   })

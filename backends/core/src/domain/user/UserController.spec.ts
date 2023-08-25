@@ -1,30 +1,62 @@
+import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { UserDto } from '@parker/core-client'
-import { NotFoundError } from '@parker/errors'
+import { SupertestInstance } from '@parker/api-client-utils'
+import { CoreClient, UserDto } from '@parker/core-client'
+import { NestAppBuilder } from '@parker/nest-utils'
 import { v4 as uuid } from 'uuid'
 import { UserController } from './UserController'
-import { UserRepository } from './UserRepository'
+import { UserModule } from './UserModule'
 
 describe(UserController.name, () => {
-  let userController: UserController
-  let user1: UserDto
+  let app: INestApplication
+  let coreClient: CoreClient
+  let user: UserDto
 
   beforeEach(async () => {
-    const app = await Test.createTestingModule({
-      controllers: [UserController],
-      providers: [UserRepository],
+    // Create the app
+    const moduleRef = await Test.createTestingModule({
+      imports: [UserModule],
     }).compile()
-    userController = app.get(UserController)
-    user1 = await userController.create({ email: 'donald.duck@example.com', fullName: 'Donald Duck' })
+    app = moduleRef.createNestApplication()
+    NestAppBuilder.addMiddleware(app)
+    await app.init()
+
+    // Create a client that will call the app
+    coreClient = new CoreClient(new SupertestInstance(app.getHttpServer()))
+
+    // Setup test data
+    const postBody = { email: 'donald.duck@example.com', fullName: 'Donald Duck' }
+    user = await coreClient.users.create(postBody)
+    const { id, ...rest } = user
+    expect(id).toBeDefined()
+    expect(rest).toStrictEqual(postBody)
   })
 
   describe('getById', () => {
     it('should get a user by id', async () => {
-      expect(await userController.getById(user1.id)).toStrictEqual(user1)
+      const maybeUser = await coreClient.users.get(user.id)
+      expect(maybeUser).toStrictEqual(user)
     })
 
-    it('should throw a not found error if the id is not found', async () => {
-      expect(userController.getById(uuid())).rejects.toBeInstanceOf(NotFoundError)
+    it('should verify that a user does not exist', async () => {
+      const maybeUser = await coreClient.users.get(uuid())
+      expect(maybeUser).toBeUndefined()
+    })
+  })
+
+  describe('update', () => {
+    it('should update a user', async () => {
+      const update = { fullName: 'Updated' }
+      const maybeUser = await coreClient.users.update(user.id, update)
+      expect(maybeUser).toStrictEqual({ ...user, ...update })
+    })
+  })
+
+  describe('delete', () => {
+    it('should delete a user', async () => {
+      await coreClient.users.delete(user.id)
+      const maybeUser = await coreClient.users.get(user.id)
+      expect(maybeUser).toBeUndefined()
     })
   })
 })

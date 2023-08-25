@@ -72,7 +72,7 @@ describe(ServerError.name, () => {
     })
 
     it('converts anything unrecognized to an UnknownError', () => {
-      expect(ServerError.fromDto(20, 500)).toStrictEqual(new UnknownError('No message'))
+      expect(ServerError.fromDto(20, 500)).toStrictEqual(new UnknownError('UnexpectedError: 20'))
     })
   })
 })

@@ -56,7 +56,7 @@ export abstract class ServerError<T = unknown> extends ExtendableError {
     } else {
       const unknownError = dto as Partial<ServerErrorDto>
       return new UnknownError(
-        unknownError.message ?? 'No message',
+        unknownError.message ?? `UnexpectedError: ${JSON.stringify(unknownError)}`,
         unknownError.subCode,
         undefined,
         unknownError.metadata

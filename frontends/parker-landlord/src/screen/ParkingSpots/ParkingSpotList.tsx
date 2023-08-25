@@ -32,7 +32,7 @@ export const ParkingSpotList = () => {
   useEffect(() => {
     const fetchAndSet = async () => {
       const coreClient = CoreClientBuilder.build()
-      const { data } = await coreClient.listParkingSpotsClosestToPoint(100, 100, 10)
+      const { data } = await coreClient.parkingSpots.listClosestToPoint({ latitude: 50, longitude: 50, limit: 10 })
       setParkingSpots(data)
     }
     // TODO: error toast or something

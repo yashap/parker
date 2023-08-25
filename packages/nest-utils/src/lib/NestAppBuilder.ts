@@ -6,15 +6,18 @@ import { logContextMiddleware } from './logContextMiddleware'
 import { NestLogger } from './NestLogger'
 
 export class NestAppBuilder {
-  public static async build(serviceName: string, appModule: unknown): Promise<INestApplication> {
+  public static async build(appModule: unknown): Promise<INestApplication> {
     const app = await NestFactory.create(appModule, {
       logger: new NestLogger(),
     })
-    app.setGlobalPrefix(serviceName)
+    this.addMiddleware(app)
+    return app
+  }
+
+  public static addMiddleware(app: INestApplication): void {
     app.use(logContextMiddleware)
     const httpAdapter = app.getHttpAdapter()
     app.useGlobalFilters(new HttpExceptionFilter(httpAdapter))
     app.useGlobalInterceptors(new HttpLoggingInterceptor(httpAdapter))
-    return app
   }
 }

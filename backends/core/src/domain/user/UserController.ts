@@ -1,31 +1,44 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common'
-import { CreateUserRequestDto, UpdateUserRequestDto, UserDto } from '@parker/core-client'
+import { Controller } from '@nestjs/common'
+import { contract } from '@parker/core-client'
+import { TsRestHandler, tsRestHandler } from '@ts-rest/nest'
 import { BaseController } from '../../http/BaseController'
 import { UserRepository } from './UserRepository'
 
-@Controller('users')
+@Controller()
 export class UserController extends BaseController {
   constructor(private readonly userRepository: UserRepository) {
     super('User')
   }
 
-  @Post()
-  public async create(@Body() createUserDto: CreateUserRequestDto): Promise<UserDto> {
-    return this.userRepository.create({ ...createUserDto })
+  @TsRestHandler(contract.users.post)
+  public async create() {
+    return tsRestHandler(contract.users.post, async ({ body }) => {
+      const user = await this.userRepository.create(body)
+      return { status: 201, body: user }
+    })
   }
 
-  @Get(':id')
-  public async getById(@Param('id', ParseUUIDPipe) id: string): Promise<UserDto> {
-    return this.getEntityOrNotFound(await this.userRepository.getById(id))
+  @TsRestHandler(contract.users.get)
+  public async getById() {
+    return tsRestHandler(contract.users.get, async ({ params: { id } }) => {
+      const maybeUser = await this.userRepository.getById(id)
+      return { status: 200, body: this.getEntityOrNotFound(maybeUser) }
+    })
   }
 
-  @Patch(':id')
-  public async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserRequestDto): Promise<UserDto> {
-    return this.userRepository.update(id, { ...updateUserDto })
+  @TsRestHandler(contract.users.patch)
+  public async update() {
+    return tsRestHandler(contract.users.patch, async ({ params: { id }, body }) => {
+      const user = await this.userRepository.update(id, body)
+      return { status: 200, body: user }
+    })
   }
 
-  @Delete(':id')
-  public async delete(@Param('id') id: string): Promise<void> {
-    await this.userRepository.delete(id)
+  @TsRestHandler(contract.users.delete)
+  public async delete() {
+    return tsRestHandler(contract.users.delete, async ({ params: { id } }) => {
+      await this.userRepository.delete(id)
+      return { status: 204, body: undefined }
+    })
   }
 }
