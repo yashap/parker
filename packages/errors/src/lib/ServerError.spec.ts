@@ -11,7 +11,7 @@ import {
 describe(ServerError.name, () => {
   describe(isServerError.name, () => {
     it('returns true if the error is a ServerError', () => {
-      expect(isServerError(new InternalServerError('Oh no', 'DatabaseConnectionTimeout'))).toBe(true)
+      expect(isServerError(new InternalServerError('Oh no', { subCode: 'DatabaseConnectionTimeout' }))).toBe(true)
       expect(isServerError(new NotFoundError('Oh no'))).toBe(true)
     })
 
@@ -22,7 +22,9 @@ describe(ServerError.name, () => {
 
   describe(isServerErrorDto.name, () => {
     it('returns true if the error is a ServerErrorDto', () => {
-      expect(isServerErrorDto(new InternalServerError('Oh no', 'DatabaseConnectionTimeout').toDto())).toBe(true)
+      expect(isServerErrorDto(new InternalServerError('Oh no', { subCode: 'DatabaseConnectionTimeout' }).toDto())).toBe(
+        true
+      )
       expect(isServerErrorDto(new NotFoundError('Oh no').toDto())).toBe(true)
     })
 
@@ -40,7 +42,10 @@ describe(ServerError.name, () => {
         metadata: { foo: 'bar' },
       }
       expect(
-        new InternalServerError('Oh no', 'DatabaseConnectionTimeout', 'Internal message', { foo: 'bar' }).toDto()
+        new InternalServerError('Oh no', {
+          subCode: 'DatabaseConnectionTimeout',
+          metadata: { foo: 'bar' },
+        }).toDto()
       ).toStrictEqual(expected)
     })
 
@@ -66,7 +71,10 @@ describe(ServerError.name, () => {
         code: 'NotFoundError',
       }
       expect(ServerError.fromDto(internalServerErrorDto, 500)).toStrictEqual(
-        new InternalServerError('Oh no', 'DatabaseConnectionTimeout', undefined, { foo: 'bar' })
+        new InternalServerError('Oh no', {
+          subCode: 'DatabaseConnectionTimeout',
+          metadata: { foo: 'bar' },
+        })
       )
       expect(ServerError.fromDto(notFoundErrorDto, 404)).toStrictEqual(new NotFoundError('Oh no'))
     })

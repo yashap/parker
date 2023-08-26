@@ -1,4 +1,4 @@
-import ExtendableError from 'extendable-error'
+import { BaseError } from './BaseError'
 
 export interface ServerErrorDto<T = unknown> {
   message: string
@@ -7,9 +7,19 @@ export interface ServerErrorDto<T = unknown> {
   metadata?: T
 }
 
-export abstract class ServerError<T = unknown> extends ExtendableError {
+export interface ErrorOptions<T = unknown> {
+  cause?: unknown
+  subCode?: string
+  internalMessage?: string
+  metadata?: T
+}
+
+export abstract class ServerError<T = unknown> extends BaseError {
   public readonly isParkerServerError: true = true as const
-  public code: string
+  public readonly code: string
+  public readonly subCode?: string
+  public readonly internalMessage?: string
+  public readonly metadata?: T
 
   /**
    * Constructs a ServerError
@@ -24,12 +34,14 @@ export abstract class ServerError<T = unknown> extends ExtendableError {
   constructor(
     public readonly httpStatusCode: number,
     message: string,
-    public readonly subCode?: string,
-    public readonly internalMessage?: string,
-    public readonly metadata?: T
+    options: ErrorOptions<T> = {}
   ) {
-    super(message)
+    super(message, options.cause)
+    const { subCode, internalMessage, metadata } = options
     this.code = this.name
+    this.subCode = subCode
+    this.internalMessage = internalMessage
+    this.metadata = metadata
   }
 
   // Transform this server error into a Data Transfer Object ()
@@ -44,14 +56,15 @@ export abstract class ServerError<T = unknown> extends ExtendableError {
 
   public static fromDto(dto: unknown, statusCode: number): ServerError {
     if (isServerErrorDto(dto)) {
+      const options = { cause: dto, subCode: dto.subCode, metadata: dto.metadata }
       if (statusCode === 400 && dto.code === InputValidationError.name) {
-        return new InputValidationError(dto.message, dto.subCode, undefined, dto.metadata)
+        return new InputValidationError(dto.message, options)
       } else if (statusCode === 404 && dto.code === NotFoundError.name) {
-        return new NotFoundError(dto.message, dto.subCode, undefined, dto.metadata)
+        return new NotFoundError(dto.message, options)
       } else if (statusCode === 500 && dto.code === InternalServerError.name) {
-        return new InternalServerError(dto.message, dto.subCode, undefined, dto.metadata)
+        return new InternalServerError(dto.message, options)
       } else if (dto.code === UnknownError.name) {
-        return new UnknownError(dto.message, dto.subCode, undefined, dto.metadata)
+        return new UnknownError(dto.message, options)
       }
     }
     return UnknownError.build(dto, statusCode)
@@ -74,8 +87,8 @@ export const isServerErrorDto = (error: unknown): error is ServerError => {
 }
 
 export class InputValidationError<T = unknown> extends ServerError<T> {
-  constructor(message: string, subCode?: string, internalMessage?: string, metadata?: T) {
-    super(400, message, subCode, internalMessage, metadata)
+  constructor(message: string, options: ErrorOptions<T> = {}) {
+    super(400, message, options)
   }
 }
 
@@ -84,8 +97,8 @@ export const isInputValidationError = <T = unknown>(error: unknown): error is In
 }
 
 export class NotFoundError<T = unknown> extends ServerError<T> {
-  constructor(message: string, subCode?: string, internalMessage?: string, metadata?: T) {
-    super(404, message, subCode, internalMessage, metadata)
+  constructor(message: string, options: ErrorOptions<T> = {}) {
+    super(404, message, options)
   }
 }
 
@@ -94,8 +107,8 @@ export const isNotFoundError = <T = unknown>(error: unknown): error is NotFoundE
 }
 
 export class InternalServerError<T = unknown> extends ServerError<T> {
-  constructor(message: string, subCode?: string, internalMessage?: string, metadata?: T) {
-    super(500, message, subCode, internalMessage, metadata)
+  constructor(message: string, options: ErrorOptions<T> = {}) {
+    super(500, message, options)
   }
 }
 
@@ -104,8 +117,8 @@ export const isInternalServerError = <T = unknown>(error: unknown): error is Int
 }
 
 export class UnknownError<T = unknown> extends ServerError<T> {
-  constructor(message: string, subCode?: string, internalMessage?: string, metadata?: T) {
-    super(500, message, subCode, internalMessage, metadata)
+  constructor(message: string, options: ErrorOptions<T> = {}) {
+    super(500, message, options)
   }
 
   public static build(error: unknown, statusCode?: number): UnknownError {
@@ -113,7 +126,7 @@ export class UnknownError<T = unknown> extends ServerError<T> {
     const message = `Unexpected response body [status: ${statusCode}] [message: ${err.message}] [body: ${JSON.stringify(
       err
     )}]`
-    return new UnknownError(message)
+    return new UnknownError(message, { cause: err })
   }
 }
 
