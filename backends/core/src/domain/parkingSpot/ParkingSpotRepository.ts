@@ -12,10 +12,12 @@ type UpdateParkingSpotInput = UpdateParkingSpotRequest
 
 @Injectable()
 export class ParkingSpotRepository extends BaseRepository {
+  private readonly tableName = 'ParkingSpot' as const
+
   public async create(payload: CreateParkingSpotInput): Promise<ParkingSpot> {
     const { location, ...rest } = payload
     const parkingSpotDao = await this.db
-      .insertInto('ParkingSpot')
+      .insertInto(this.tableName)
       .values({
         ...rest,
         location: this.pointToSql(location),
@@ -36,7 +38,7 @@ export class ParkingSpotRepository extends BaseRepository {
       return []
     }
     const parkingSpotDaos = await this.db
-      .selectFrom('ParkingSpot')
+      .selectFrom(this.tableName)
       .select(['id', 'ownerUserId', this.pointFieldToGeoJson('location').as('location')])
       .where('id', 'in', ids)
       .execute()
@@ -49,7 +51,7 @@ export class ParkingSpotRepository extends BaseRepository {
     }
     const { longitude, latitude } = location
     const parkingSpotDaos = await this.db
-      .selectFrom('ParkingSpot')
+      .selectFrom(this.tableName)
       .select(['id', 'ownerUserId', this.pointFieldToGeoJson('location').as('location')])
       .orderBy(sql`"location" <-> ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)`, 'asc')
       .limit(limit)
@@ -60,7 +62,7 @@ export class ParkingSpotRepository extends BaseRepository {
   public async update(id: string, update: UpdateParkingSpotInput): Promise<ParkingSpot> {
     const { location, ...rest } = update
     const parkingSpotDao = await this.db
-      .updateTable('ParkingSpot')
+      .updateTable(this.tableName)
       .set({
         ...rest,
         ...(location && { location: this.pointToSql(location) }),
@@ -73,7 +75,7 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   public async delete(id: string): Promise<void> {
-    await this.db.deleteFrom('ParkingSpot').where('id', '=', id).executeTakeFirst()
+    await this.db.deleteFrom(this.tableName).where('id', '=', id).executeTakeFirst()
   }
 
   private static parkingSpotToDomain(

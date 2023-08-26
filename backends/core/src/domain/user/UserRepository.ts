@@ -12,10 +12,12 @@ type UpdateUserInput = UpdateUserRequest
 
 @Injectable()
 export class UserRepository extends BaseRepository {
+  private readonly tableName = 'User' as const
+
   public create(payload: CreateUserInput): Promise<User> {
     return UserRepository.mapDuplicateEmailError(async () => {
       const userDao = await this.db
-        .insertInto('User')
+        .insertInto(this.tableName)
         .values({ ...UserRepository.sanitize(payload), ...this.updatedAt() })
         .returningAll()
         .executeTakeFirstOrThrow()
@@ -24,14 +26,14 @@ export class UserRepository extends BaseRepository {
   }
 
   public async getById(id: string): Promise<User | undefined> {
-    const userDao = await this.db.selectFrom('User').selectAll().where('id', '=', id).executeTakeFirst()
+    const userDao = await this.db.selectFrom(this.tableName).selectAll().where('id', '=', id).executeTakeFirst()
     return userDao ? UserRepository.userToDomain(userDao) : undefined
   }
 
   public update(id: string, update: UpdateUserInput): Promise<User> {
     return UserRepository.mapDuplicateEmailError(async () => {
       const userDao = await this.db
-        .updateTable('User')
+        .updateTable(this.tableName)
         .set({
           ...UserRepository.sanitize(update),
           ...this.updatedAt(),
@@ -44,7 +46,7 @@ export class UserRepository extends BaseRepository {
   }
 
   public async delete(id: string): Promise<void> {
-    await this.db.deleteFrom('User').where('id', '=', id).executeTakeFirst()
+    await this.db.deleteFrom(this.tableName).where('id', '=', id).executeTakeFirst()
   }
 
   private static userToDomain(userDao: Selectable<UserDao>): User {

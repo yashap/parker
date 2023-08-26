@@ -69,9 +69,8 @@ export const buildServerErrorFromDto = (dto: unknown, statusCode: number): Serve
       return new UnknownError(dto.message, options)
     }
   }
-  const maybeError = dto as Partial<Error>
-  const message = `Unexpected response from server [status: ${statusCode}] [message: ${
-    maybeError.message
-  }] [body: ${JSON.stringify(maybeError)}]`
-  return new UnknownError(message, { cause: maybeError })
+  return new UnknownError('Unexpected response from server', {
+    cause: dto,
+    metadata: { response: { body: dto, status: statusCode } },
+  })
 }
