@@ -2,8 +2,6 @@
 
 What am I planning to work on next?
 
-TODO: FIGURE OUT ERROR EXTENSION PROBLEMS!
-
 - Fix logging middleware when errors are thrown
 - Setup proper accounts
   - Using something like Keycloak or Ory Kratos
