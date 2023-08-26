@@ -52,7 +52,7 @@ const getFormat = (): winston.Logform.Format => {
   }
   return winston.format.combine(
     winston.format.colorize(),
-    winston.format.timestamp(),
+    winston.format.timestamp({ format: 'hh:mm:ss' }),
     winston.format.align(),
     winston.format.printf((log) => {
       const { timestamp, level, name, message, context, metadata, error } = log

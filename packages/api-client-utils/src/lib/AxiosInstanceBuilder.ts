@@ -1,4 +1,4 @@
-import { ServerError } from '@parker/errors'
+import { buildServerErrorFromDto } from '@parker/errors'
 import axios, { AxiosInstance, CreateAxiosDefaults, isAxiosError } from 'axios'
 
 const DEFAULT_TIMEOUT_MS: number = 60 * 1000
@@ -29,7 +29,7 @@ export class AxiosInstanceBuilder {
           const status = error.status
           const payload = error.response?.data
           if (status && payload) {
-            throw ServerError.fromDto(payload, status)
+            throw buildServerErrorFromDto(payload, status)
           }
         }
         // TODO: better classify/wrap other errors (timeout, etc.)

@@ -14,9 +14,6 @@
     "db:migrate-up:test": {
       "cache": false
     },
-    "dev": {
-      "cache": false
-    },
     "format": {
       "outputs": []
     },
@@ -25,6 +22,9 @@
     },
     "lint": {
       "outputs": []
+    },
+    "serve:backend": {
+      "cache": false
     },
     "test": {
       "outputs": []

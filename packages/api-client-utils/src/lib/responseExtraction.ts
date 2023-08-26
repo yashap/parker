@@ -1,4 +1,4 @@
-import { ServerError, isNotFoundError } from '@parker/errors'
+import { ServerError, buildServerErrorFromDto } from '@parker/errors'
 import { HTTPStatusCode } from '@ts-rest/core'
 
 type TsRestResponse<ResponseBody, SuccessStatus extends number> =
@@ -6,7 +6,7 @@ type TsRestResponse<ResponseBody, SuccessStatus extends number> =
   | { status: Exclude<HTTPStatusCode, SuccessStatus>; body: unknown }
 
 const buildError = (response: { status: number; body: unknown }): Error =>
-  ServerError.fromDto(response.body, response.status)
+  buildServerErrorFromDto(response.body, response.status)
 
 const extract200 = async <T>(response: TsRestResponse<T, 200> | Promise<TsRestResponse<T, 200>>): Promise<T> => {
   const resp = await response
@@ -33,7 +33,7 @@ export const extractGetByIdResponse = async <T>(
     }
     return await extract200(resp)
   } catch (error) {
-    if (isNotFoundError(error)) {
+    if ((error as Partial<ServerError>).httpStatusCode === 404) {
       return undefined
     }
     throw error

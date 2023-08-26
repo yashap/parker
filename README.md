@@ -38,8 +38,11 @@ yarn workspace @parker/context-propagation test
 # When starting work for the day, or after running git pull. Installs dependencies, migrates local DBs, builds everything, etc.
 yarn post-sync
 
-# Start all backends and frontends in watch mode
-yarn dev
+# Serve all backends (in watch mode)
+yarn serve:backend
+
+# Serve landlord frontend (in watch mode)
+yarn serve:landlord
 
 # Before you push
 yarn format && yarn test

@@ -1,35 +1,23 @@
+import { ErrorOptions, ServerError, ServerErrorDto } from './ServerError'
 import {
+  buildServerErrorFromDto,
+  InputValidationError,
   InternalServerError,
-  isServerError,
-  isServerErrorDto,
   NotFoundError,
-  ServerError,
-  ServerErrorDto,
   UnknownError,
-} from './ServerError'
+} from './serverErrors'
 
 describe(ServerError.name, () => {
-  describe(isServerError.name, () => {
-    it('returns true if the error is a ServerError', () => {
-      expect(isServerError(new InternalServerError('Oh no', { subCode: 'DatabaseConnectionTimeout' }))).toBe(true)
-      expect(isServerError(new NotFoundError('Oh no'))).toBe(true)
-    })
-
-    it('returns true if the error is not a ServerError', () => {
-      expect(isServerError(new Error('Oh no'))).toBe(false)
-    })
-  })
-
-  describe(isServerErrorDto.name, () => {
+  describe(ServerError.isServerErrorDto.name, () => {
     it('returns true if the error is a ServerErrorDto', () => {
-      expect(isServerErrorDto(new InternalServerError('Oh no', { subCode: 'DatabaseConnectionTimeout' }).toDto())).toBe(
-        true
-      )
-      expect(isServerErrorDto(new NotFoundError('Oh no').toDto())).toBe(true)
+      expect(
+        ServerError.isServerErrorDto(new InternalServerError('Oh no', { subCode: 'DatabaseConnectionTimeout' }).toDto())
+      ).toBe(true)
+      expect(ServerError.isServerErrorDto(new NotFoundError('Oh no').toDto())).toBe(true)
     })
 
     it('returns true if the error is not a ServerErrorDto', () => {
-      expect(isServerErrorDto(new Error('Oh no'))).toBe(false)
+      expect(ServerError.isServerErrorDto(new Error('Oh no'))).toBe(false)
     })
   })
 
@@ -58,7 +46,7 @@ describe(ServerError.name, () => {
     })
   })
 
-  describe(ServerError.fromDto.name, () => {
+  describe(buildServerErrorFromDto.name, () => {
     it('converts a ServerErrorDto to a ServerError', () => {
       const internalServerErrorDto: ServerErrorDto<{ foo: string }> = {
         message: 'Oh no',
@@ -70,19 +58,50 @@ describe(ServerError.name, () => {
         message: 'Oh no',
         code: 'NotFoundError',
       }
-      expect(ServerError.fromDto(internalServerErrorDto, 500)).toStrictEqual(
+      expect(buildServerErrorFromDto(internalServerErrorDto, 500)).toStrictEqual(
         new InternalServerError('Oh no', {
           subCode: 'DatabaseConnectionTimeout',
           metadata: { foo: 'bar' },
         })
       )
-      expect(ServerError.fromDto(notFoundErrorDto, 404)).toStrictEqual(new NotFoundError('Oh no'))
+      expect(buildServerErrorFromDto(notFoundErrorDto, 404)).toStrictEqual(new NotFoundError('Oh no'))
     })
 
     it('converts anything unrecognized to an UnknownError', () => {
-      expect(ServerError.fromDto(20, 500)).toStrictEqual(
+      expect(buildServerErrorFromDto(20, 500)).toStrictEqual(
         new UnknownError('Unexpected response body [status: 500] [message: undefined] [body: 20]')
       )
+    })
+  })
+
+  describe('properties', () => {
+    it('have expected values', () => {
+      const options: ErrorOptions = {
+        cause: new Error('Bam'),
+        subCode: 'BadThing',
+        internalMessage: 'Boom internal',
+        metadata: {
+          id: '10',
+          foo: true,
+        },
+      }
+      const error = new InternalServerError('Boom', options)
+      expect(error.message).toBe('Boom')
+      expect(error.name).toBe('InternalServerError')
+      expect(error.code).toBe('InternalServerError')
+      expect(error.cause).toBe(options.cause)
+      expect(error.subCode).toBe(options.subCode)
+      expect(error.internalMessage).toBe(options.internalMessage)
+      expect(error.metadata).toBe(options.metadata)
+    })
+
+    it("cause is set only if it's an error", () => {
+      const err1 = new Error('foo')
+      const err2 = new InternalServerError('bar')
+      const notError = { message: 'foo', name: 'bar' }
+      expect(new InputValidationError('bah', { cause: err1 }).cause).toBe(err1)
+      expect(new InputValidationError('bah', { cause: err2 }).cause).toBe(err2)
+      expect(new InputValidationError('bah', { cause: notError }).cause).toBeUndefined()
     })
   })
 })

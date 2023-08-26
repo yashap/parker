@@ -1,5 +1,5 @@
 import { ApiAxiosInstance, ApiAxiosRequest, ApiAxiosResponse } from '@parker/api-client-utils'
-import { ServerError } from '@parker/errors'
+import { buildServerErrorFromDto } from '@parker/errors'
 import supertest from 'supertest'
 
 /**
@@ -30,7 +30,7 @@ export class SupertestInstance implements ApiAxiosInstance {
     }
     if (response) {
       if (response.status >= 400) {
-        throw ServerError.fromDto(response.body, response.status)
+        throw buildServerErrorFromDto(response.body, response.status)
       }
       return { status: response.status, data: response.body, headers: {} }
     }

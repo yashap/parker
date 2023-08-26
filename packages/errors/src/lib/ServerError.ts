@@ -14,6 +14,10 @@ export interface ErrorOptions<T = unknown> {
   metadata?: T
 }
 
+export interface WrapErrorOptions<T = unknown> extends Omit<ErrorOptions<T>, 'cause'> {
+  message?: string
+}
+
 export abstract class ServerError<T = unknown> extends BaseError {
   public readonly isParkerServerError: true = true as const
   public readonly code: string
@@ -54,82 +58,22 @@ export abstract class ServerError<T = unknown> extends BaseError {
     }
   }
 
-  public static fromDto(dto: unknown, statusCode: number): ServerError {
-    if (isServerErrorDto(dto)) {
-      const options = { cause: dto, subCode: dto.subCode, metadata: dto.metadata }
-      if (statusCode === 400 && dto.code === InputValidationError.name) {
-        return new InputValidationError(dto.message, options)
-      } else if (statusCode === 404 && dto.code === NotFoundError.name) {
-        return new NotFoundError(dto.message, options)
-      } else if (statusCode === 500 && dto.code === InternalServerError.name) {
-        return new InternalServerError(dto.message, options)
-      } else if (dto.code === UnknownError.name) {
-        return new UnknownError(dto.message, options)
-      }
+  public static isServerErrorDto(error: unknown): error is ServerErrorDto {
+    const serverError = error as ServerErrorDto
+    return Boolean(serverError.message) && Boolean(serverError.code)
+  }
+
+  protected static buildOptionForWrappedError<A = unknown>(
+    error: Error,
+    options: WrapErrorOptions<A> = {}
+  ): { message: string; options: ErrorOptions<A> } {
+    const maybeServerError = error as Partial<ServerError>
+    const defaultOptions: ErrorOptions<A> = {
+      subCode: maybeServerError.subCode,
+      internalMessage: maybeServerError.internalMessage,
+      cause: maybeServerError.cause,
     }
-    return UnknownError.build(dto, statusCode)
+    const { message, ...optionOverrides } = options
+    return { message: message ?? error.message, options: { ...defaultOptions, ...optionOverrides } }
   }
-}
-
-export const isServerError = (error: unknown): error is ServerError => {
-  const serverError = error as ServerError
-  return (
-    Boolean(serverError.isParkerServerError) &&
-    Boolean(serverError.httpStatusCode) &&
-    Boolean(serverError.message) &&
-    Boolean(serverError.code)
-  )
-}
-
-export const isServerErrorDto = (error: unknown): error is ServerError => {
-  const serverError = error as ServerErrorDto
-  return Boolean(serverError.message) && Boolean(serverError.code)
-}
-
-export class InputValidationError<T = unknown> extends ServerError<T> {
-  constructor(message: string, options: ErrorOptions<T> = {}) {
-    super(400, message, options)
-  }
-}
-
-export const isInputValidationError = <T = unknown>(error: unknown): error is InputValidationError<T> => {
-  return isServerError(error) && error.code === InputValidationError.name
-}
-
-export class NotFoundError<T = unknown> extends ServerError<T> {
-  constructor(message: string, options: ErrorOptions<T> = {}) {
-    super(404, message, options)
-  }
-}
-
-export const isNotFoundError = <T = unknown>(error: unknown): error is NotFoundError<T> => {
-  return isServerError(error) && error.code === NotFoundError.name
-}
-
-export class InternalServerError<T = unknown> extends ServerError<T> {
-  constructor(message: string, options: ErrorOptions<T> = {}) {
-    super(500, message, options)
-  }
-}
-
-export const isInternalServerError = <T = unknown>(error: unknown): error is InternalServerError<T> => {
-  return isServerError(error) && error.code === InternalServerError.name
-}
-
-export class UnknownError<T = unknown> extends ServerError<T> {
-  constructor(message: string, options: ErrorOptions<T> = {}) {
-    super(500, message, options)
-  }
-
-  public static build(error: unknown, statusCode?: number): UnknownError {
-    const err = error as Partial<Error>
-    const message = `Unexpected response body [status: ${statusCode}] [message: ${err.message}] [body: ${JSON.stringify(
-      err
-    )}]`
-    return new UnknownError(message, { cause: err })
-  }
-}
-
-export const isUnknownError = <T = unknown>(error: unknown): error is UnknownError<T> => {
-  return isServerError(error) && error.code === UnknownError.name
 }
