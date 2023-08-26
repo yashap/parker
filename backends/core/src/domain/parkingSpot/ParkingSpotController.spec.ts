@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common'
-import { SupertestInstance } from '@parker/api-client-utils'
+import { SupertestInstance } from '@parker/api-client-test-utils'
 import { CoreClient, ParkingSpotDto, UserDto } from '@parker/core-client'
 import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'

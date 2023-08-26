@@ -13,7 +13,7 @@
     "db:migrate-up:test": "yarn db:init:test && NODE_PATH=./src DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:5441/core?schema=public' db-migrate --migrations-dir src/migrations up",
     "dev": "nest start --watch",
     "format": "eslint . --ext .ts --fix",
-    "generate": "kysely-codegen --dialect postgres --exclude-pattern '(spatial_ref_sys|_prisma_migrations)' --out-file \"$(git rev-parse --show-toplevel)/backends/core/src/db/generated/db.ts\"",
+    "generate": "kysely-codegen --dialect postgres --exclude-pattern '(spatial_ref_sys|geography_columns|geometry_columns|migrations)' --out-file \"$(git rev-parse --show-toplevel)/backends/core/src/db/generated/db.ts\"",
     "lint": "tsc --noEmit && eslint . --ext .ts",
     "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest src/ --runInBand",
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --watch src/ --runInBand",
@@ -29,7 +29,6 @@
     "@parker/geography": "*",
     "@parker/logging": "*",
     "@parker/nest-utils": "*",
-    "@prisma/client": "^4.5.0",
     "@ts-rest/nest": "^3.28.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
@@ -43,6 +42,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@parker/api-client-test-utils": "*",
     "@nestjs/cli": "^9.1.5",
     "@nestjs/schematics": "^9.0.3",
     "@nestjs/testing": "^9.1.6",
@@ -58,7 +58,6 @@
     "eslint-config-custom": "*",
     "jest": "^29.0.3",
     "kysely-codegen": "^0.9.0",
-    "prisma": "^4.5.0",
     "ts-jest": "^29.0.3",
     "typescript": "^4.9.3"
   }

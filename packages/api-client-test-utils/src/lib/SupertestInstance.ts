@@ -1,6 +1,6 @@
+import { ApiAxiosInstance, ApiAxiosRequest, ApiAxiosResponse } from '@parker/api-client-utils'
 import { ServerError } from '@parker/errors'
 import supertest from 'supertest'
-import { ApiAxiosInstance, ApiAxiosRequest, ApiAxiosResponse } from './ApiClientBuilder'
 
 /**
  * Wraps supertest so that it satisfies the ApiAxiosInstance contract, and thus can be used with out API clients. For

@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common'
-import { SupertestInstance } from '@parker/api-client-utils'
+import { SupertestInstance } from '@parker/api-client-test-utils'
 import { CoreClient, UserDto } from '@parker/core-client'
 import { v4 as uuid } from 'uuid'
 import { buildTestApp } from '../../test/buildTestApp'
@@ -48,6 +48,7 @@ describe(UserController.name, () => {
       await coreClient.users.delete(user.id)
       maybeUser = await coreClient.users.get(user.id)
       expect(maybeUser).toBeUndefined()
+      expect(10).toBe(10)
     })
   })
 })

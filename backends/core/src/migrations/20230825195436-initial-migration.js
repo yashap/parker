@@ -1,8 +1,16 @@
 /* eslint-disable */
 exports.up = async (db) => {
   return db
-    .runSql('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
-    .then(() => db.runSql('CREATE EXTENSION IF NOT EXISTS "postgis";'))
+    .runSql(
+      `
+      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+    `
+    )
+    .then(() =>
+      db.runSql(`
+      CREATE EXTENSION IF NOT EXISTS "postgis";
+    `)
+    )
     .then(() =>
       db.runSql(`
         CREATE TABLE IF NOT EXISTS "User" (
@@ -12,6 +20,11 @@ exports.up = async (db) => {
           "email" TEXT NOT NULL,
           "fullName" TEXT NOT NULL
         );
+      `)
+    )
+    .then(() =>
+      db.runSql(`
+        CREATE UNIQUE INDEX IF NOT EXISTS "email_idx" ON "User" (LOWER("email"));
       `)
     )
     .then(() =>

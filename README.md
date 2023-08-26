@@ -54,11 +54,14 @@ yarn generate
 
 ```bash
 # Add a package to a workspace
-# Note: the workspace name is the name of the package in the package.json
 yarn workspace <workspace> add <package>
+# e.g. yarn workspace @parker/core add lodash
 
 # Add a dev package to a workspace
 yarn workspace <workspace> add -D <package>
+
+# Remove a package from a workspace
+yarn workspace <workspace> remove <package>
 ```
 
 **Install an internal dependency (e.g. depend on something in `packages/`)**

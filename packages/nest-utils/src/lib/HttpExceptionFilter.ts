@@ -1,5 +1,5 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus, HttpServer } from '@nestjs/common'
-import { isServerError, ServerError, ServerErrorDto } from '@parker/errors'
+import { isServerError, ServerErrorDto, UnknownError } from '@parker/errors'
 import { Logger } from '@parker/logging'
 
 @Catch()
@@ -17,7 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter<unknown> {
       this.logger.warn('Caught exception', { error, metadata: { status } })
     }
     const response = ctx.getResponse()
-    const body: ServerErrorDto = isServerError(error) ? error.toDto() : ServerError.fromDto(error, status).toDto()
+    const body: ServerErrorDto = isServerError(error) ? error.toDto() : UnknownError.build(error).toDto()
     this.server.reply(response, body, status)
   }
 }

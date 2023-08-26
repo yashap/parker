@@ -79,7 +79,10 @@ export class Logger {
   private readonly underlyingLogger: winston.Logger
   private readonly enabledLevelValue: number
 
-  constructor(private readonly name: string, private readonly defaultMetadata?: LogData) {
+  constructor(
+    private readonly name: string,
+    private readonly defaultMetadata?: LogData
+  ) {
     const level = getLevel()
     this.underlyingLogger = winston.createLogger({
       levels,

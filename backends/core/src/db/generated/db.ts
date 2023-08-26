@@ -11,7 +11,7 @@ export interface ParkingSpot {
   createdAt: Generated<Timestamp>
   updatedAt: Timestamp
   ownerUserId: string
-  location: string | null
+  location: string
 }
 
 export interface User {

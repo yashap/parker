@@ -24,10 +24,9 @@
     "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
-    "prettier": "latest",
+    "prettier": "^3.0.2",
     "turbo": "latest"
   },
-  "dependencies": {},
   "engines": {
     "node": ">=14.0.0"
   },

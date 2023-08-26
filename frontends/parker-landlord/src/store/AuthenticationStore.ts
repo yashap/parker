@@ -6,6 +6,7 @@ export class AuthenticationStore {
   private static authenticatedUser: UserDto | undefined = undefined
   private static token: string | undefined
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public static async login(email: string, _password: string): Promise<void> {
     // TODO: stop creating a user during the login flow, once I have real user registration, auth, etc.
     const coreClient = UnauthenticatedCoreClientBuilder.build()

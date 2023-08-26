@@ -54,11 +54,7 @@ export abstract class ServerError<T = unknown> extends ExtendableError {
         return new UnknownError(dto.message, dto.subCode, undefined, dto.metadata)
       }
     }
-    const error = dto as Partial<ServerErrorDto>
-    const message = `Unexpected response body [status: ${statusCode}] [message: ${
-      error.message
-    }] [body: ${JSON.stringify(error)}]`
-    return new UnknownError(message, error.subCode, undefined, error.metadata)
+    return UnknownError.build(dto, statusCode)
   }
 }
 
@@ -110,6 +106,14 @@ export const isInternalServerError = <T = unknown>(error: unknown): error is Int
 export class UnknownError<T = unknown> extends ServerError<T> {
   constructor(message: string, subCode?: string, internalMessage?: string, metadata?: T) {
     super(500, message, subCode, internalMessage, metadata)
+  }
+
+  public static build(error: unknown, statusCode?: number): UnknownError {
+    const err = error as Partial<Error>
+    const message = `Unexpected response body [status: ${statusCode}] [message: ${err.message}] [body: ${JSON.stringify(
+      err
+    )}]`
+    return new UnknownError(message)
   }
 }
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { CreateParkingSpotRequest, UpdateParkingSpotRequest } from '@parker/core-client'
 import { Point } from '@parker/geography'
 import { Selectable, sql } from 'kysely'
 import { BaseRepository } from '../../db/BaseRepository'
@@ -6,8 +7,8 @@ import { ParkingSpot as ParkingSpotDao } from '../../db/generated/db'
 import { GeoJsonPoint, toPoint } from '../geography'
 import { ParkingSpot } from './ParkingSpot'
 
-type CreateParkingSpotInput = Omit<ParkingSpot, 'id'>
-type UpdateParkingSpotInput = Partial<CreateParkingSpotInput>
+type CreateParkingSpotInput = CreateParkingSpotRequest
+type UpdateParkingSpotInput = UpdateParkingSpotRequest
 
 @Injectable()
 export class ParkingSpotRepository extends BaseRepository {
@@ -79,7 +80,7 @@ export class ParkingSpotRepository extends BaseRepository {
     parkingSpotDao: Pick<Selectable<ParkingSpotDao>, 'id' | 'ownerUserId' | 'location'>
   ): ParkingSpot {
     const { id, ownerUserId, location } = parkingSpotDao
-    const locationGeoJson = JSON.parse(location!) as GeoJsonPoint // TODO: remove the ! once I make the DB field non-nullable
+    const locationGeoJson = JSON.parse(location) as GeoJsonPoint
     return { id, ownerUserId, location: toPoint(locationGeoJson) }
   }
 }

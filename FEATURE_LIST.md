@@ -2,7 +2,7 @@
 
 What am I planning to work on next?
 
-- Eliminate Prisma (which is now migrations only), add new migrations
+- Fix logging middleware when errors are thrown
 - Setup proper accounts
   - Using something like Keycloak or Ory Kratos
 - Create a mega-simple "parker-landlord" app, that lets you list a parking spot
