@@ -10,7 +10,7 @@ export class InputValidationError<T = unknown> extends ServerError<T> {
   }
 
   public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): InputValidationError<A> {
-    const { message, options } = this.buildOptionForWrappedError(error, optionOverrides)
+    const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
     return new InputValidationError(message, options)
   }
 }
@@ -21,7 +21,7 @@ export class NotFoundError<T = unknown> extends ServerError<T> {
   }
 
   public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): NotFoundError<A> {
-    const { message, options } = this.buildOptionForWrappedError(error, optionOverrides)
+    const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
     return new NotFoundError(message, options)
   }
 }
@@ -36,7 +36,7 @@ export class InternalServerError<T = unknown> extends ServerError<T> {
   }
 
   public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): InternalServerError<A> {
-    const { message, options } = this.buildOptionForWrappedError(error, optionOverrides)
+    const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
     return new InternalServerError(message, options)
   }
 }
@@ -47,7 +47,7 @@ export class UnknownError<T = unknown> extends ServerError<T> {
   }
 
   public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): UnknownError<A> {
-    const { message, options } = this.buildOptionForWrappedError(error, optionOverrides)
+    const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
     return new UnknownError(message, options)
   }
 }
@@ -70,7 +70,7 @@ export const buildServerErrorFromDto = (dto: unknown, statusCode: number): Serve
     }
   }
   const maybeError = dto as Partial<Error>
-  const message = `Unexpected response body [status: ${statusCode}] [message: ${
+  const message = `Unexpected response from server [status: ${statusCode}] [message: ${
     maybeError.message
   }] [body: ${JSON.stringify(maybeError)}]`
   return new UnknownError(message, { cause: maybeError })

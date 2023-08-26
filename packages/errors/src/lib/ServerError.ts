@@ -63,7 +63,7 @@ export abstract class ServerError<T = unknown> extends BaseError {
     return Boolean(serverError.message) && Boolean(serverError.code)
   }
 
-  protected static buildOptionForWrappedError<A = unknown>(
+  protected static buildOptionsForWrappedError<A = unknown>(
     error: Error,
     options: WrapErrorOptions<A> = {}
   ): { message: string; options: ErrorOptions<A> } {

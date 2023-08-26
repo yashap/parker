@@ -19,7 +19,7 @@ export class SupertestInstance implements ApiAxiosInstance {
     const pathWithQueryParams = `${url.pathname}${url.search}`
     const maybeRequestBody = config.data ? JSON.parse(config.data as string) : undefined
     const requestHeaders = config.headers
-    let response: Pick<Response, 'status' | 'body'> | undefined = undefined
+    let response: Pick<Response, 'status' | 'body' | 'headers'> | undefined = undefined
     if (method === 'get') {
       response = await this.supertest.get(pathWithQueryParams).set(requestHeaders).send(maybeRequestBody)
     } else if (method === 'post') {
@@ -29,13 +29,13 @@ export class SupertestInstance implements ApiAxiosInstance {
     } else if (method === 'delete') {
       response = await this.supertest.delete(pathWithQueryParams).set(requestHeaders).send(maybeRequestBody)
     }
-    if (response) {
-      if (response.status >= 400) {
-        throw buildServerErrorFromDto(response.body, response.status)
-      }
-      return { status: response.status, data: response.body, headers: {} }
+    if (!response) {
+      throw new Error(`Unexpected method: ${config.method}`)
     }
-    throw new Error(`Unexpected method: ${config.method}`)
+    if (response.status >= 400) {
+      throw buildServerErrorFromDto(response.body, response.status)
+    }
+    return { status: response.status, data: response.body, headers: response.headers }
   }
 
   public readonly defaults = { baseURL: 'http://example.com' }
