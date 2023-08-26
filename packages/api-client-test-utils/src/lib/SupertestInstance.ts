@@ -16,17 +16,18 @@ export class SupertestInstance implements ApiAxiosInstance {
   public async request(config: ApiAxiosRequest): Promise<ApiAxiosResponse> {
     const method = config.method.toLowerCase()
     const url = new URL(config.url)
-    const path = `${url.pathname}${url.search}`
-    const data = config.data ? JSON.parse(config.data as string) : undefined
+    const pathWithQueryParams = `${url.pathname}${url.search}`
+    const maybeRequestBody = config.data ? JSON.parse(config.data as string) : undefined
+    const requestHeaders = config.headers
     let response: Pick<Response, 'status' | 'body'> | undefined = undefined
     if (method === 'get') {
-      response = data ? await this.supertest.get(path).send(data) : await this.supertest.get(path).send()
+      response = await this.supertest.get(pathWithQueryParams).set(requestHeaders).send(maybeRequestBody)
     } else if (method === 'post') {
-      response = data ? await this.supertest.post(path).send(data) : await this.supertest.post(path)
+      response = await this.supertest.post(pathWithQueryParams).set(requestHeaders).send(maybeRequestBody)
     } else if (method === 'patch') {
-      response = data ? await this.supertest.patch(path).send(data) : await this.supertest.patch(path).send()
+      response = await this.supertest.patch(pathWithQueryParams).set(requestHeaders).send(maybeRequestBody)
     } else if (method === 'delete') {
-      response = data ? await this.supertest.delete(path).send(data) : await this.supertest.delete(path).send()
+      response = await this.supertest.delete(pathWithQueryParams).set(requestHeaders).send(maybeRequestBody)
     }
     if (response) {
       if (response.status >= 400) {
