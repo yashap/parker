@@ -4,6 +4,7 @@ What am I planning to work on next?
 
 - Fix logging middleware when errors are thrown
   - Then add tests so it stays fixed
+- Add some tests about input validation, make sure it's working (and returning 400s)
 - Setup proper accounts
   - Using something like Keycloak or Ory Kratos
 - Improve "landlord" app, that lets you list a parking spot
