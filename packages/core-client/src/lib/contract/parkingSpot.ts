@@ -8,7 +8,7 @@ import { UpdateParkingSpotRequestSchema } from '../model/UpdateParkingSpotReques
 
 const c = initContract()
 
-export const parkingSpotsContract = c.router({
+export const parkingSpotContract = c.router({
   listClosestToPoint: {
     method: 'GET',
     path: '/core/parkingSpots/closestToPoint',

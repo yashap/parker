@@ -6,7 +6,7 @@ import { UserSchema } from '../model/User'
 
 const c = initContract()
 
-export const usersContract = c.router({
+export const userContract = c.router({
   post: {
     method: 'POST',
     path: '/core/users',

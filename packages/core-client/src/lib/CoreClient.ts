@@ -20,7 +20,7 @@ import {
   UpdateParkingSpotRequest,
   UpdateUserRequest,
   UserDto,
-} from './model'
+} from './model/types'
 
 export class CoreClient {
   private client: ApiClient<typeof contract>

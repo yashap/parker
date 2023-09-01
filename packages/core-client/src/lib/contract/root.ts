@@ -1,10 +1,10 @@
 import { initContract } from '@ts-rest/core'
-import { parkingSpotsContract } from './parkingSpot'
-import { usersContract } from './users'
+import { parkingSpotContract } from './parkingSpot'
+import { userContract } from './user'
 
 const c = initContract()
 
 export const contract = c.router({
-  users: usersContract,
-  parkingSpots: parkingSpotsContract,
+  users: userContract,
+  parkingSpots: parkingSpotContract,
 })
