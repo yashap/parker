@@ -27,24 +27,22 @@ describe(logContextMiddleware.name, () => {
     let context2: Payload = {}
     let context3: Payload = {}
 
-    const request = {
-      method: 'GET',
-      url: 'http://example.com/users/123',
-    } as Request
+    const request = {} as Request
+    const response = {} as Response
 
     // Kick off 3 concurrent requests
     let callsCompleted = 0
-    logContextMiddleware(request, {} as Response, async () => {
+    logContextMiddleware(request, response, async () => {
       sleep(50)
       context1 = LogContextPropagator.getContext() ?? {}
       callsCompleted += 1
     })
-    logContextMiddleware(request, {} as Response, async () => {
+    logContextMiddleware(request, response, async () => {
       sleep(50)
       context2 = LogContextPropagator.getContext() ?? {}
       callsCompleted += 1
     })
-    logContextMiddleware(request, {} as Response, async () => {
+    logContextMiddleware(request, response, async () => {
       sleep(50)
       context3 = LogContextPropagator.getContext() ?? {}
       callsCompleted += 1
