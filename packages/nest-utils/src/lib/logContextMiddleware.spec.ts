@@ -33,17 +33,17 @@ describe(logContextMiddleware.name, () => {
     // Kick off 3 concurrent requests
     let callsCompleted = 0
     logContextMiddleware(request, response, async () => {
-      sleep(50)
+      await sleep(50)
       context1 = LogContextPropagator.getContext() ?? {}
       callsCompleted += 1
     })
     logContextMiddleware(request, response, async () => {
-      sleep(50)
+      await sleep(50)
       context2 = LogContextPropagator.getContext() ?? {}
       callsCompleted += 1
     })
     logContextMiddleware(request, response, async () => {
-      sleep(50)
+      await sleep(50)
       context3 = LogContextPropagator.getContext() ?? {}
       callsCompleted += 1
     })
