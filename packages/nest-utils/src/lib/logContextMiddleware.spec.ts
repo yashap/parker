@@ -1,4 +1,4 @@
-import { LogData, LogContextPropagator } from '@parker/logging'
+import { LogContextPropagator, Payload } from '@parker/logging'
 import { Request, Response } from 'express'
 import { v4 as uuid } from 'uuid'
 import { logContextMiddleware } from './logContextMiddleware'
@@ -8,7 +8,7 @@ describe(logContextMiddleware.name, () => {
     new Promise((resolve) => setTimeout(resolve as () => void, milliseconds))
 
   it('sets a correlationId', async () => {
-    let contextWithinEndpoint: LogData = {}
+    let contextWithinEndpoint: Payload = {}
 
     const request = {
       method: 'GET',
@@ -19,42 +19,32 @@ describe(logContextMiddleware.name, () => {
       contextWithinEndpoint = LogContextPropagator.getContext() ?? {}
     })
 
-    expect(contextWithinEndpoint['method']).toStrictEqual(request.method)
-    expect(contextWithinEndpoint['path']).toStrictEqual('/users/123')
     expect(contextWithinEndpoint['correlationId']).toHaveLength(uuid().length)
   })
 
-  it('sets proper context with multiple concurrent requests', async () => {
-    let context1: LogData = {}
-    let context2: LogData = {}
-    let context3: LogData = {}
+  it('sets correlationIds with multiple concurrent requests', async () => {
+    let context1: Payload = {}
+    let context2: Payload = {}
+    let context3: Payload = {}
 
-    const request1 = {
+    const request = {
       method: 'GET',
-      url: 'http://example.com/users/123',
-    } as Request
-    const request2 = {
-      method: 'POST',
-      url: 'http://example.com/users',
-    } as Request
-    const request3 = {
-      method: 'PATCH',
       url: 'http://example.com/users/123',
     } as Request
 
     // Kick off 3 concurrent requests
     let callsCompleted = 0
-    logContextMiddleware(request1, {} as Response, async () => {
+    logContextMiddleware(request, {} as Response, async () => {
       sleep(50)
       context1 = LogContextPropagator.getContext() ?? {}
       callsCompleted += 1
     })
-    logContextMiddleware(request2, {} as Response, async () => {
+    logContextMiddleware(request, {} as Response, async () => {
       sleep(50)
       context2 = LogContextPropagator.getContext() ?? {}
       callsCompleted += 1
     })
-    logContextMiddleware(request3, {} as Response, async () => {
+    logContextMiddleware(request, {} as Response, async () => {
       sleep(50)
       context3 = LogContextPropagator.getContext() ?? {}
       callsCompleted += 1
@@ -66,16 +56,17 @@ describe(logContextMiddleware.name, () => {
     }
 
     // Ensure they all have the expected data
-    expect(context1['method']).toStrictEqual(request1.method)
-    expect(context1['path']).toStrictEqual('/users/123')
-    expect(context1['correlationId']).toHaveLength(uuid().length)
+    const context1CorrelationId = context1['correlationId']
+    expect(context1CorrelationId).toHaveLength(uuid().length)
 
-    expect(context2['method']).toStrictEqual(request2.method)
-    expect(context2['path']).toStrictEqual('/users')
-    expect(context2['correlationId']).toHaveLength(uuid().length)
+    const context2CorrelationId = context2['correlationId']
+    expect(context2CorrelationId).toHaveLength(uuid().length)
 
-    expect(context3['method']).toStrictEqual(request3.method)
-    expect(context3['path']).toStrictEqual('/users/123')
-    expect(context3['correlationId']).toHaveLength(uuid().length)
+    const context3CorrelationId = context3['correlationId']
+    expect(context3CorrelationId).toHaveLength(uuid().length)
+
+    expect(context1CorrelationId).not.toEqual(context2CorrelationId)
+    expect(context1CorrelationId).not.toEqual(context3CorrelationId)
+    expect(context2CorrelationId).not.toEqual(context3CorrelationId)
   })
 })

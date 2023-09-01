@@ -12,9 +12,9 @@ export class HttpExceptionFilter implements ExceptionFilter<unknown> {
     const ctx = host.switchToHttp()
     const status = error instanceof ServerError ? error.httpStatusCode : HttpStatus.INTERNAL_SERVER_ERROR
     if (status >= 500) {
-      this.logger.error('Caught exception', { error, metadata: { status } })
+      this.logger.error('Caught exception', { error, status })
     } else {
-      this.logger.warn('Caught exception', { error, metadata: { status } })
+      this.logger.warn('Caught exception', { error, status })
     }
     const response = ctx.getResponse()
     const body: ServerErrorDto = error instanceof ServerError ? error.toDto() : UnknownError.wrap(error).toDto()

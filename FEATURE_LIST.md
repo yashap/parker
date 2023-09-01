@@ -2,9 +2,10 @@
 
 What am I planning to work on next?
 
-- Fix logging middleware when errors are thrown
-  - Then add tests so it stays fixed
+- Change LogContextPropagator to CorrelationIdPropagator
+  - And move out of the logging package
 - Add some tests about input validation, make sure it's working (and returning 400s)
+- Add tests around full server logging (logging responses properly, logging exceptions properly, correlation ids, etc.)
 - Setup proper accounts
   - Using something like Keycloak or Ory Kratos
 - Improve "landlord" app, that lets you list a parking spot

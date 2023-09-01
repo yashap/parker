@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { HttpExceptionFilter } from './HttpExceptionFilter'
-import { HttpLoggingInterceptor } from './HttpLoggingInterceptor'
 import { logContextMiddleware } from './logContextMiddleware'
+import { logMiddleware } from './logMiddleware'
 import { NestLogger } from './NestLogger'
 
 export class NestAppBuilder {
@@ -10,14 +10,13 @@ export class NestAppBuilder {
     const app = await NestFactory.create(appModule, {
       logger: new NestLogger(),
     })
-    this.addMiddleware(app)
+    this.addDefaultMiddleware(app)
     return app
   }
 
-  public static addMiddleware(app: INestApplication): void {
-    app.use(logContextMiddleware)
+  public static addDefaultMiddleware(app: INestApplication): void {
+    app.use(logContextMiddleware, logMiddleware)
     const httpAdapter = app.getHttpAdapter()
     app.useGlobalFilters(new HttpExceptionFilter(httpAdapter))
-    app.useGlobalInterceptors(new HttpLoggingInterceptor(httpAdapter))
   }
 }

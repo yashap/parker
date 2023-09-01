@@ -17,6 +17,6 @@ class AppModule {}
 const serviceName: string = ...
 const port: number = ...
 
-const app = await NestAppBuilder.build(serviceName, AppModule)
-await NestAppRunner.run(app, serviceName, port)
+const app = await NestAppBuilder.build(AppModule)
+await NestAppRunner.run(app, port)
 ```

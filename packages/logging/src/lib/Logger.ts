@@ -1,7 +1,6 @@
 import { toString } from 'lodash'
 import winston from 'winston'
 import { LogContextPropagator } from './LogContextPropagator'
-import { LogData } from './LogData'
 
 export enum LogLevel {
   Off = 'off',
@@ -55,24 +54,20 @@ const getFormat = (): winston.Logform.Format => {
     winston.format.timestamp({ format: 'hh:mm:ss' }),
     winston.format.align(),
     winston.format.printf((log) => {
-      const { timestamp, level, name, message, context, metadata, error } = log
-      const contextString =
-        context && Object.keys(context).length > 0
-          ? ` ${AnsiColors.Cyan}${JSON.stringify(context)}${AnsiColors.Cyan}`
-          : ''
+      const { timestamp, level, name, message, error, ...metadata } = log
       const metadataString =
         metadata && Object.keys(metadata).length > 0
-          ? ` ${AnsiColors.Yellow}${JSON.stringify(metadata)}${AnsiColors.Yellow}`
+          ? ` ${AnsiColors.Cyan}${JSON.stringify(metadata)}${AnsiColors.Yellow}`
           : ''
       const errorString = error ? `\n  ${error.stack ? error.stack : toString(error)}` : ''
-      return `${timestamp} ${level} [${name}]: ${message}${contextString}${metadataString}${errorString}`
+      return `${timestamp} ${level} [${name}]: ${message}${metadataString}${errorString}`
     })
   )
 }
 
 export interface Payload {
   error?: unknown
-  metadata?: LogData
+  [key: string]: unknown
 }
 
 export class Logger {
@@ -81,7 +76,7 @@ export class Logger {
 
   constructor(
     private readonly name: string,
-    private readonly defaultMetadata?: LogData
+    private readonly defaultMetadata?: Payload
   ) {
     const level = getLevel()
     this.underlyingLogger = winston.createLogger({
@@ -121,7 +116,7 @@ export class Logger {
    * @param defaultMetadataOverrides Metadata to override (or add to) values from the parent
    * @returns A new logger
    */
-  public child(name: string, defaultMetadataOverrides?: LogData) {
+  public child(name: string, defaultMetadataOverrides?: Payload) {
     return new Logger(name, { ...this.defaultMetadata, ...defaultMetadataOverrides })
   }
 
@@ -146,15 +141,15 @@ export class Logger {
   }
 
   private log(level: LogLevel, message: string, payload?: Payload): void {
-    const { error, metadata } = payload ?? {}
+    const { error, ...metadata } = payload ?? {}
     const context = LogContextPropagator.getContext()
-    const fullMetadata = { ...this.defaultMetadata, ...metadata }
     this.underlyingLogger.log({
       level,
       message,
       name: this.name,
-      ...(Object.keys(fullMetadata).length === 0 ? {} : { metadata: fullMetadata }),
-      ...(context === undefined ? {} : { context }),
+      ...context,
+      ...this.defaultMetadata,
+      ...metadata,
       ...(error === undefined ? {} : { error }), // TODO: nicely format with stack trace and whatnot
     })
   }

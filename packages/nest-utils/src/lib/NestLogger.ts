@@ -1,5 +1,5 @@
 import { LoggerService } from '@nestjs/common'
-import { LogData, Logger, Payload } from '@parker/logging'
+import { Logger, Payload } from '@parker/logging'
 
 export class NestLogger implements LoggerService {
   private readonly underlyingLogger: Logger
@@ -29,6 +29,6 @@ export class NestLogger implements LoggerService {
   }
 
   private static toPayload(optionalParams: unknown[]): Payload {
-    return optionalParams.length > 0 ? { metadata: { nestJsData: optionalParams } as LogData } : {}
+    return optionalParams.length > 0 ? { nestJsData: optionalParams } : {}
   }
 }
