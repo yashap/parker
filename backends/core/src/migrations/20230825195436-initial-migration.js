@@ -1,16 +1,8 @@
 /* eslint-disable */
 exports.up = async (db) => {
   return db
-    .runSql(
-      `
-      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-    `
-    )
-    .then(() =>
-      db.runSql(`
-      CREATE EXTENSION IF NOT EXISTS "postgis";
-    `)
-    )
+    .runSql('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
+    .then(() => db.runSql('CREATE EXTENSION IF NOT EXISTS "postgis";'))
     .then(() =>
       db.runSql(`
         CREATE TABLE IF NOT EXISTS "User" (
@@ -22,14 +14,10 @@ exports.up = async (db) => {
         );
       `)
     )
+    .then(() => db.runSql('CREATE UNIQUE INDEX IF NOT EXISTS "email_idx" ON "User" (LOWER("email"));'))
     .then(() =>
       db.runSql(`
-        CREATE UNIQUE INDEX IF NOT EXISTS "email_idx" ON "User" (LOWER("email"));
-      `)
-    )
-    .then(() =>
-      db.runSql(`
-      CREATE TABLE IF NOT EXISTS "ParkingSpot" (
+        CREATE TABLE IF NOT EXISTS "ParkingSpot" (
           "id" UUID NOT NULL DEFAULT uuid_generate_v1() PRIMARY KEY,
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -38,11 +26,7 @@ exports.up = async (db) => {
         );
       `)
     )
-    .then(() =>
-      db.runSql(`
-        CREATE INDEX IF NOT EXISTS "location_idx" ON "ParkingSpot" USING GIST ("location");
-      `)
-    )
+    .then(() => db.runSql('CREATE INDEX IF NOT EXISTS "location_idx" ON "ParkingSpot" USING GIST ("location");'))
 }
 
 exports.down = async () => {
