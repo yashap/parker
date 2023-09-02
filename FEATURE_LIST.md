@@ -2,8 +2,7 @@
 
 What am I planning to work on next?
 
-- Change LogContextPropagator to CorrelationIdPropagator
-  - And move out of the logging package
+- Look into why I'm sending 304 not modified sometimes (e.g. list parking spots)
 - Add some tests about input validation, make sure it's working (and returning 400s)
 - Add tests around full server logging (logging responses properly, logging exceptions properly, correlation ids, etc.)
 - Setup proper accounts

@@ -21,8 +21,8 @@ describe(Logger.name, () => {
     })
   })
 
-  describe('Log context', () => {
-    it('Should add context to logs from LogContextPropagator', () => {
+  describe('Correlation ids', () => {
+    it('Should add correlation ids to logs', () => {
       // TODO
     })
   })

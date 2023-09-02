@@ -18,7 +18,7 @@ export class ParkingSpotController extends BaseController {
         { longitude, latitude },
         limit
       )
-      return { status: 200, body: { data: parkingSpots, pagination: {} } }
+      return { status: 200, body: { data: parkingSpots } }
     })
   }
 

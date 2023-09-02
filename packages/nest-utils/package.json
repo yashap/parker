@@ -13,6 +13,7 @@
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --watch src/"
   },
   "dependencies": {
+    "@parker/correlation-id-propagator": "*",
     "@parker/logging": "*",
     "@nestjs/common": "^9.1.6",
     "@nestjs/core": "^9.1.6",

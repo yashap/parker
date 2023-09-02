@@ -4,5 +4,5 @@ import { ParkingSpotSchema } from './ParkingSpot'
 
 export const ListParkingSpotsClosestToPointResponseSchema = z.object({
   data: z.array(ParkingSpotSchema),
-  pagination: PaginationSchema,
+  pagination: PaginationSchema.optional(),
 })

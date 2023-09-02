@@ -1,6 +1,6 @@
+import { CorrelationIdPropagator } from '@parker/correlation-id-propagator'
 import { toString } from 'lodash'
 import winston from 'winston'
-import { LogContextPropagator } from './LogContextPropagator'
 
 export enum LogLevel {
   Off = 'off',
@@ -142,12 +142,12 @@ export class Logger {
 
   private log(level: LogLevel, message: string, payload?: Payload): void {
     const { error, ...metadata } = payload ?? {}
-    const context = LogContextPropagator.getContext()
+    const correlationId = CorrelationIdPropagator.getContext()
     this.underlyingLogger.log({
       level,
       message,
       name: this.name,
-      ...context,
+      correlationId,
       ...this.defaultMetadata,
       ...metadata,
       ...(error === undefined ? {} : { error }), // TODO: nicely format with stack trace and whatnot

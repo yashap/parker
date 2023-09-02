@@ -5,28 +5,17 @@ A logging library for backend services.
 ## Usage
 
 ```ts
-import { Logger, LogContextPropagator }
+import { Logger }
 
 const logger = new Logger('UserRepository')
 
 try {
   await saveUser(user)
+  logger.debug('User saved', { userId: user.id })
 } catch (error) {
   logger.error('Failed to save user', { error, userId: user.id })
   throw error
 }
-
-// Or, put data into the "log context", and it will be automatically added to all logs in the callback
-// e.g. in the below example, both logs will have the userId
-LogContextPropagator.runWithContext({ userId: user.id }, async () => {
-  try {
-    logger.debug('Attempting to save user')
-    await saveUser(user)
-  } catch (error) {
-    logger.error('Failed to save user', { error })
-    throw error
-  }
-})
 ```
 
 ### Environment Variables
