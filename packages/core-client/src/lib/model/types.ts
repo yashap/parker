@@ -3,7 +3,6 @@ import { CreateParkingSpotRequestSchema } from './CreateParkingSpotRequest'
 import { CreateUserRequestSchema } from './CreateUserRequest'
 import { ListParkingSpotsClosestToPointRequestSchema } from './ListParkingSpotsClosestToPointRequest'
 import { ListParkingSpotsClosestToPointResponseSchema } from './ListParkingSpotsClosestToPointResponse'
-import { PaginationSchema } from './Pagination'
 import { ParkingSpotSchema } from './ParkingSpot'
 import { PointSchema } from './Point'
 import { UpdateParkingSpotRequestSchema } from './UpdateParkingSpotRequest'
@@ -21,7 +20,8 @@ export type UpdateUserRequest = z.infer<typeof UpdateUserRequestSchema>
 export type ListParkingSpotsClosestToPointResponse = z.infer<typeof ListParkingSpotsClosestToPointResponseSchema>
 
 // Data Models
-export type PaginationDto = z.infer<typeof PaginationSchema>
+export type { ServerErrorDto } from '@parker/api-client-utils'
+export type { PaginationDto } from '@parker/api-client-utils'
 export type ParkingSpotDto = z.infer<typeof ParkingSpotSchema>
 export type PointDto = z.infer<typeof PointSchema>
 export type UserDto = z.infer<typeof UserSchema>

@@ -1,3 +1,4 @@
+import { DefaultErrorResponses, DefaultErrorResponsesWithNotFound } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 import { CreateParkingSpotRequestSchema } from '../model/CreateParkingSpotRequest'
@@ -15,6 +16,7 @@ export const parkingSpotContract = c.router({
     query: ListParkingSpotsClosestToPointRequestSchema,
     responses: {
       200: ListParkingSpotsClosestToPointResponseSchema,
+      ...DefaultErrorResponses,
     },
     summary: 'Get a parking spot',
   },
@@ -23,6 +25,7 @@ export const parkingSpotContract = c.router({
     path: '/core/parkingSpots',
     responses: {
       201: ParkingSpotSchema,
+      ...DefaultErrorResponses,
     },
     body: CreateParkingSpotRequestSchema,
     summary: 'Create a parking spot',
@@ -32,6 +35,7 @@ export const parkingSpotContract = c.router({
     path: '/core/parkingSpots/:id',
     responses: {
       200: ParkingSpotSchema,
+      ...DefaultErrorResponsesWithNotFound,
     },
     summary: 'Get a parking spot',
   },
@@ -40,6 +44,7 @@ export const parkingSpotContract = c.router({
     path: '/core/parkingSpots/:id',
     responses: {
       200: ParkingSpotSchema,
+      ...DefaultErrorResponsesWithNotFound,
     },
     body: UpdateParkingSpotRequestSchema,
     summary: 'Update a parking spot',
@@ -49,6 +54,7 @@ export const parkingSpotContract = c.router({
     path: '/core/parkingSpots/:id',
     responses: {
       204: z.undefined(),
+      ...DefaultErrorResponsesWithNotFound,
     },
     body: z.NEVER,
     summary: 'Delete a parking spot',

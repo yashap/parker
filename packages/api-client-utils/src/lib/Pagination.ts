@@ -7,3 +7,5 @@ export const PaginationSchema = z.object(
   },
   { description: 'Pagination information, attached to responses of list endpoints, to allow you to fetch other pages' }
 )
+
+export type PaginationDto = z.infer<typeof PaginationSchema>

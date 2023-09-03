@@ -14,7 +14,8 @@
     "@parker/errors": "*",
     "@ts-rest/core": "^3.28.0",
     "axios": "^1.3.2",
-    "tslib": "^2.4.0"
+    "tslib": "^2.4.0",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@parker/tsconfig": "*",
