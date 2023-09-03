@@ -39,10 +39,7 @@ export type FooClient = ApiClient<typeof contract>
 
 export class FooRepository {
   public static createFoo(body: CreateFooRequest): Foo {
-    return {
-      ...body,
-      id: 1,
-    }
+    return { ...body, id: 1 }
   }
 }
 
