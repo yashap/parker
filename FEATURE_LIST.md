@@ -2,7 +2,6 @@
 
 What am I planning to work on next?
 
-- Finish NestAppBuilder.spec.ts
 - Add tests around full server logging (logging responses properly, logging exceptions properly, correlation ids, etc.)
 - Setup proper accounts
   - Using something like Keycloak or Ory Kratos

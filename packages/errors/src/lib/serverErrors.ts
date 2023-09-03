@@ -26,6 +26,17 @@ export class NotFoundError<T = unknown> extends ServerError<T> {
   }
 }
 
+export class EndpointNotFoundError<T = unknown> extends ServerError<T> {
+  constructor(message: string, options: ErrorOptions<T> = {}) {
+    super(404, message, options)
+  }
+
+  public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): EndpointNotFoundError<A> {
+    const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
+    return new EndpointNotFoundError(message, options)
+  }
+}
+
 /**
  * 5xx errors
  */
@@ -41,14 +52,29 @@ export class InternalServerError<T = unknown> extends ServerError<T> {
   }
 }
 
-export class UnknownError<T = unknown> extends ServerError<T> {
+export class ResponseValidationError<T = unknown> extends ServerError<T> {
   constructor(message: string, options: ErrorOptions<T> = {}) {
     super(500, message, options)
   }
 
-  public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): UnknownError<A> {
+  public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): ResponseValidationError<A> {
     const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
-    return new UnknownError(message, options)
+    return new ResponseValidationError(message, options)
+  }
+}
+
+export class UnknownError<T = unknown> extends ServerError<T> {
+  constructor(message: string, httpStatusCode: number = 500, options: ErrorOptions<T> = {}) {
+    super(httpStatusCode, message, options)
+  }
+
+  public static wrap<A = unknown>(
+    error: Error,
+    httpStatusCode: number = 500,
+    optionOverrides: WrapErrorOptions<A> = {}
+  ): UnknownError<A> {
+    const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
+    return new UnknownError(message, httpStatusCode, options)
   }
 }
 
@@ -63,14 +89,18 @@ export const buildServerErrorFromDto = (dto: unknown, statusCode: number): Serve
       return new InputValidationError(dto.message, options)
     } else if (statusCode === 404 && dto.code === NotFoundError.name) {
       return new NotFoundError(dto.message, options)
+    } else if (statusCode === 404 && dto.code === EndpointNotFoundError.name) {
+      return new EndpointNotFoundError(dto.message, options)
     } else if (statusCode === 500 && dto.code === InternalServerError.name) {
       return new InternalServerError(dto.message, options)
+    } else if (statusCode === 500 && dto.code === ResponseValidationError.name) {
+      return new ResponseValidationError(dto.message, options)
     } else if (dto.code === UnknownError.name) {
-      return new UnknownError(dto.message, options)
+      return new UnknownError(dto.message, statusCode, options)
     }
   }
-  return new UnknownError('Unexpected response from server', {
+  return new UnknownError('Unexpected response from server', statusCode, {
     cause: dto,
-    metadata: { response: { body: dto, status: statusCode } },
+    metadata: { response: { body: dto } },
   })
 }

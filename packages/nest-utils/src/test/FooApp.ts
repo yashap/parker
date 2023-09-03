@@ -3,9 +3,9 @@ import { Test } from '@nestjs/testing'
 import { SupertestInstance } from '@parker/api-client-test-utils'
 import { ApiClient, ApiClientBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
-import { TsRestHandler, tsRestHandler } from '@ts-rest/nest'
 import { z } from 'zod'
 import { NestAppBuilder } from '../lib/NestAppBuilder'
+import { TsRestHandler, tsRestHandler } from '../lib/tsRest'
 
 /**
  * This is a basic Nest server, with a client/server contract defined using ts-rest, that makes it easy to test our nest-utils
@@ -20,9 +20,18 @@ const FooSchema = z.object({
 
 const CreateFooRequestSchema = FooSchema.omit({ id: true })
 
-export type Foo = z.infer<typeof FooSchema>
+export const ListFoosRequestSchema = z.object({
+  limit: z.coerce.number(),
+})
 
+export const ListFoosResponseSchema = z.object({
+  data: z.array(FooSchema),
+})
+
+export type Foo = z.infer<typeof FooSchema>
 export type CreateFooRequest = z.infer<typeof CreateFooRequestSchema>
+export type ListFoosRequest = z.infer<typeof ListFoosRequestSchema>
+export type ListFoosResponse = z.infer<typeof ListFoosResponseSchema>
 
 const contract = c.router({
   postFoo: {
@@ -33,13 +42,32 @@ const contract = c.router({
     },
     body: CreateFooRequestSchema,
   },
+  listFoos: {
+    method: 'GET',
+    path: '/foos',
+    responses: {
+      200: ListFoosResponseSchema,
+    },
+    query: ListFoosRequestSchema,
+  },
 })
 
 export type FooClient = ApiClient<typeof contract>
 
 export class FooRepository {
+  private static currentId: number = 1
+  private static foos: Foo[] = []
+
   public static createFoo(body: CreateFooRequest): Foo {
-    return { ...body, id: 1 }
+    const id = this.currentId
+    this.currentId++
+    const foo = { ...body, id }
+    this.foos.push(foo)
+    return foo
+  }
+
+  public static listFoos({ limit }: ListFoosRequest): Foo[] {
+    return this.foos.slice(0, limit)
   }
 }
 
@@ -50,6 +78,14 @@ class FooController {
     return tsRestHandler(contract.postFoo, async ({ body }) => {
       const foo = FooRepository.createFoo(body)
       return { status: 201, body: foo }
+    })
+  }
+
+  @TsRestHandler(contract.listFoos)
+  public async list() {
+    return tsRestHandler(contract.listFoos, async ({ query }) => {
+      const foos = FooRepository.listFoos(query)
+      return { status: 200, body: { data: foos } }
     })
   }
 }

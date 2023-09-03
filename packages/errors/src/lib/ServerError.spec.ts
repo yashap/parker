@@ -68,10 +68,10 @@ describe(ServerError.name, () => {
     })
 
     it('converts anything unrecognized to an UnknownError', () => {
-      expect(buildServerErrorFromDto(20, 500)).toStrictEqual(
-        new UnknownError('Unexpected response from server', {
+      expect(buildServerErrorFromDto(20, 501)).toStrictEqual(
+        new UnknownError('Unexpected response from server', 501, {
           cause: 20,
-          metadata: { response: { body: 20, status: 500 } },
+          metadata: { response: { body: 20 } },
         })
       )
     })
