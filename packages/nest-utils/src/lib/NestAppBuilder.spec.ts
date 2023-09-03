@@ -1,14 +1,12 @@
-import { INestApplication } from '@nestjs/common'
 import { InputValidationError } from '@parker/errors'
-import { CreateFooRequest, Foo, FooClient, buildFooApp, buildFooClient } from '../test/FooServer'
+import { CreateFooRequest, Foo, FooClient, buildFooApp, buildFooClient } from '../test/FooApp'
 import { NestAppBuilder } from './NestAppBuilder'
 
 describe(NestAppBuilder.name, () => {
-  let app: INestApplication
   let client: FooClient
 
   beforeEach(async () => {
-    app = await buildFooApp()
+    const app = await buildFooApp()
     client = buildFooClient(app)
   })
 

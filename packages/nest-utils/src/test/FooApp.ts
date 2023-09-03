@@ -35,6 +35,8 @@ const contract = c.router({
   },
 })
 
+export type FooClient = ApiClient<typeof contract>
+
 export class FooRepository {
   public static createFoo(body: CreateFooRequest): Foo {
     return {
@@ -69,8 +71,6 @@ export const buildFooApp = async (): Promise<INestApplication> => {
   await app.init()
   return app
 }
-
-export type FooClient = ApiClient<typeof contract>
 
 export const buildFooClient = (app: INestApplication): FooClient => {
   const supertestInstance = new SupertestInstance(app.getHttpServer())
