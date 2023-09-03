@@ -84,7 +84,7 @@ export class UnknownError<T = unknown> extends ServerError<T> {
 
 export const buildServerErrorFromDto = (dto: unknown, statusCode: number): ServerError => {
   if (ServerError.isServerErrorDto(dto)) {
-    const options = { cause: dto, subCode: dto.subCode, metadata: dto.metadata }
+    const options = { cause: dto, metadata: dto.metadata }
     if (statusCode === 400 && dto.code === InputValidationError.name) {
       return new InputValidationError(dto.message, options)
     } else if (statusCode === 404 && dto.code === NotFoundError.name) {

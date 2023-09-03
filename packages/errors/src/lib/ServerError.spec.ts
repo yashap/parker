@@ -10,9 +10,7 @@ import {
 describe(ServerError.name, () => {
   describe(ServerError.isServerErrorDto.name, () => {
     it('returns true if the error is a ServerErrorDto', () => {
-      expect(
-        ServerError.isServerErrorDto(new InternalServerError('Oh no', { subCode: 'DatabaseConnectionTimeout' }).toDto())
-      ).toBe(true)
+      expect(ServerError.isServerErrorDto(new InternalServerError('Oh no').toDto())).toBe(true)
       expect(ServerError.isServerErrorDto(new NotFoundError('Oh no').toDto())).toBe(true)
     })
 
@@ -22,16 +20,14 @@ describe(ServerError.name, () => {
   })
 
   describe('toDto', () => {
-    it('converts a ServerError to a ServerErrorDto, with all optional fields populated', () => {
+    it('converts a ServerError to a ServerErrorDto, with metadata', () => {
       const expected: ServerErrorDto<{ foo: string }> = {
         message: 'Oh no',
         code: 'InternalServerError',
-        subCode: 'DatabaseConnectionTimeout',
         metadata: { foo: 'bar' },
       }
       expect(
         new InternalServerError('Oh no', {
-          subCode: 'DatabaseConnectionTimeout',
           metadata: { foo: 'bar' },
         }).toDto()
       ).toStrictEqual(expected)
@@ -51,7 +47,6 @@ describe(ServerError.name, () => {
       const internalServerErrorDto: ServerErrorDto<{ foo: string }> = {
         message: 'Oh no',
         code: 'InternalServerError',
-        subCode: 'DatabaseConnectionTimeout',
         metadata: { foo: 'bar' },
       }
       const notFoundErrorDto: ServerErrorDto = {
@@ -60,7 +55,6 @@ describe(ServerError.name, () => {
       }
       expect(buildServerErrorFromDto(internalServerErrorDto, 500)).toStrictEqual(
         new InternalServerError('Oh no', {
-          subCode: 'DatabaseConnectionTimeout',
           metadata: { foo: 'bar' },
         })
       )
@@ -81,7 +75,6 @@ describe(ServerError.name, () => {
     it('have expected values', () => {
       const options: ErrorOptions = {
         cause: new Error('Bam'),
-        subCode: 'BadThing',
         internalMessage: 'Boom internal',
         metadata: {
           id: '10',
@@ -93,7 +86,6 @@ describe(ServerError.name, () => {
       expect(error.name).toBe('InternalServerError')
       expect(error.code).toBe('InternalServerError')
       expect(error.cause).toBe(options.cause)
-      expect(error.subCode).toBe(options.subCode)
       expect(error.internalMessage).toBe(options.internalMessage)
       expect(error.metadata).toBe(options.metadata)
     })
