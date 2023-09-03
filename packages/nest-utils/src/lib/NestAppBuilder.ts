@@ -10,11 +10,16 @@ export class NestAppBuilder {
     const app = await NestFactory.create(appModule, {
       logger: new NestLogger(),
     })
-    this.addDefaultMiddleware(app)
+    this.configureApp(app)
     return app
   }
 
-  public static addDefaultMiddleware(app: INestApplication): void {
+  public static configureApp(app: INestApplication): void {
+    /**
+     * For an API just serving json, would rather not deal with Etag caching, which is mostly useful for large static
+     * assets (images, videos, etc.), not small JSON responses.
+     */
+    app.getHttpAdapter().getInstance().set('etag', false)
     app.use(logContextMiddleware, logMiddleware)
     const httpAdapter = app.getHttpAdapter()
     app.useGlobalFilters(new HttpExceptionFilter(httpAdapter))

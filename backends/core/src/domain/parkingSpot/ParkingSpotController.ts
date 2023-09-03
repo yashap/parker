@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common'
 import { contract } from '@parker/core-client'
-import { TsRestHandler, tsRestHandler } from '@ts-rest/nest'
+import { TsRestHandler, tsRestHandler } from '@parker/nest-utils'
 import { BaseController } from '../../http/BaseController'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 

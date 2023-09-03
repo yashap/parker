@@ -4,6 +4,7 @@
     "corepack",
     "Daos",
     "Dtos",
+    "foos",
     "frontends",
     "Keycloak",
     "Kratos",

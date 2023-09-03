@@ -9,7 +9,7 @@ export const buildTestApp = async (): Promise<INestApplication> => {
     imports: [UserModule, ParkingSpotModule],
   }).compile()
   const app = moduleRef.createNestApplication()
-  NestAppBuilder.addDefaultMiddleware(app)
+  NestAppBuilder.configureApp(app)
   await app.init()
   return app
 }
