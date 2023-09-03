@@ -1,7 +1,6 @@
 import { Controller } from '@nestjs/common'
 import { contract } from '@parker/core-client'
-import { TsRestHandler, tsRestHandler } from '@parker/nest-utils'
-import { BaseController } from '../../http/BaseController'
+import { BaseController, TsRestHandler, tsRestHandler } from '@parker/nest-utils'
 import { UserRepository } from './UserRepository'
 
 @Controller()
