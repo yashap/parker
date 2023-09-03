@@ -54,15 +54,11 @@ class FooController {
   }
 }
 
-@Module({
-  controllers: [FooController],
-})
+@Module({ controllers: [FooController] })
 class FooModule {}
 
 export const buildFooApp = async (): Promise<INestApplication> => {
-  const moduleRef = await Test.createTestingModule({
-    imports: [FooModule],
-  }).compile()
+  const moduleRef = await Test.createTestingModule({ imports: [FooModule] }).compile()
   const app = moduleRef.createNestApplication()
   NestAppBuilder.configureApp(app)
   await app.init()
