@@ -1,7 +1,17 @@
 import { SupertestInstance } from '@parker/api-client-test-utils'
 import { ApiAxiosInstance } from '@parker/api-client-utils'
-import { EndpointNotFoundError, InputValidationError, ResponseValidationError, required } from '@parker/errors'
+import {
+  EndpointNotFoundError,
+  InputValidationError,
+  ResponseValidationError,
+  NotFoundError,
+  required,
+  ServerError,
+  InternalServerError,
+} from '@parker/errors'
 import { LogLevel, Logger } from '@parker/logging'
+import { v4 as uuid } from 'uuid'
+import { expectServerError } from '../test/expectServerError'
 import {
   CreateFooRequest,
   Foo,
@@ -16,6 +26,12 @@ import { NestAppBuilder } from './NestAppBuilder'
 describe(NestAppBuilder.name, () => {
   let client: FooClient
   let supertestInstance: ApiAxiosInstance
+
+  const expectSameCorrelationId = (left: { correlationId?: string }, right: { correlationId?: string }): void => {
+    expect(left.correlationId).toBeDefined()
+    expect(left.correlationId).toHaveLength(uuid().length)
+    expect(left.correlationId).toBe(right.correlationId)
+  }
 
   beforeEach(async () => {
     const app = await buildFooApp()
@@ -34,41 +50,101 @@ describe(NestAppBuilder.name, () => {
 
     it('returns an InputValidationError for an invalid request body', async () => {
       const invalidPostBody = { name: 10 } as unknown as CreateFooRequest
-      await expect(client.postFoo({ body: invalidPostBody })).rejects.toThrow(InputValidationError)
+      const error = await expectServerError(client.postFoo({ body: invalidPostBody }), InputValidationError)
+      expect(error.toDto()).toStrictEqual({
+        message: 'Invalid request',
+        code: 'InputValidationError',
+        metadata: {
+          bodyErrors: [
+            {
+              code: 'invalid_type',
+              expected: 'string',
+              received: 'number',
+              path: ['name'],
+              message: 'Expected string, received number',
+            },
+          ],
+        },
+      })
     })
 
     it('returns an InputValidationError for invalid query params', async () => {
       const invalidQueryParams = { limit: true } as unknown as ListFoosRequest
-      await expect(client.listFoos({ query: invalidQueryParams })).rejects.toThrow(InputValidationError)
+      const error = await expectServerError(client.listFoos({ query: invalidQueryParams }), InputValidationError)
+      expect(error.toDto()).toStrictEqual({
+        message: 'Invalid request',
+        code: 'InputValidationError',
+        metadata: {
+          queryErrors: [
+            {
+              code: 'invalid_type',
+              expected: 'number',
+              received: 'nan',
+              path: ['limit'],
+              message: 'Expected number, received nan',
+            },
+          ],
+        },
+      })
     })
 
     it('returns an EndpointNotFoundError for an unknown endpoint', async () => {
-      await expect(
+      const error = await expectServerError(
         supertestInstance.request({
           method: 'GET',
           url: 'http://example.com/notARealEndpoint',
           headers: {},
           data: undefined,
-        })
-      ).rejects.toThrow(EndpointNotFoundError)
+        }),
+        EndpointNotFoundError
+      )
+      expect(error.toDto()).toStrictEqual({
+        message: 'Endpoint not found',
+        code: 'EndpointNotFoundError',
+      })
     })
 
     it('returns a ResponseValidationError for an invalid response', async () => {
-      const mockFooRepository = jest.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
-        const badFoo = { oops: 'Not a foo' } as unknown as Foo
-        return badFoo
-      })
-      await expect(client.postFoo({ body: { name: 'Foo' } })).rejects.toThrow(ResponseValidationError)
+      const mockFooRepository = jest
+        .spyOn(FooRepository, 'createFoo')
+        .mockReturnValue({ oops: 'Not a foo' } as unknown as Foo)
+      const error = await expectServerError(client.postFoo({ body: { name: 'Foo' } }), ResponseValidationError)
       expect(mockFooRepository).toHaveBeenCalledTimes(1)
+      expect(error.toDto()).toStrictEqual({
+        message: 'Invalid response',
+        code: 'ResponseValidationError',
+        metadata: {
+          details: [
+            { code: 'invalid_type', expected: 'number', received: 'undefined', path: ['id'], message: 'Required' },
+            { code: 'invalid_type', expected: 'string', received: 'undefined', path: ['name'], message: 'Required' },
+          ],
+        },
+      })
+    })
+
+    it('returns the thrown error, if a ServerError is thrown', async () => {
+      const mockFooRepository = jest.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
+        throw new NotFoundError('Oops', { metadata: { foo: 'bar' } })
+      })
+      const error = await expectServerError(client.postFoo({ body: { name: 'Foo' } }), NotFoundError)
+      expect(mockFooRepository).toHaveBeenCalledTimes(1)
+      expect(error.toDto()).toStrictEqual({
+        message: 'Oops',
+        code: 'NotFoundError',
+        metadata: { foo: 'bar' },
+      })
     })
   })
 
   describe('logging', () => {
     let mockLog: jest.SpyInstance<void, [level: LogLevel, message: string, metadata: object]>
-    const getLogPayload = (level: LogLevel, message: string): object => {
+    const getLogPayload = <T extends { correlationId?: string; error?: ServerError }>(
+      level: LogLevel,
+      message: string
+    ): T => {
       const logCall = mockLog.mock.calls.find((args) => args[0] === level && args[1] === message)
       expect(logCall).toBeDefined()
-      return required(logCall)[2]
+      return required(logCall)[2] as T
     }
 
     beforeEach(() => {
@@ -103,15 +179,81 @@ describe(NestAppBuilder.name, () => {
     })
 
     it('logs 400s, twice (http response and caught exception), with the same correlation id', async () => {
-      // TODO
+      const mockFooRepository = jest.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
+        throw new InputValidationError('Oops', { metadata: { foo: 'bar' } })
+      })
+      await expectServerError(client.postFoo({ body: { name: 'Foo' } }), InputValidationError)
+      expect(mockFooRepository).toHaveBeenCalledTimes(1)
+      expect(mockLog).toHaveBeenCalledTimes(2)
+      const httpResponseLogPayload = getLogPayload(LogLevel.Warn, 'Returning 4xx error')
+      const exceptionLogPayload = getLogPayload(LogLevel.Warn, 'Caught exception')
+      expect(httpResponseLogPayload).toEqual(
+        expect.objectContaining({
+          status: 400,
+          method: 'POST',
+          path: '/foos',
+        })
+      )
+      expect(exceptionLogPayload.error?.toDto()).toStrictEqual({
+        message: 'Oops',
+        code: 'InputValidationError',
+        metadata: {
+          foo: 'bar',
+        },
+      })
+      expectSameCorrelationId(httpResponseLogPayload, exceptionLogPayload)
     })
 
     it('logs 404s, twice (http response and caught exception), with the same correlation id', async () => {
-      // TODO
+      const mockFooRepository = jest.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
+        throw new NotFoundError('Oops', { metadata: { foo: 'bar' } })
+      })
+      await expectServerError(client.postFoo({ body: { name: 'Foo' } }), NotFoundError)
+      expect(mockFooRepository).toHaveBeenCalledTimes(1)
+      expect(mockLog).toHaveBeenCalledTimes(2)
+      const httpResponseLogPayload = getLogPayload(LogLevel.Warn, 'Returning 4xx error')
+      const exceptionLogPayload = getLogPayload(LogLevel.Warn, 'Caught exception')
+      expect(httpResponseLogPayload).toEqual(
+        expect.objectContaining({
+          status: 404,
+          method: 'POST',
+          path: '/foos',
+        })
+      )
+      expect(exceptionLogPayload.error?.toDto()).toStrictEqual({
+        message: 'Oops',
+        code: 'NotFoundError',
+        metadata: {
+          foo: 'bar',
+        },
+      })
+      expectSameCorrelationId(httpResponseLogPayload, exceptionLogPayload)
     })
 
     it('logs 500s, twice (http response and caught exception), with the same correlation id', async () => {
-      // TODO
+      const mockFooRepository = jest.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
+        throw new InternalServerError('Oops', { metadata: { foo: 'bar' } })
+      })
+      await expectServerError(client.postFoo({ body: { name: 'Foo' } }), InternalServerError)
+      expect(mockFooRepository).toHaveBeenCalledTimes(1)
+      expect(mockLog).toHaveBeenCalledTimes(2)
+      const httpResponseLogPayload = getLogPayload(LogLevel.Error, 'Returning 5xx error')
+      const exceptionLogPayload = getLogPayload(LogLevel.Error, 'Caught exception')
+      expect(httpResponseLogPayload).toEqual(
+        expect.objectContaining({
+          status: 500,
+          method: 'POST',
+          path: '/foos',
+        })
+      )
+      expect(exceptionLogPayload.error?.toDto()).toStrictEqual({
+        message: 'Oops',
+        code: 'InternalServerError',
+        metadata: {
+          foo: 'bar',
+        },
+      })
+      expectSameCorrelationId(httpResponseLogPayload, exceptionLogPayload)
     })
   })
 })

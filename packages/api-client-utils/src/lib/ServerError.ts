@@ -7,18 +7,3 @@ export const ServerErrorSchema = z.object({
 })
 
 export type ServerErrorDto = z.infer<typeof ServerErrorSchema>
-
-export const DefaultErrorResponses = {
-  400: ServerErrorSchema,
-  401: ServerErrorSchema,
-  403: ServerErrorSchema,
-  500: ServerErrorSchema,
-}
-
-export const DefaultErrorResponsesWithNotFound = {
-  400: ServerErrorSchema,
-  401: ServerErrorSchema,
-  403: ServerErrorSchema,
-  404: ServerErrorSchema,
-  500: ServerErrorSchema,
-}

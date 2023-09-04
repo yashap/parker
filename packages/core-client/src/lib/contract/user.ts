@@ -1,4 +1,4 @@
-import { DefaultErrorResponsesWithNotFound, DefaultErrorResponses } from '@parker/api-client-utils'
+import { ContractBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 import { CreateUserRequestSchema } from '../model/CreateUserRequest'
@@ -12,38 +12,26 @@ export const userContract = c.router({
     method: 'POST',
     path: '/core/users',
     body: CreateUserRequestSchema,
-    responses: {
-      201: UserSchema,
-      ...DefaultErrorResponses,
-    },
+    responses: ContractBuilder.buildPostResponses(UserSchema),
     summary: 'Create a user',
   },
   get: {
     method: 'GET',
     path: '/core/users/:id',
-    responses: {
-      200: UserSchema,
-      ...DefaultErrorResponsesWithNotFound,
-    },
+    responses: ContractBuilder.buildGetResponses(UserSchema),
     summary: 'Get a user',
   },
   patch: {
     method: 'PATCH',
     path: '/core/users/:id',
-    responses: {
-      200: UserSchema,
-      ...DefaultErrorResponsesWithNotFound,
-    },
+    responses: ContractBuilder.buildPatchResponses(UserSchema),
     body: UpdateUserRequestSchema,
     summary: 'Update a user',
   },
   delete: {
     method: 'DELETE',
     path: '/core/users/:id',
-    responses: {
-      204: z.undefined(),
-      ...DefaultErrorResponsesWithNotFound,
-    },
+    responses: ContractBuilder.buildDeleteResponses(),
     body: z.NEVER,
     summary: 'Delete a user',
   },

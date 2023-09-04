@@ -1,4 +1,4 @@
-import { DefaultErrorResponses, DefaultErrorResponsesWithNotFound } from '@parker/api-client-utils'
+import { ContractBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 import { CreateParkingSpotRequestSchema } from '../model/CreateParkingSpotRequest'
@@ -14,49 +14,34 @@ export const parkingSpotContract = c.router({
     method: 'GET',
     path: '/core/parkingSpots/closestToPoint',
     query: ListParkingSpotsClosestToPointRequestSchema,
-    responses: {
-      200: ListParkingSpotsClosestToPointResponseSchema,
-      ...DefaultErrorResponses,
-    },
-    summary: 'Get a parking spot',
+    responses: ContractBuilder.buildListResponses(ListParkingSpotsClosestToPointResponseSchema),
+    summary: 'List parking spots closest to a point',
   },
   post: {
     method: 'POST',
     path: '/core/parkingSpots',
     body: CreateParkingSpotRequestSchema,
-    responses: {
-      201: ParkingSpotSchema,
-      ...DefaultErrorResponses,
-    },
+    responses: ContractBuilder.buildPostResponses(ParkingSpotSchema),
     summary: 'Create a parking spot',
   },
   get: {
     method: 'GET',
     path: '/core/parkingSpots/:id',
-    responses: {
-      200: ParkingSpotSchema,
-      ...DefaultErrorResponsesWithNotFound,
-    },
+    responses: ContractBuilder.buildGetResponses(ParkingSpotSchema),
     summary: 'Get a parking spot',
   },
   patch: {
     method: 'PATCH',
     path: '/core/parkingSpots/:id',
     body: UpdateParkingSpotRequestSchema,
-    responses: {
-      200: ParkingSpotSchema,
-      ...DefaultErrorResponsesWithNotFound,
-    },
+    responses: ContractBuilder.buildPatchResponses(ParkingSpotSchema),
     summary: 'Update a parking spot',
   },
   delete: {
     method: 'DELETE',
     path: '/core/parkingSpots/:id',
     body: z.NEVER,
-    responses: {
-      204: z.undefined(),
-      ...DefaultErrorResponsesWithNotFound,
-    },
+    responses: ContractBuilder.buildDeleteResponses(),
     summary: 'Delete a parking spot',
   },
 })

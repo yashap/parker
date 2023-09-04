@@ -1,7 +1,7 @@
 import { INestApplication, Controller, Module } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import { SupertestInstance } from '@parker/api-client-test-utils'
-import { ApiClient, ApiClientBuilder, buildListResponseSchema } from '@parker/api-client-utils'
+import { ApiClient, ApiClientBuilder, SchemaBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 import { Endpoint, handle } from '../lib/Endpoint'
@@ -24,7 +24,7 @@ export const ListFoosRequestSchema = z.object({
   limit: z.coerce.number(),
 })
 
-export const ListFoosResponseSchema = buildListResponseSchema(FooSchema)
+export const ListFoosResponseSchema = SchemaBuilder.buildListResponse(FooSchema)
 
 export type Foo = z.infer<typeof FooSchema>
 export type CreateFooRequest = z.infer<typeof CreateFooRequestSchema>

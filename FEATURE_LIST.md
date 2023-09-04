@@ -2,7 +2,6 @@
 
 What am I planning to work on next?
 
-- Add tests around full server logging (logging responses properly, logging exceptions properly, correlation ids, etc.)
 - Setup proper accounts
   - Using something like Keycloak or Ory Kratos
 - Improve "landlord" app, that lets you list a parking spot

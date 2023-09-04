@@ -16,8 +16,7 @@ import {
   UnknownError,
 } from '@parker/errors'
 import { Logger } from '@parker/logging'
-import { RequestValidationError, ResponseValidationError as LibResponseValidationError } from '@ts-rest/nest'
-import { isString } from 'lodash'
+import { RequestValidationError, ResponseValidationError as TsRestResponseValidationError } from '@ts-rest/nest'
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter<unknown> {
@@ -61,27 +60,22 @@ export class HttpExceptionFilter implements ExceptionFilter<unknown> {
   }
 
   private static nestExceptionToServerError(error: NestHttpException): ServerError {
-    let metadata: object = {}
-    const errorDetails = error.getResponse()
-    if (isString(errorDetails)) {
-      try {
-        metadata = JSON.parse(errorDetails)
-      } catch (_parseError) {
-        metadata = { details: errorDetails }
-      }
-    } else {
-      metadata = errorDetails
-    }
     if (error instanceof RequestValidationError) {
       return new InputValidationError('Invalid request', {
         cause: error,
-        metadata,
+        metadata: {
+          ...(error.pathParams && { pathParamErrors: error.pathParams.issues }),
+          ...(error.body && { bodyErrors: error.body.issues }),
+          ...(error.query && { queryErrors: error.query.issues }),
+        },
       })
     }
-    if (error instanceof LibResponseValidationError) {
+    if (error instanceof TsRestResponseValidationError) {
       return new ResponseValidationError('Invalid response', {
         cause: error,
-        metadata,
+        metadata: {
+          details: error.error.issues,
+        },
       })
     }
     if (error instanceof NestNotFoundException && HttpExceptionFilter.endpointNotFoundRegex.test(error.message)) {
@@ -89,6 +83,9 @@ export class HttpExceptionFilter implements ExceptionFilter<unknown> {
         cause: error,
       })
     }
-    return new UnknownError(error.message, error.getStatus(), { cause: error, metadata })
+    return new UnknownError(error.message, error.getStatus(), {
+      cause: error,
+      metadata: { details: error.getResponse() },
+    })
   }
 }
