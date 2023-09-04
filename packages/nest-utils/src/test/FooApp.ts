@@ -4,8 +4,8 @@ import { SupertestInstance } from '@parker/api-client-test-utils'
 import { ApiClient, ApiClientBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
+import { Endpoint, handle } from '../lib/Endpoint'
 import { NestAppBuilder } from '../lib/NestAppBuilder'
-import { TsRestHandler, tsRestHandler } from '../lib/tsRest'
 
 /**
  * This is a basic Nest server, with a client/server contract defined using ts-rest, that makes it easy to test our nest-utils
@@ -78,17 +78,17 @@ export class FooRepository {
 
 @Controller()
 class FooController {
-  @TsRestHandler(contract.postFoo)
+  @Endpoint(contract.postFoo)
   public async post() {
-    return tsRestHandler(contract.postFoo, async ({ body }) => {
+    return handle(contract.postFoo, async ({ body }) => {
       const foo = FooRepository.createFoo(body)
       return { status: 201, body: foo }
     })
   }
 
-  @TsRestHandler(contract.listFoos)
+  @Endpoint(contract.listFoos)
   public async list() {
-    return tsRestHandler(contract.listFoos, async ({ query }) => {
+    return handle(contract.listFoos, async ({ query }) => {
       const foos = FooRepository.listFoos(query)
       return { status: 200, body: { data: foos } }
     })
