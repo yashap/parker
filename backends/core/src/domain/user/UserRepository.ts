@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { CreateUserRequest, UpdateUserRequest } from '@parker/core-client'
 import { InputValidationError } from '@parker/errors'
-import { Selectable } from 'kysely'
 import { BaseRepository } from '../../db/BaseRepository'
-import { User as UserDao } from '../../db/generated/db'
 import { User } from './User'
 
 type CreateUserInput = CreateUserRequest
@@ -15,24 +13,22 @@ export class UserRepository extends BaseRepository {
   private readonly fields = ['id', 'fullName', 'email'] as const
 
   public create(payload: CreateUserInput): Promise<User> {
-    return UserRepository.mapDuplicateEmailError(async () => {
-      const userDao = await this.db
+    return UserRepository.mapDuplicateEmailError(() =>
+      this.db
         .insertInto(this.tableName)
         .values({ ...UserRepository.sanitize(payload), ...this.updatedAt() })
         .returning(this.fields)
         .executeTakeFirstOrThrow()
-      return UserRepository.userToDomain(userDao)
-    })
+    )
   }
 
   public async getById(id: string): Promise<User | undefined> {
-    const userDao = await this.db.selectFrom(this.tableName).select(this.fields).where('id', '=', id).executeTakeFirst()
-    return userDao ? UserRepository.userToDomain(userDao) : undefined
+    return this.db.selectFrom(this.tableName).select(this.fields).where('id', '=', id).executeTakeFirst()
   }
 
   public update(id: string, update: UpdateUserInput): Promise<User> {
-    return UserRepository.mapDuplicateEmailError(async () => {
-      const userDao = await this.db
+    return UserRepository.mapDuplicateEmailError(async () =>
+      this.db
         .updateTable(this.tableName)
         .set({
           ...UserRepository.sanitize(update),
@@ -41,17 +37,11 @@ export class UserRepository extends BaseRepository {
         .where('id', '=', id)
         .returning(this.fields)
         .executeTakeFirstOrThrow()
-      return UserRepository.userToDomain(userDao)
-    })
+    )
   }
 
   public async delete(id: string): Promise<void> {
     await this.db.deleteFrom(this.tableName).where('id', '=', id).executeTakeFirst()
-  }
-
-  private static userToDomain(userDao: Pick<Selectable<UserDao>, 'id' | 'fullName' | 'email'>): User {
-    // No transformation needed
-    return userDao
   }
 
   // Strips trailing/leading whitespace. Doesn't change casing, because our index is already case insensitive
