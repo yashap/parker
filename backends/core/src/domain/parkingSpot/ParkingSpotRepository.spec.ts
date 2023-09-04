@@ -39,32 +39,6 @@ describe(ParkingSpotRepository.name, () => {
     })
   })
 
-  describe('getByIds', () => {
-    it('should get parking spots by ids', async () => {
-      const spot2 = await parkingSpotRepository.create({
-        ownerUserId: user.id,
-        location: { longitude: 11, latitude: 21 },
-      })
-      const spot3 = await parkingSpotRepository.create({
-        ownerUserId: user.id,
-        location: { longitude: 12, latitude: 22 },
-      })
-      expect(await parkingSpotRepository.getByIds([spot.id, spot2.id, spot3.id])).toStrictEqual([spot, spot2, spot3])
-    })
-
-    it('should work with a single parking spot id', async () => {
-      expect(await parkingSpotRepository.getByIds([spot.id])).toStrictEqual([spot])
-    })
-
-    it('should work with no parking spot ids', async () => {
-      expect(await parkingSpotRepository.getByIds([])).toStrictEqual([])
-    })
-
-    it('should not throw if an id does not exist', async () => {
-      expect(await parkingSpotRepository.getByIds([spot.id, uuid()])).toStrictEqual([spot])
-    })
-  })
-
   describe('listParkingSpotsClosestToLocation', () => {
     it('should list the parking spots closest to a given location', async () => {
       // Create 20 spots

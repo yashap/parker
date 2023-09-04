@@ -25,24 +25,16 @@ export class ParkingSpotRepository extends BaseRepository {
       })
       .returning(this.fields)
       .executeTakeFirstOrThrow()
-
     return ParkingSpotRepository.parkingSpotToDomain(parkingSpotDao)
   }
 
   public async getById(id: string): Promise<ParkingSpot | undefined> {
-    return (await this.getByIds([id]))[0]
-  }
-
-  public async getByIds(ids: string[]): Promise<ParkingSpot[]> {
-    if (ids.length === 0) {
-      return []
-    }
-    const parkingSpotDaos = await this.db
+    const parkingSpotDao = await this.db
       .selectFrom(this.tableName)
       .select(this.fields)
-      .where('id', 'in', ids)
-      .execute()
-    return parkingSpotDaos.map((dao) => ParkingSpotRepository.parkingSpotToDomain(dao))
+      .where('id', '=', id)
+      .executeTakeFirst()
+    return parkingSpotDao ? ParkingSpotRepository.parkingSpotToDomain(parkingSpotDao) : undefined
   }
 
   public async listParkingSpotsClosestToLocation(location: Point, limit: number): Promise<ParkingSpot[]> {

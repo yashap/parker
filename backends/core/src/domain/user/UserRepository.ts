@@ -22,12 +22,12 @@ export class UserRepository extends BaseRepository {
     )
   }
 
-  public async getById(id: string): Promise<User | undefined> {
+  public getById(id: string): Promise<User | undefined> {
     return this.db.selectFrom(this.tableName).select(this.fields).where('id', '=', id).executeTakeFirst()
   }
 
   public update(id: string, update: UpdateUserInput): Promise<User> {
-    return UserRepository.mapDuplicateEmailError(async () =>
+    return UserRepository.mapDuplicateEmailError(() =>
       this.db
         .updateTable(this.tableName)
         .set({
