@@ -22,6 +22,7 @@
     "serve:backend": "turbo run serve:backend --parallel",
     "serve:landlord": "yarn workspace @parker/landlord serve",
     "test": "turbo run test",
+    "test:force": "turbo run test --force",
     "test:watch": "turbo run test:watch"
   },
   "devDependencies": {

@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { CreateParkingSpotRequest, UpdateParkingSpotRequest } from '@parker/core-client'
-import { Point } from '@parker/geography'
+import { GeoJsonPoint, Point, geoJsonToPoint } from '@parker/geography'
 import { Selectable, sql } from 'kysely'
 import { BaseRepository } from '../../db/BaseRepository'
 import { ParkingSpot as ParkingSpotDao } from '../../db/generated/db'
-import { GeoJsonPoint, toPoint } from '../geography'
 import { ParkingSpot } from './ParkingSpot'
 
 type CreateParkingSpotInput = CreateParkingSpotRequest
@@ -83,6 +82,6 @@ export class ParkingSpotRepository extends BaseRepository {
   ): ParkingSpot {
     const { id, ownerUserId, location } = parkingSpotDao
     const locationGeoJson = JSON.parse(location) as GeoJsonPoint
-    return { id, ownerUserId, location: toPoint(locationGeoJson) }
+    return { id, ownerUserId, location: geoJsonToPoint(locationGeoJson) }
   }
 }
