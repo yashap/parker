@@ -16,7 +16,12 @@ describe(UserRepository.name, () => {
 
   beforeEach(async () => {
     userRepository = new UserRepository()
-    user = await userRepository.create({ email: 'the.tick@example.com', fullName: 'The Tick' })
+    const createUserInput = { email: 'the.tick@example.com', fullName: 'The Tick' }
+    user = await userRepository.create(createUserInput)
+    expect(user).toStrictEqual({
+      id: user.id,
+      ...createUserInput,
+    })
   })
 
   describe('getById', () => {

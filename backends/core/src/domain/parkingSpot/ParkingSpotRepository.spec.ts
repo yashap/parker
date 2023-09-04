@@ -15,8 +15,18 @@ describe(ParkingSpotRepository.name, () => {
   beforeEach(async () => {
     parkingSpotRepository = new ParkingSpotRepository()
     userRepository = new UserRepository()
-    user = await userRepository.create({ email: 'the.tick@example.com', fullName: 'The Tick' })
-    spot = await parkingSpotRepository.create({ ownerUserId: user.id, location: { longitude: 10, latitude: 20 } })
+    const createUserInput = { email: 'the.tick@example.com', fullName: 'The Tick' }
+    user = await userRepository.create(createUserInput)
+    expect(user).toStrictEqual({
+      id: user.id,
+      ...createUserInput,
+    })
+    const createParkingSpotInput = { ownerUserId: user.id, location: { longitude: 10, latitude: 20 } }
+    spot = await parkingSpotRepository.create(createParkingSpotInput)
+    expect(spot).toStrictEqual({
+      id: spot.id,
+      ...createParkingSpotInput,
+    })
   })
 
   describe('getById', () => {
