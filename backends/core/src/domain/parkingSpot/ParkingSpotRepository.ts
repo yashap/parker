@@ -12,6 +12,7 @@ type UpdateParkingSpotInput = UpdateParkingSpotRequest
 @Injectable()
 export class ParkingSpotRepository extends BaseRepository {
   private readonly tableName = 'ParkingSpot' as const
+  private readonly fields = ['id', 'ownerUserId', this.pointFieldToGeoJson('location').as('location')] as const
 
   public async create(payload: CreateParkingSpotInput): Promise<ParkingSpot> {
     const { location, ...rest } = payload
@@ -22,7 +23,7 @@ export class ParkingSpotRepository extends BaseRepository {
         location: this.pointToSql(location),
         ...this.updatedAt(),
       })
-      .returning(['id', 'ownerUserId', this.pointFieldToGeoJson('location').as('location')])
+      .returning(this.fields)
       .executeTakeFirstOrThrow()
 
     return ParkingSpotRepository.parkingSpotToDomain(parkingSpotDao)
@@ -38,7 +39,7 @@ export class ParkingSpotRepository extends BaseRepository {
     }
     const parkingSpotDaos = await this.db
       .selectFrom(this.tableName)
-      .select(['id', 'ownerUserId', this.pointFieldToGeoJson('location').as('location')])
+      .select(this.fields)
       .where('id', 'in', ids)
       .execute()
     return parkingSpotDaos.map((dao) => ParkingSpotRepository.parkingSpotToDomain(dao))
@@ -51,7 +52,7 @@ export class ParkingSpotRepository extends BaseRepository {
     const { longitude, latitude } = location
     const parkingSpotDaos = await this.db
       .selectFrom(this.tableName)
-      .select(['id', 'ownerUserId', this.pointFieldToGeoJson('location').as('location')])
+      .select(this.fields)
       .orderBy(sql`"location" <-> ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)`, 'asc')
       .limit(limit)
       .execute()
@@ -68,7 +69,7 @@ export class ParkingSpotRepository extends BaseRepository {
         ...this.updatedAt(),
       })
       .where('id', '=', id)
-      .returning(['id', 'ownerUserId', this.pointFieldToGeoJson('location').as('location')])
+      .returning(this.fields)
       .executeTakeFirstOrThrow()
     return ParkingSpotRepository.parkingSpotToDomain(parkingSpotDao)
   }

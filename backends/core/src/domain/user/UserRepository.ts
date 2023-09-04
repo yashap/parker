@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { CreateUserRequest, UpdateUserRequest } from '@parker/core-client'
 import { InputValidationError } from '@parker/errors'
 import { Selectable } from 'kysely'
-import { pick } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
 import { User as UserDao } from '../../db/generated/db'
 import { User } from './User'
@@ -13,20 +12,21 @@ type UpdateUserInput = UpdateUserRequest
 @Injectable()
 export class UserRepository extends BaseRepository {
   private readonly tableName = 'User' as const
+  private readonly fields = ['id', 'fullName', 'email'] as const
 
   public create(payload: CreateUserInput): Promise<User> {
     return UserRepository.mapDuplicateEmailError(async () => {
       const userDao = await this.db
         .insertInto(this.tableName)
         .values({ ...UserRepository.sanitize(payload), ...this.updatedAt() })
-        .returningAll()
+        .returning(this.fields)
         .executeTakeFirstOrThrow()
       return UserRepository.userToDomain(userDao)
     })
   }
 
   public async getById(id: string): Promise<User | undefined> {
-    const userDao = await this.db.selectFrom(this.tableName).selectAll().where('id', '=', id).executeTakeFirst()
+    const userDao = await this.db.selectFrom(this.tableName).select(this.fields).where('id', '=', id).executeTakeFirst()
     return userDao ? UserRepository.userToDomain(userDao) : undefined
   }
 
@@ -39,7 +39,7 @@ export class UserRepository extends BaseRepository {
           ...this.updatedAt(),
         })
         .where('id', '=', id)
-        .returningAll()
+        .returning(this.fields)
         .executeTakeFirstOrThrow()
       return UserRepository.userToDomain(userDao)
     })
@@ -49,8 +49,9 @@ export class UserRepository extends BaseRepository {
     await this.db.deleteFrom(this.tableName).where('id', '=', id).executeTakeFirst()
   }
 
-  private static userToDomain(userDao: Selectable<UserDao>): User {
-    return pick(userDao, ['id', 'fullName', 'email'])
+  private static userToDomain(userDao: Pick<Selectable<UserDao>, 'id' | 'fullName' | 'email'>): User {
+    // No transformation needed
+    return userDao
   }
 
   // Strips trailing/leading whitespace. Doesn't change casing, because our index is already case insensitive
