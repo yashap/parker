@@ -2,8 +2,11 @@
 
 // eslint-disable-next-line no-undef
 module.exports = {
-  // Automatically clear mock calls, instances, contexts and results before every test
-  clearMocks: true,
+  // Automatically reset mock state before every test
+  resetMocks: true,
+
+  // Automatically restore mock state and implementation before every test
+  restoreMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
   collectCoverage: true,
@@ -21,7 +24,7 @@ module.exports = {
   setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: [],
+  setupFilesAfterEnv: ['<rootDir>/src/test/jestHooks/globalHooks.ts'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   slowTestThreshold: 5,

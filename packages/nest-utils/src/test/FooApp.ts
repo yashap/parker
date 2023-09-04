@@ -69,6 +69,11 @@ export class FooRepository {
   public static listFoos({ limit }: ListFoosRequest): Foo[] {
     return this.foos.slice(0, limit)
   }
+
+  public static clear(): void {
+    this.currentId = 1
+    this.foos = []
+  }
 }
 
 @Controller()

@@ -143,14 +143,21 @@ export class Logger {
   private log(level: LogLevel, message: string, payload?: Payload): void {
     const { error, ...metadata } = payload ?? {}
     const correlationId = CorrelationIdPropagator.getContext()
-    this.underlyingLogger.log({
-      level,
-      message,
+    this.doLog(level, message, {
       name: this.name,
       correlationId,
       ...this.defaultMetadata,
       ...metadata,
       ...(error === undefined ? {} : { error }), // TODO: nicely format with stack trace and whatnot
+    })
+  }
+
+  // Just makes testing easier - we can spy on this in tests
+  private doLog(level: LogLevel, message: string, metadata: object): void {
+    this.underlyingLogger.log({
+      level,
+      message,
+      ...metadata,
     })
   }
 }
