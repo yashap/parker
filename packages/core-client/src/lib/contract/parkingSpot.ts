@@ -23,11 +23,11 @@ export const parkingSpotContract = c.router({
   post: {
     method: 'POST',
     path: '/core/parkingSpots',
+    body: CreateParkingSpotRequestSchema,
     responses: {
       201: ParkingSpotSchema,
       ...DefaultErrorResponses,
     },
-    body: CreateParkingSpotRequestSchema,
     summary: 'Create a parking spot',
   },
   get: {
@@ -42,21 +42,21 @@ export const parkingSpotContract = c.router({
   patch: {
     method: 'PATCH',
     path: '/core/parkingSpots/:id',
+    body: UpdateParkingSpotRequestSchema,
     responses: {
       200: ParkingSpotSchema,
       ...DefaultErrorResponsesWithNotFound,
     },
-    body: UpdateParkingSpotRequestSchema,
     summary: 'Update a parking spot',
   },
   delete: {
     method: 'DELETE',
     path: '/core/parkingSpots/:id',
+    body: z.NEVER,
     responses: {
       204: z.undefined(),
       ...DefaultErrorResponsesWithNotFound,
     },
-    body: z.NEVER,
     summary: 'Delete a parking spot',
   },
 })

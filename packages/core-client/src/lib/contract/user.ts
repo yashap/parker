@@ -11,11 +11,11 @@ export const userContract = c.router({
   post: {
     method: 'POST',
     path: '/core/users',
+    body: CreateUserRequestSchema,
     responses: {
       201: UserSchema,
       ...DefaultErrorResponses,
     },
-    body: CreateUserRequestSchema,
     summary: 'Create a user',
   },
   get: {
