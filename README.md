@@ -16,7 +16,7 @@ Install the following:
   - Then run `corepack enable`
     - `corepack` includes `yarn`, and ships with Node.js >=16.10, but you have to opt in to enabling it
 - [cmake](https://cmake.org/)
-  - `brew install cmake`
+  - On a Mac, `brew install cmake`
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
   - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 - [XCode](https://en.wikipedia.org/wiki/Xcode)
