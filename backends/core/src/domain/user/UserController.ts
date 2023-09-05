@@ -1,7 +1,9 @@
 import { Controller } from '@nestjs/common'
-import { contract } from '@parker/core-client'
+import { contract as rootContract } from '@parker/core-client'
 import { BaseController, Endpoint, HandlerResult, handler } from '@parker/nest-utils'
 import { UserRepository } from './UserRepository'
+
+const contract = rootContract.users
 
 @Controller()
 export class UserController extends BaseController {
@@ -9,33 +11,33 @@ export class UserController extends BaseController {
     super('User')
   }
 
-  @Endpoint(contract.users.post)
-  public create(): HandlerResult<typeof contract.users.post> {
-    return handler(contract.users.post, async ({ body }) => {
+  @Endpoint(contract.post)
+  public create(): HandlerResult<typeof contract.post> {
+    return handler(contract.post, async ({ body }) => {
       const user = await this.userRepository.create(body)
       return { status: 201, body: user }
     })
   }
 
-  @Endpoint(contract.users.get)
-  public getById(): HandlerResult<typeof contract.users.get> {
-    return handler(contract.users.get, async ({ params: { id } }) => {
+  @Endpoint(contract.get)
+  public getById(): HandlerResult<typeof contract.get> {
+    return handler(contract.get, async ({ params: { id } }) => {
       const maybeUser = await this.userRepository.getById(id)
       return { status: 200, body: this.getEntityOrNotFound(maybeUser) }
     })
   }
 
-  @Endpoint(contract.users.patch)
-  public update(): HandlerResult<typeof contract.users.patch> {
-    return handler(contract.users.patch, async ({ params: { id }, body }) => {
+  @Endpoint(contract.patch)
+  public update(): HandlerResult<typeof contract.patch> {
+    return handler(contract.patch, async ({ params: { id }, body }) => {
       const user = await this.userRepository.update(id, body)
       return { status: 200, body: user }
     })
   }
 
-  @Endpoint(contract.users.delete)
-  public delete(): HandlerResult<typeof contract.users.delete> {
-    return handler(contract.users.delete, async ({ params: { id } }) => {
+  @Endpoint(contract.delete)
+  public delete(): HandlerResult<typeof contract.delete> {
+    return handler(contract.delete, async ({ params: { id } }) => {
       await this.userRepository.delete(id)
       return { status: 204, body: undefined }
     })
