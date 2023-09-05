@@ -1,4 +1,5 @@
 import { z, ZodTypeAny } from 'zod'
+import { PaginatedResponseSchema } from './Pagination'
 import { ServerErrorSchema } from './ServerError'
 
 const AllErrors = {
@@ -46,7 +47,7 @@ export class ContractBuilder {
    * @param successSchema The Zod schema describing the response body for a successful request
    * @returns The `responses` section of a `ts-rest` contract
    */
-  public static buildListResponses<T extends ZodTypeAny>(successSchema: T) {
+  public static buildListResponses<Item extends ZodTypeAny, T extends PaginatedResponseSchema<Item>>(successSchema: T) {
     return {
       200: successSchema,
       ...AllErrorsExcept404,

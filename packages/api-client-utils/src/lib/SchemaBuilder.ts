@@ -1,8 +1,8 @@
 import { z, ZodTypeAny } from 'zod'
-import { PaginationSchema } from './Pagination'
+import { PaginatedResponseSchema, PaginationSchema } from './Pagination'
 
 export class SchemaBuilder {
-  public static buildListResponse<T extends ZodTypeAny>(itemSchema: T) {
+  public static buildListResponse<T extends ZodTypeAny>(itemSchema: T): PaginatedResponseSchema<T> {
     return z.object({
       data: z.array(itemSchema),
       pagination: PaginationSchema.optional(),

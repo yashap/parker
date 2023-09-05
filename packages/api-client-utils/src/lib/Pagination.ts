@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z, ZodArray, ZodObject, ZodOptional, ZodTypeAny } from 'zod'
 
 export const PaginationSchema = z.object(
   {
@@ -9,3 +9,8 @@ export const PaginationSchema = z.object(
 )
 
 export type PaginationDto = z.infer<typeof PaginationSchema>
+
+export type PaginatedResponseSchema<T extends ZodTypeAny> = ZodObject<{
+  data: ZodArray<T, 'many'>
+  pagination: ZodOptional<typeof PaginationSchema>
+}>
