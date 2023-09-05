@@ -10,4 +10,6 @@ export const Endpoint = (appRouterOrRoute: AppRouter | AppRoute): MethodDecorato
   })
 
 // A function endpoints should call in their implementations
-export const handle = tsRestHandler
+export const handler = tsRestHandler
+
+export type HandlerResult = ReturnType<typeof handler>

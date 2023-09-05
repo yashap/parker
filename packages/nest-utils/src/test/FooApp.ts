@@ -4,7 +4,7 @@ import { SupertestInstance } from '@parker/api-client-test-utils'
 import { ApiClient, ApiClientBuilder, SchemaBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
-import { Endpoint, handle } from '../lib/Endpoint'
+import { Endpoint, HandlerResult, handler } from '../lib/Endpoint'
 import { NestAppBuilder } from '../lib/NestAppBuilder'
 
 /**
@@ -77,16 +77,16 @@ export class FooRepository {
 @Controller()
 class FooController {
   @Endpoint(contract.postFoo)
-  public async post() {
-    return handle(contract.postFoo, async ({ body }) => {
+  public post(): HandlerResult {
+    return handler(contract.postFoo, async ({ body }) => {
       const foo = FooRepository.createFoo(body)
       return { status: 201, body: foo }
     })
   }
 
   @Endpoint(contract.listFoos)
-  public async list() {
-    return handle(contract.listFoos, async ({ query }) => {
+  public list(): HandlerResult {
+    return handler(contract.listFoos, async ({ query }) => {
       const foos = FooRepository.listFoos(query)
       return { status: 200, body: { data: foos } }
     })

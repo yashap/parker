@@ -22,7 +22,7 @@ Install the following:
 - [XCode](https://en.wikipedia.org/wiki/Xcode)
   - Ensure XCode is installed, with command line tools (necessary for running iOS Simulator)
 
-After this, you can try running `yarn post-sync && yarn generate && yarn format && yarn lint && yarn test && yarn dev` to ensure everything works.
+After this, you can try running `yarn post-sync && yarn generate && yarn format && yarn lint && yarn test` to ensure everything works, before proceeding to `Dev Workflows` (below).
 
 ## Dev Workflows
 
@@ -33,6 +33,8 @@ For any of the above commands, you can run against a specific workspace (a libra
 ```bash
 yarn workspace @parker/context-propagation test
 ```
+
+The name of the workspace is the value of the `name` field in its `package.json`.
 
 ### Core Dev Workflow
 
@@ -49,7 +51,7 @@ yarn serve:landlord
 # Before you push
 yarn format && yarn test
 
-# Run code generation (after changing OAS, DB schema, etc.)
+# Run code generation (after changing DB schema, etc.)
 yarn generate
 ```
 
