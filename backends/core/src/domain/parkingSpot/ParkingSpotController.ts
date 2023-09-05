@@ -10,7 +10,7 @@ export class ParkingSpotController extends BaseController {
   }
 
   @Endpoint(contract.parkingSpots.listClosestToPoint)
-  public listClosestToPoint(): HandlerResult {
+  public listClosestToPoint(): HandlerResult<typeof contract.parkingSpots.listClosestToPoint> {
     return handler(contract.parkingSpots.listClosestToPoint, async ({ query }) => {
       const { longitude, latitude, limit } = query
       const parkingSpots = await this.parkingSpotRepository.listParkingSpotsClosestToLocation(
@@ -22,7 +22,7 @@ export class ParkingSpotController extends BaseController {
   }
 
   @Endpoint(contract.parkingSpots.post)
-  public create(): HandlerResult {
+  public create(): HandlerResult<typeof contract.parkingSpots.post> {
     return handler(contract.parkingSpots.post, async ({ body }) => {
       const parkingSpot = await this.parkingSpotRepository.create(body)
       return { status: 201, body: parkingSpot }
@@ -30,7 +30,7 @@ export class ParkingSpotController extends BaseController {
   }
 
   @Endpoint(contract.parkingSpots.get)
-  public getById(): HandlerResult {
+  public getById(): HandlerResult<typeof contract.parkingSpots.get> {
     return handler(contract.parkingSpots.get, async ({ params: { id } }) => {
       const maybeParkingSpot = await this.parkingSpotRepository.getById(id)
       return { status: 200, body: this.getEntityOrNotFound(maybeParkingSpot) }
@@ -38,7 +38,7 @@ export class ParkingSpotController extends BaseController {
   }
 
   @Endpoint(contract.parkingSpots.patch)
-  public update(): HandlerResult {
+  public update(): HandlerResult<typeof contract.parkingSpots.patch> {
     return handler(contract.parkingSpots.patch, async ({ params: { id }, body }) => {
       const parkingSpot = await this.parkingSpotRepository.update(id, body)
       return { status: 200, body: parkingSpot }
@@ -46,7 +46,7 @@ export class ParkingSpotController extends BaseController {
   }
 
   @Endpoint(contract.parkingSpots.delete)
-  public delete(): HandlerResult {
+  public delete(): HandlerResult<typeof contract.parkingSpots.delete> {
     return handler(contract.parkingSpots.delete, async ({ params: { id } }) => {
       await this.parkingSpotRepository.delete(id)
       return { status: 204, body: undefined }

@@ -10,7 +10,7 @@ export class UserController extends BaseController {
   }
 
   @Endpoint(contract.users.post)
-  public create(): HandlerResult {
+  public create(): HandlerResult<typeof contract.users.post> {
     return handler(contract.users.post, async ({ body }) => {
       const user = await this.userRepository.create(body)
       return { status: 201, body: user }
@@ -18,7 +18,7 @@ export class UserController extends BaseController {
   }
 
   @Endpoint(contract.users.get)
-  public getById(): HandlerResult {
+  public getById(): HandlerResult<typeof contract.users.get> {
     return handler(contract.users.get, async ({ params: { id } }) => {
       const maybeUser = await this.userRepository.getById(id)
       return { status: 200, body: this.getEntityOrNotFound(maybeUser) }
@@ -26,7 +26,7 @@ export class UserController extends BaseController {
   }
 
   @Endpoint(contract.users.patch)
-  public update(): HandlerResult {
+  public update(): HandlerResult<typeof contract.users.patch> {
     return handler(contract.users.patch, async ({ params: { id }, body }) => {
       const user = await this.userRepository.update(id, body)
       return { status: 200, body: user }
@@ -34,7 +34,7 @@ export class UserController extends BaseController {
   }
 
   @Endpoint(contract.users.delete)
-  public delete(): HandlerResult {
+  public delete(): HandlerResult<typeof contract.users.delete> {
     return handler(contract.users.delete, async ({ params: { id } }) => {
       await this.userRepository.delete(id)
       return { status: 204, body: undefined }

@@ -77,7 +77,7 @@ export class FooRepository {
 @Controller()
 class FooController {
   @Endpoint(contract.postFoo)
-  public post(): HandlerResult {
+  public post(): HandlerResult<typeof contract.postFoo> {
     return handler(contract.postFoo, async ({ body }) => {
       const foo = FooRepository.createFoo(body)
       return { status: 201, body: foo }
@@ -85,7 +85,7 @@ class FooController {
   }
 
   @Endpoint(contract.listFoos)
-  public list(): HandlerResult {
+  public list(): HandlerResult<typeof contract.listFoos> {
     return handler(contract.listFoos, async ({ query }) => {
       const foos = FooRepository.listFoos(query)
       return { status: 200, body: { data: foos } }
