@@ -1,5 +1,5 @@
+import { PointSchema } from '@parker/api-client-utils'
 import { z } from 'zod'
-import { PointSchema } from './Point'
 
 export const ParkingSpotSchema = z.object({
   id: z.string().uuid(),
