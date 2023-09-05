@@ -28,13 +28,13 @@ export class HttpExceptionFilter implements ExceptionFilter<unknown> {
   public catch(error: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const status = HttpExceptionFilter.getStatus(error)
-    if (status >= 500) {
-      this.logger.error('Caught exception', { error, status })
-    } else {
-      this.logger.warn('Caught exception', { error, status })
-    }
     const response = ctx.getResponse()
     const responseBody = HttpExceptionFilter.getServerErrorDto(error)
+    if (status >= 500) {
+      this.logger.error('Caught exception', { error, status, responseBody })
+    } else {
+      this.logger.warn('Caught exception', { error, status, responseBody })
+    }
     this.server.reply(response, responseBody, status)
   }
 

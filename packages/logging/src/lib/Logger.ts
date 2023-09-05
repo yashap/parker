@@ -142,13 +142,14 @@ export class Logger {
 
   private log(level: LogLevel, message: string, payload?: Payload): void {
     const { error, ...metadata } = payload ?? {}
+    const errorMetadata = error && error instanceof Error ? (error as { metadata?: unknown }).metadata : undefined
     const correlationId = CorrelationIdPropagator.getContext()
     this.doLog(level, message, {
       name: this.name,
       correlationId,
       ...this.defaultMetadata,
       ...metadata,
-      ...(error === undefined ? {} : { error }), // TODO: nicely format with stack trace and whatnot
+      ...(error === undefined ? {} : { error, errorMetadata }),
     })
   }
 

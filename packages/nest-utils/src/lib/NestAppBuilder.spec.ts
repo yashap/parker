@@ -138,7 +138,9 @@ describe(NestAppBuilder.name, () => {
 
   describe('logging', () => {
     let mockLog: jest.SpyInstance<void, [level: LogLevel, message: string, metadata: object]>
-    const getLogPayload = <T extends { correlationId?: string; error?: ServerError }>(
+    const getLogPayload = <
+      T extends { correlationId?: string; error?: ServerError; status?: number; responseBody?: object },
+    >(
       level: LogLevel,
       message: string
     ): T => {
@@ -194,6 +196,7 @@ describe(NestAppBuilder.name, () => {
           path: '/foos',
         })
       )
+      expect(exceptionLogPayload.status).toBe(400)
       expect(exceptionLogPayload.error?.toDto()).toStrictEqual({
         message: 'Oops',
         code: 'InputValidationError',
@@ -201,6 +204,7 @@ describe(NestAppBuilder.name, () => {
           foo: 'bar',
         },
       })
+      expect(exceptionLogPayload.responseBody).toStrictEqual(exceptionLogPayload.error?.toDto())
       expectSameCorrelationId(httpResponseLogPayload, exceptionLogPayload)
     })
 
@@ -220,6 +224,7 @@ describe(NestAppBuilder.name, () => {
           path: '/foos',
         })
       )
+      expect(exceptionLogPayload.status).toBe(404)
       expect(exceptionLogPayload.error?.toDto()).toStrictEqual({
         message: 'Oops',
         code: 'NotFoundError',
@@ -227,6 +232,7 @@ describe(NestAppBuilder.name, () => {
           foo: 'bar',
         },
       })
+      expect(exceptionLogPayload.responseBody).toStrictEqual(exceptionLogPayload.error?.toDto())
       expectSameCorrelationId(httpResponseLogPayload, exceptionLogPayload)
     })
 
@@ -246,6 +252,7 @@ describe(NestAppBuilder.name, () => {
           path: '/foos',
         })
       )
+      expect(exceptionLogPayload.status).toBe(500)
       expect(exceptionLogPayload.error?.toDto()).toStrictEqual({
         message: 'Oops',
         code: 'InternalServerError',
@@ -253,6 +260,7 @@ describe(NestAppBuilder.name, () => {
           foo: 'bar',
         },
       })
+      expect(exceptionLogPayload.responseBody).toStrictEqual(exceptionLogPayload.error?.toDto())
       expectSameCorrelationId(httpResponseLogPayload, exceptionLogPayload)
     })
   })
