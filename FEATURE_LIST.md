@@ -13,3 +13,6 @@ What am I planning to work on next?
     - Pics
   - Better styling
 - Create a simple "parker" app, that lets you book a parking spot
+  - View spots near you on a map
+  - Click one to view details, with the option to book
+  - No payments for now, all free
