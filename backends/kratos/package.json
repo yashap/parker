@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "db:init": "../../tools/scripts/ensure_postgres_db.sh -d kratos && ../../tools/scripts/ensure_postgres_user.sh -u kratos -w kratos_password -d kratos",
-    "db:migrate-up": "yarn db:init && docker run --name parker_kratos_migrate -e DSN=\"postgres://dev_admin:dev_admin_password@host.docker.internal:5440/kratos?sslmode=disable&max_conns=20&max_idle_conns=4\" -v $(pwd)/config/email-password:/etc/config/kratos --rm oryd/kratos:v1.0 -c /etc/config/kratos/kratos.yaml migrate sql -e --yes",
-    "serve:backend": "docker-compose -f kratos.yaml up --build --force-recreate"
+    "db:migrate-up": "yarn db:init && docker run --name parker_kratos_migrate -e DSN=\"postgres://dev_admin:dev_admin_password@host.docker.internal:5440/kratos?sslmode=disable&max_conns=20&max_idle_conns=4\" -v $(pwd)/config:/etc/config/kratos --rm oryd/kratos:v1.0 -c /etc/config/kratos/kratos.yaml migrate sql -e --yes",
+    "serve": "docker-compose -f kratos.yaml up --build --force-recreate"
   }
 }

@@ -40,22 +40,30 @@ The name of the workspace is the value of the `name` field in its `package.json`
 
 ### Core Dev Workflow
 
+All commands below should be run from the root of this repo.
+
 ```bash
-# When starting work for the day, or after running git pull. Installs dependencies, migrates local DBs, builds everything, etc.
+# When starting work for the day, or after running git pull
+# Installs dependencies, spins up and migrates local DBs, builds everything, etc.
 yarn post-sync
 
 # Serve all backends (in watch mode)
 yarn serve:backend
 
 # Serve landlord frontend (in watch mode)
+# It often works best if you manually open up a simulated device using Simulator, let it start up, then run the below command
 yarn serve:landlord
 
-# Before you push
+# Before you push to GitHub (no CI setup yet, so do this manually!)
 yarn format && yarn test
 
 # Run code generation (after changing DB schema, etc.)
 yarn generate
 ```
+
+### Email
+
+We don't send emails locally - instead, they get sent to [MailSlurper](https://www.mailslurper.com/), a small SMTP mail server, that saves emails to an in-memory DB, and lets you view them in a UI. If you want to check on emails (e.g. account verification emails, password reset emails, etc.), as long as your local backend is running (`yarn serve:backend`), you can run `yarn email` from the root of this repo to view them.
 
 ### Install Dependencies
 
@@ -93,7 +101,7 @@ yarn workspace <workspace> remove <package>
 yarn install
 ```
 
-### Clear all build artifacts (`node_modules`, `dist`, etc.)
+### Clear all build artifacts (`node_modules`, `dist`, etc.) and local databases
 
 ```bash
 yarn clean
@@ -104,6 +112,8 @@ yarn clean && rm yarn.lock
 
 ### Adding a new app/package
 
-- For adding a new package, copy `packages/context-propagation` as an example
-- For adding a new backend service, copy `src/backends/core` as an example
-- For adding a new React Native app, copy `src/frontends/landlord` as an example
+- For adding a new package (a.k.a. library), copy `packages/context-propagation` as an example
+- For adding a new backend service, copy `backends/core` as an example
+- For adding a new React Native app, copy `frontends/landlord` as an example
+
+If adding new packages becomes a pain point, we could consider writing [Turborepo custom code generators](https://turbo.build/repo/docs/core-concepts/monorepos/code-generation).

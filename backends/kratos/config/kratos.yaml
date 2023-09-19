@@ -18,6 +18,9 @@ selfservice:
   methods:
     password:
       enabled: true
+    # Kratos also supports social signin via Google, FB, etc., but we aren't using that for now
+    # oidc:
+    #   enabled: true
     totp:
       config:
         issuer: Kratos
@@ -87,10 +90,12 @@ hashers:
     cost: 8
 
 identity:
-  default_schema_id: default
+  default_schema_id: user_v0
   schemas:
-    - id: default
-      url: file:///etc/config/kratos/identity.schema.json
+    # To support different types of users (e.g. admin vs. landlord vs. renter), can have different schemas
+    # Details: https://www.ory.sh/docs/kratos/manage-identities/managing-users-identities-metadata
+    - id: user_v0
+      url: file:///etc/config/kratos/user_v0.schema.json
 
 courier:
   smtp:

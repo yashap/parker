@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "native",
-    "slug": "native",
+    "name": "Landlord",
+    "slug": "landlord",
     "version": "1.0.0",
+    "description": "Allows landlords to manage their Parker parking spots (add new ones, set prices, set availability, etc.).",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

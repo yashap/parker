@@ -23,7 +23,7 @@
     "lint": {
       "outputs": []
     },
-    "serve:backend": {
+    "serve": {
       "cache": false
     },
     "test": {

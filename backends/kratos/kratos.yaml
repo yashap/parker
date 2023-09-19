@@ -12,7 +12,7 @@ services:
     command: serve -c /etc/config/kratos/kratos.yaml --dev --watch-courier
     volumes:
       - type: bind
-        source: ./config/email-password
+        source: ./config
         target: /etc/config/kratos
     networks:
       - intranet
