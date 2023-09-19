@@ -17,8 +17,11 @@
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest src/ --watch --runInBand --passWithNoTests"
   },
   "dependencies": {
+    "@ory/kratos-client": "^1.0.0",
     "@parker/core-client": "*",
+    "@react-native-async-storage/async-storage": "^1.19.3",
     "expo": "^47.0.8",
+    "expo-secure-store": "^12.5.0",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
