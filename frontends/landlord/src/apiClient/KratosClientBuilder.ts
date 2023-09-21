@@ -15,7 +15,7 @@ export class KratosClientBuilder {
         },
       }),
       config.kratosUrl,
-      // Types of created Axios instance are subtly different
+      // Types of the created Axios instance are subtly different
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       axiosFactory.create() as any
     )
