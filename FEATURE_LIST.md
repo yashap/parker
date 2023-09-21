@@ -2,6 +2,8 @@
 
 What am I planning to work on next?
 
+- Figure out why landlord FE isn't getting the expected error
+  - e.g. why isn't Axios error mapping middleware working?
 - Setup proper accounts
   - Using something like Keycloak or Ory Kratos
 - Improve "landlord" app, that lets you list a parking spot

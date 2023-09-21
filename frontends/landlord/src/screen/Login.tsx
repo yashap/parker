@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { showMessage } from 'react-native-flash-message'
 import { AuthenticationStore } from '../store/AuthenticationStore'
 
 export interface LoginProps {
@@ -30,8 +31,15 @@ export const Login = ({ onLogin }: LoginProps) => {
       <Button
         title='Submit'
         onPress={async () => {
-          await AuthenticationStore.login(email, password)
-          onLogin()
+          try {
+            await AuthenticationStore.login(email, password)
+            onLogin()
+          } catch (error) {
+            showMessage({
+              message: (error as Error).message ?? 'Failed to log in',
+              type: 'danger',
+            })
+          }
         }}
       />
     </View>

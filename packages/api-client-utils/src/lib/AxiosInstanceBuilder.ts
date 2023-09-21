@@ -1,5 +1,5 @@
 import { buildServerErrorFromDto } from '@parker/errors'
-import axios, { AxiosInstance, CreateAxiosDefaults, isAxiosError } from 'axios'
+import axios, { AxiosError, AxiosInstance, CreateAxiosDefaults } from 'axios'
 
 const DEFAULT_TIMEOUT_MS: number = 60 * 1000
 
@@ -11,6 +11,7 @@ export type AxiosConfig = CreateAxiosDefaults & {
 
 export class AxiosInstanceBuilder {
   public static build({ headers, token, locale, timeout, ...rest }: AxiosConfig): AxiosInstance {
+    console.warn('BUILT!!!!')
     const axiosAgent = axios.create({
       ...rest,
       headers: {
@@ -25,12 +26,12 @@ export class AxiosInstanceBuilder {
     axiosAgent.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (isAxiosError(error)) {
-          const status = error.status
-          const payload = error.response?.data
-          if (status && payload) {
-            throw buildServerErrorFromDto(payload, status)
-          }
+        const axiosError = error as AxiosError
+        const status = axiosError.status
+        const payload = axiosError.response?.data
+        console.warn('Stuff', { status, payload, error })
+        if (status && payload) {
+          throw buildServerErrorFromDto(payload, status)
         }
         // TODO: better classify/wrap other errors (timeout, etc.)
         throw error
