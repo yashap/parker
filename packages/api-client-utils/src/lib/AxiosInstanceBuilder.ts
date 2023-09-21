@@ -11,7 +11,6 @@ export type AxiosConfig = CreateAxiosDefaults & {
 
 export class AxiosInstanceBuilder {
   public static build({ headers, token, locale, timeout, ...rest }: AxiosConfig): AxiosInstance {
-    console.warn('BUILT!!!!')
     const axiosAgent = axios.create({
       ...rest,
       headers: {
@@ -27,9 +26,8 @@ export class AxiosInstanceBuilder {
       (response) => response,
       (error) => {
         const axiosError = error as AxiosError
-        const status = axiosError.status
+        const status = axiosError.response?.status
         const payload = axiosError.response?.data
-        console.warn('Stuff', { status, payload, error })
         if (status && payload) {
           throw buildServerErrorFromDto(payload, status)
         }
