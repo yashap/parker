@@ -4,6 +4,10 @@ import { Button, SafeAreaView, StyleSheet, Text, TextInput } from 'react-native'
 import { CoreClientBuilder } from '../../apiClient/CoreClientBuilder'
 import { AuthenticationStore } from '../../store/AuthenticationStore'
 
+export interface NewParkingSpotProps {
+  onCreate: () => void
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -26,7 +30,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const NewParkingSpot = () => {
+export const NewParkingSpot = ({ onCreate }: NewParkingSpotProps) => {
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
   return (
@@ -49,11 +53,11 @@ export const NewParkingSpot = () => {
         title='Submit'
         onPress={async () => {
           const coreClient = CoreClientBuilder.build()
-          const parkingSpot = await coreClient.parkingSpots.create({
+          await coreClient.parkingSpots.create({
             location: { latitude: Number(latitude), longitude: Number(longitude) },
             ownerUserId: AuthenticationStore.getAuthenticatedUser().id,
           })
-          alert(`Parking spot created: ${JSON.stringify(parkingSpot)}`)
+          onCreate()
         }}
       />
     </SafeAreaView>

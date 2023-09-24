@@ -29,7 +29,9 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "scheme": "my-deeplink-scheme-TODO-figure-out-what-this-is"
   }
 }
