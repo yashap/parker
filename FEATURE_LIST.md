@@ -3,7 +3,6 @@
 What am I planning to work on next?
 
 - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
-- Switch landlord FE router to expo routing
 - Finish proper login/account management with Kratos
   - Should I still have a user table outside Kratos?
 - Improve "landlord" app, that lets you list a parking spot

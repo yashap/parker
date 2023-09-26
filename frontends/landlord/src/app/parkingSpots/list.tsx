@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const ParkingSpotList = () => {
+export default function ParkingSpotList() {
   const [parkingSpots, setParkingSpots] = useState<ParkingSpotDto[]>([])
   useEffect(() => {
     const fetchAndSet = async () => {

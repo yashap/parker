@@ -16,5 +16,6 @@ export default (parentConfig: ExpoConfig): ExpoConfig => {
       kratosUrl,
       coreUrl,
     },
+    scheme: 'parkerlandlord',
   }
 }

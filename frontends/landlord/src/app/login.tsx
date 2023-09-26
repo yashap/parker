@@ -1,18 +1,35 @@
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { Pressable, Text, TextInput, TextInputProps, View } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
+import { CoreClientBuilder } from '../apiClient/CoreClientBuilder'
 import { AuthenticationStore } from '../store/AuthenticationStore'
-
-export interface LoginProps {
-  onLogin: () => Promise<void>
-}
 
 const StyledTextInput = (props: TextInputProps) => (
   <TextInput className='text-lg text-gray-700 w-11/12 my-2 p-2 bg-white rounded-md shadow shadow-gray-400' {...props} />
 )
 
-export const Login = ({ onLogin }: LoginProps) => {
+const userHasParkingSpots = async (): Promise<boolean> => {
+  const coreClient = CoreClientBuilder.build()
+  const { data } = await coreClient.parkingSpots.listClosestToPoint({
+    latitude: 50,
+    longitude: 50,
+    limit: 1,
+  })
+  return data.length > 0
+}
+
+const onLogin = async () => {
+  const hasParkingSpots = await userHasParkingSpots()
+  if (hasParkingSpots) {
+    router.replace('/parkingSpots/list')
+  } else {
+    router.replace('/parkingSpots/new')
+  }
+}
+
+export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   return (

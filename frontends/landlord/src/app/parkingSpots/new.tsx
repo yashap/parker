@@ -1,12 +1,9 @@
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { Button, SafeAreaView, StyleSheet, Text, TextInput } from 'react-native'
 import { CoreClientBuilder } from '../../apiClient/CoreClientBuilder'
 import { AuthenticationStore } from '../../store/AuthenticationStore'
-
-export interface NewParkingSpotProps {
-  onCreate: () => void
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +27,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const NewParkingSpot = ({ onCreate }: NewParkingSpotProps) => {
+export default function NewParkingSpot() {
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
   return (
@@ -49,6 +46,7 @@ export const NewParkingSpot = ({ onCreate }: NewParkingSpotProps) => {
         onChangeText={(newLongitude) => setLongitude(newLongitude)}
         defaultValue={longitude}
       />
+      {/* TODO: maybe switch to Link component? https://docs.expo.dev/routing/navigating-pages/ */}
       <Button
         title='Submit'
         onPress={async () => {
@@ -57,7 +55,7 @@ export const NewParkingSpot = ({ onCreate }: NewParkingSpotProps) => {
             location: { latitude: Number(latitude), longitude: Number(longitude) },
             ownerUserId: AuthenticationStore.getAuthenticatedUser().id,
           })
-          onCreate()
+          router.push('/parkingSpots/list')
         }}
       />
     </SafeAreaView>
