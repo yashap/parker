@@ -20,7 +20,7 @@ export default function Layout() {
       >
         <Stack.Screen name='login' options={{ title: 'Login' }} />
         <Stack.Screen name='parkingSpots/list' options={{ title: 'Your Parking Spots' }} />
-        <Stack.Screen name='parkingSpots/new' options={{ title: 'Create Parking Spot' }} />
+        <Stack.Screen name='parkingSpots/new' options={{ title: 'Add Parking Spot' }} />
       </Stack>
       <FlashMessage
         position='bottom'
