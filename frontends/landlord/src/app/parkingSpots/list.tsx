@@ -1,53 +1,32 @@
 import { ParkingSpotDto } from '@parker/core-client'
-import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useState } from 'react'
-import { View, FlatList, SafeAreaView, StyleSheet, Text } from 'react-native'
+import { FlatList, Text } from 'react-native'
+import { showMessage } from 'react-native-flash-message'
 import { CoreClientBuilder } from '../../apiClient/CoreClientBuilder'
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  header: {
-    fontWeight: 'bold',
-    marginBottom: 20,
-    fontSize: 36,
-  },
-  listContainer: {
-    flex: 1,
-    width: '100%',
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
-  },
-})
+import { ScreenContainer } from '../../components/ScreenContainer'
 
 export default function ParkingSpotList() {
   const [parkingSpots, setParkingSpots] = useState<ParkingSpotDto[]>([])
+  // TODO: better way to handle this - hook with loading and whatnot
   useEffect(() => {
     const fetchAndSet = async () => {
       const coreClient = CoreClientBuilder.build()
       const { data } = await coreClient.parkingSpots.listClosestToPoint({ latitude: 50, longitude: 50, limit: 10 })
       setParkingSpots(data)
     }
-    // TODO: error toast or something
-    fetchAndSet().catch((error) => console.error(error))
+    fetchAndSet().catch((error) => {
+      showMessage({
+        message: (error as Error).message ?? 'Failed to fetch parking spots',
+        type: 'danger',
+      })
+    })
   }, [])
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style='auto' />
-      <Text style={styles.header}>Your Parking Spots</Text>
-      <View style={styles.listContainer}>
-        <FlatList
-          data={parkingSpots}
-          renderItem={({ item: parkingSpot }) => <Text style={styles.item}>{parkingSpot.id}</Text>}
-        />
-      </View>
-    </SafeAreaView>
+    <ScreenContainer>
+      <FlatList
+        data={parkingSpots}
+        renderItem={({ item: parkingSpot }) => <Text className='text-lg p-2'>{parkingSpot.id}</Text>}
+      />
+    </ScreenContainer>
   )
 }

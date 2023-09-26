@@ -1,14 +1,12 @@
 import { router } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
-import { Pressable, Text, TextInput, TextInputProps, View } from 'react-native'
 import { showMessage } from 'react-native-flash-message'
 import { CoreClientBuilder } from '../apiClient/CoreClientBuilder'
+import { MainTitle } from '../components/MainTitle'
+import { ScreenContainer } from '../components/ScreenContainer'
+import { StyledTextInput } from '../components/StyledTextInput'
+import { SubmitButton } from '../components/SubmitButton'
 import { AuthenticationStore } from '../store/AuthenticationStore'
-
-const StyledTextInput = (props: TextInputProps) => (
-  <TextInput className='text-lg text-gray-700 w-11/12 my-2 p-2 bg-white rounded-md shadow shadow-gray-400' {...props} />
-)
 
 const userHasParkingSpots = async (): Promise<boolean> => {
   const coreClient = CoreClientBuilder.build()
@@ -33,11 +31,9 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   return (
-    <View className='flex-1 bg-green-300 items-center justify-center'>
-      <StatusBar style='auto' />
-      <Text className='text-5xl text-gray-700 font-bold m-3'>Parker</Text>
+    <ScreenContainer className='items-center justify-center'>
+      <MainTitle>Parker</MainTitle>
       <StyledTextInput
-        multiline={true}
         textContentType='username'
         placeholder='Email'
         onChangeText={(newEmail) => setEmail(newEmail)}
@@ -49,8 +45,9 @@ export default function Login() {
         onChangeText={(newPassword) => setPassword(newPassword)}
         defaultValue={password}
       />
-      <Pressable
-        className='w-11/12 bg-blue-600 px-4 py-2 rounded-lg m-2 shadow shadow-blue-400'
+      <SubmitButton
+        title='Login'
+        className='w-11/12'
         onPress={async () => {
           try {
             await AuthenticationStore.login(email, password)
@@ -62,9 +59,7 @@ export default function Login() {
             })
           }
         }}
-      >
-        <Text className='text-2xl text-white font-bold text-center'>Login</Text>
-      </Pressable>
-    </View>
+      />
+    </ScreenContainer>
   )
 }

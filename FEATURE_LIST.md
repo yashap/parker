@@ -2,9 +2,9 @@
 
 What am I planning to work on next?
 
-- Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
 - Finish proper login/account management with Kratos
   - Should I still have a user table outside Kratos?
+- Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
 - Improve "landlord" app, that lets you list a parking spot
   - Improve UI for base flow (login, add parking spot, list parking spots)
     - Also, switch to just "list my parking spots" everywhere, vs. "list closest to point"
