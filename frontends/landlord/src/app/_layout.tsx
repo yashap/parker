@@ -18,6 +18,10 @@ export default function Layout() {
             },
           }}
         >
+          {/*
+            TODO: would be nicer to put this config in each component, but there's a bug where it generates
+            annoying warnings. Move these to the the individual screen components once that's fixed
+          */}
           <Stack.Screen name='login' options={{ headerShown: false }} />
           <Stack.Screen name='parkingSpots/list' options={{ title: 'Your Parking Spots' }} />
           <Stack.Screen name='parkingSpots/new' options={{ title: 'Add Parking Spot' }} />
