@@ -17,7 +17,6 @@
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest src/ --watch --runInBand --passWithNoTests"
   },
   "dependencies": {
-    "@ory/kratos-client": "^1.0.0",
     "@parker/core-client": "*",
     "@react-native-async-storage/async-storage": "1.18.2",
     "axios": "^1.5.0",
@@ -31,12 +30,15 @@
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.72.5",
+    "react-native": "0.72.6",
     "react-native-flash-message": "^0.4.2",
     "react-native-gesture-handler": "~2.12.0",
+    "react-native-paper": "^5.11.1",
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
     "react-native-url-polyfill": "^2.0.0",
+    "react-use": "^17.4.0",
+    "supertokens-react-native": "^4.0.8",
     "tslib": "^2.4.0"
   },
   "devDependencies": {

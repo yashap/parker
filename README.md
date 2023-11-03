@@ -54,6 +54,9 @@ yarn serve:backend
 # It often works best if you manually open up a simulated device using Simulator, let it start up, then run the below command
 yarn serve:landlord
 
+# Load email UI to see account verification emails, password reset emails, etc.
+yarn email
+
 # Before you push to GitHub (no CI setup yet, so do this manually!)
 yarn format && yarn test
 

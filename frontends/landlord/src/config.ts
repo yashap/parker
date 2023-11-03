@@ -6,6 +6,5 @@ const getRequiredString = (key: string): string =>
   required((Constants.expoConfig?.extra ?? {})[key], `No config value with key ${key}`)
 
 export const config = {
-  kratosUrl: getRequiredString('kratosUrl'),
   coreUrl: getRequiredString('coreUrl'),
 }

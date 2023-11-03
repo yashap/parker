@@ -1,32 +1,39 @@
-import { ParkingSpotDto } from '@parker/core-client'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { FlatList, Text } from 'react-native'
-import { showMessage } from 'react-native-flash-message'
-import { CoreClientBuilder } from '../../apiClient/CoreClientBuilder'
+import { ActivityIndicator, useTheme } from 'react-native-paper'
+import { useCoreClient } from '../../apiClient/useCoreClient'
 import { ScreenContainer } from '../../components/ScreenContainer'
+import { showErrorToast } from '../../toasts/showErrorToast'
 
-export default function ParkingSpotList() {
-  const [parkingSpots, setParkingSpots] = useState<ParkingSpotDto[]>([])
-  // TODO: better way to handle this - hook with loading and whatnot
-  useEffect(() => {
-    const fetchAndSet = async () => {
-      const coreClient = CoreClientBuilder.build()
-      const { data } = await coreClient.parkingSpots.listClosestToPoint({ latitude: 50, longitude: 50, limit: 10 })
-      setParkingSpots(data)
-    }
-    fetchAndSet().catch((error) => {
-      showMessage({
-        message: (error as Error).message ?? 'Failed to fetch parking spots',
-        type: 'danger',
-      })
-    })
-  }, [])
+const ParkingSpotList: React.FC = () => {
+  const theme = useTheme()
+  const {
+    value: parkingSpotsResponse,
+    loading,
+    error,
+  } = useCoreClient((coreClient) =>
+    coreClient.parkingSpots.listClosestToPoint({ latitude: 50, longitude: 50, limit: 10 })
+  )
+  if (loading) {
+    // TODO: better size, colors, etc?
+    return (
+      <ScreenContainer>
+        <ActivityIndicator animating={true} color={theme.colors.secondary} size={'large'} />
+      </ScreenContainer>
+    )
+  }
+  if (error) {
+    showErrorToast(error)
+  }
+
   return (
     <ScreenContainer>
       <FlatList
-        data={parkingSpots}
+        data={parkingSpotsResponse?.data ?? []}
         renderItem={({ item: parkingSpot }) => <Text className='text-lg p-2'>{parkingSpot.id}</Text>}
       />
     </ScreenContainer>
   )
 }
+
+export default ParkingSpotList

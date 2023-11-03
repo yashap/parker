@@ -1,12 +1,13 @@
 import { router } from 'expo-router'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import SuperTokens from 'supertokens-react-native'
 import { CoreClientBuilder } from '../../apiClient/CoreClientBuilder'
 import { ScreenContainer } from '../../components/ScreenContainer'
 import { StyledTextInput } from '../../components/StyledTextInput'
 import { SubmitButton } from '../../components/SubmitButton'
-import { AuthenticationStore } from '../../store/AuthenticationStore'
+import { showErrorToast } from '../../toasts/showErrorToast'
 
-export default function NewParkingSpot() {
+const NewParkingSpot: React.FC = () => {
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
   return (
@@ -27,13 +28,21 @@ export default function NewParkingSpot() {
         className='w-11/12'
         onPress={async () => {
           const coreClient = CoreClientBuilder.build()
-          await coreClient.parkingSpots.create({
-            location: { latitude: Number(latitude), longitude: Number(longitude) },
-            ownerUserId: AuthenticationStore.getAuthenticatedUser().id,
-          })
-          router.push('/parkingSpots/list')
+          try {
+            // TODO: REMOVE
+            const userId = await SuperTokens.getUserId()
+            await coreClient.parkingSpots.create({
+              location: { latitude: Number(latitude), longitude: Number(longitude) },
+              ownerUserId: userId,
+            })
+            router.push('/parkingSpots/list')
+          } catch (error) {
+            showErrorToast(error)
+          }
         }}
       />
     </ScreenContainer>
   )
 }
+
+export default NewParkingSpot

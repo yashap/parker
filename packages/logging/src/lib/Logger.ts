@@ -20,6 +20,17 @@ const levels: Record<LogLevel, number> = {
   [LogLevel.Trace]: 5,
 }
 
+// Colors for the log level part of the log (e.g. the part that says "info")
+// Colors should be a string from: https://github.com/Marak/colors.js
+const colors: Record<LogLevel, string> = {
+  [LogLevel.Off]: 'gray',
+  [LogLevel.Error]: 'red',
+  [LogLevel.Warn]: 'yellow',
+  [LogLevel.Info]: 'green',
+  [LogLevel.Debug]: 'cyan',
+  [LogLevel.Trace]: 'blue',
+}
+
 enum AnsiColors {
   Yellow = '\u001B[33m',
   Cyan = '\u001B[36m',
@@ -50,7 +61,7 @@ const getFormat = (): winston.Logform.Format => {
     return winston.format.json()
   }
   return winston.format.combine(
-    winston.format.colorize(),
+    winston.format.colorize({ colors }),
     winston.format.timestamp({ format: 'hh:mm:ss' }),
     winston.format.align(),
     winston.format.printf((log) => {

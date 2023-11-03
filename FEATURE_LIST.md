@@ -2,8 +2,10 @@
 
 What am I planning to work on next?
 
-- Finish proper login/account management with Kratos
-  - Should I still have a user table outside Kratos?
+- Finish user backend, making proper use of Supertokens
+  - And fix tests
+- Validate flows around bad auth
+  - Handled well on BE and FE? Ideally some BE tests!
 - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
 - Improve "landlord" app, that lets you list a parking spot
   - Improve UI for base flow (login, add parking spot, list parking spots)

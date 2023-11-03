@@ -1,12 +1,13 @@
 import { CoreClient } from '@parker/core-client'
 import { config } from '../config'
-import { AuthenticationStore } from '../store/AuthenticationStore'
+import { AxiosInstanceBuilder } from './AxiosInstanceBuilder'
 
 export class CoreClientBuilder {
   public static build() {
-    return CoreClient.build({
-      baseURL: config.coreUrl,
-      token: AuthenticationStore.getToken(),
-    })
+    return new CoreClient(
+      AxiosInstanceBuilder.build({
+        baseURL: config.coreUrl,
+      })
+    )
   }
 }
