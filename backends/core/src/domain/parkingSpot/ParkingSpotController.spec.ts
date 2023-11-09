@@ -77,13 +77,11 @@ describe(ParkingSpotController.name, () => {
       const fiveClosestSpots = allSpots.filter((spot) => [8, 9, 10, 11, 12].includes(spot.location.longitude))
       expect(fiveClosestSpots).toHaveLength(5) // Make sure we didn't screw up the test setup
       // Then get those 5 spots, verify they're the 5 closest
-      const foundSpots = (
-        await coreClient.parkingSpots.listClosestToPoint({
-          longitude: location.longitude,
-          latitude: location.latitude,
-          limit: 5,
-        })
-      ).data
+      const { data: foundSpots } = await coreClient.parkingSpots.listClosestToPoint({
+        longitude: location.longitude,
+        latitude: location.latitude,
+        limit: 5,
+      })
       expect(orderBy(foundSpots, (spot) => spot.location.longitude)).toStrictEqual(fiveClosestSpots)
     })
   })
