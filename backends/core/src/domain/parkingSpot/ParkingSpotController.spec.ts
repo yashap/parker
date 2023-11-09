@@ -4,8 +4,10 @@ import { CoreClient, ParkingSpotDto, UserDto } from '@parker/core-client'
 import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
+import { AuthGuard } from '../../auth'
 import { buildTestApp } from '../../test/buildTestApp'
 import { TestDbTeardown } from '../../test/TestDbTeardown'
+import { UserRepository } from '../user'
 import { ParkingSpotController } from './ParkingSpotController'
 
 describe(ParkingSpotController.name, () => {
@@ -15,15 +17,10 @@ describe(ParkingSpotController.name, () => {
   let parkingSpot: ParkingSpotDto
 
   beforeEach(async () => {
-    app = await buildTestApp()
-    coreClient = new CoreClient(new SupertestInstance(app.getHttpServer()))
+    user = await new UserRepository().create({ email: 'donald.duck@example.com', fullName: 'Donald Duck' })
 
-    // Setup test user
-    const userPostBody = { email: 'donald.duck@example.com', fullName: 'Donald Duck' }
-    user = await coreClient.users.create(userPostBody)
-    const { id: userId, ...otherUserData } = user
-    expect(userId).toBeDefined()
-    expect(otherUserData).toStrictEqual(userPostBody)
+    app = await buildTestApp()
+    coreClient = new CoreClient(new SupertestInstance(app.getHttpServer(), AuthGuard.buildTestAuthHeaders(user.id)))
 
     // Setup test parking spot
     const parkingSpotPostBody = { ownerUserId: user.id, location: { longitude: 10, latitude: 20 } }

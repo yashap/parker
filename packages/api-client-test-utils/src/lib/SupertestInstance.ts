@@ -9,7 +9,10 @@ import supertest from 'supertest'
 export class SupertestInstance implements ApiAxiosInstance {
   private readonly supertest: supertest.SuperTest<supertest.Test>
 
-  constructor(httpServer: unknown) {
+  constructor(
+    httpServer: unknown,
+    private readonly defaultHeaders?: Record<string, string>
+  ) {
     this.supertest = supertest(httpServer)
   }
 
@@ -18,7 +21,7 @@ export class SupertestInstance implements ApiAxiosInstance {
     const url = new URL(config.url)
     const pathWithQueryParams = `${url.pathname}${url.search}`
     const maybeRequestBody = config.data ? JSON.parse(config.data as string) : undefined
-    const requestHeaders = config.headers
+    const requestHeaders = { ...this.defaultHeaders, ...config.headers }
     let response: Pick<Response, 'status' | 'body' | 'headers'> | undefined = undefined
     if (method === 'get') {
       response = await this.supertest.get(pathWithQueryParams).set(requestHeaders).send(maybeRequestBody)

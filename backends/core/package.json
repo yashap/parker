@@ -46,6 +46,7 @@
     "@nestjs/schematics": "^10.0.2",
     "@nestjs/testing": "^10.2.5",
     "@parker/api-client-test-utils": "*",
+    "@parker/test-utils": "*",
     "@parker/tsconfig": "*",
     "@types/jest": "^29.0.0",
     "@types/lodash": "^4.14.187",

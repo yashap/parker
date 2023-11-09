@@ -1,7 +1,9 @@
+import { AuthGuard } from '../../auth'
 import { TestDbTeardown } from '../TestDbTeardown'
 
 beforeAll(async () => {
   await new TestDbTeardown().clear()
+  AuthGuard.mock()
 })
 
 afterEach(async () => {
@@ -10,4 +12,5 @@ afterEach(async () => {
 
 afterAll(async () => {
   await new TestDbTeardown().disconnect()
+  AuthGuard.unMock()
 })
