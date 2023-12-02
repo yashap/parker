@@ -8,7 +8,9 @@
     "build": "tsc",
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
     "format": "eslint . --ext .ts --fix",
-    "lint": "tsc --noEmit && eslint . --ext .ts"
+    "lint": "tsc --noEmit && eslint . --ext .ts",
+    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest src/",
+    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --watch src/"
   },
   "dependencies": {
     "tslib": "^2.4.0"
