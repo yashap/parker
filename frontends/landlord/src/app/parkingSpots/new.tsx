@@ -30,6 +30,8 @@ const NewParkingSpot: React.FC = () => {
           try {
             await coreClient.parkingSpots.create({
               location: { latitude: Number(latitude), longitude: Number(longitude) },
+              // TODO!
+              timeRules: [],
             })
             router.push('/parkingSpots/list')
           } catch (error) {
