@@ -9,10 +9,9 @@ import supertokens from 'supertokens-node'
 import { AuthModule, SuperTokensExceptionFilter } from './auth'
 import { config } from './config'
 import { ParkingSpotModule } from './domain/parkingSpot'
-import { UserModule } from './domain/user'
 
 @Module({
-  imports: [ParkingSpotModule, UserModule, AuthModule.forRoot(config.auth)],
+  imports: [ParkingSpotModule, AuthModule.forRoot(config.auth)],
 })
 class AppModule {}
 

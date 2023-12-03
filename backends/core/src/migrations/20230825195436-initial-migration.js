@@ -5,23 +5,11 @@ exports.up = async (db) => {
     .then(() => db.runSql('CREATE EXTENSION IF NOT EXISTS "postgis";'))
     .then(() =>
       db.runSql(`
-        CREATE TABLE IF NOT EXISTS "User" (
-          "id" UUID NOT NULL DEFAULT uuid_generate_v1() PRIMARY KEY,
-          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          "updatedAt" TIMESTAMP(3) NOT NULL,
-          "email" TEXT NOT NULL,
-          "fullName" TEXT NOT NULL
-        );
-      `)
-    )
-    .then(() => db.runSql('CREATE UNIQUE INDEX IF NOT EXISTS "email_idx" ON "User" (LOWER("email"));'))
-    .then(() =>
-      db.runSql(`
         CREATE TABLE IF NOT EXISTS "ParkingSpot" (
           "id" UUID NOT NULL DEFAULT uuid_generate_v1() PRIMARY KEY,
           "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) NOT NULL,
-          "ownerUserId" UUID NOT NULL REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+          "ownerUserId" UUID NOT NULL,
           "location" GEOMETRY(POINT, 4326) NOT NULL
         );
       `)

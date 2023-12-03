@@ -1,6 +1,5 @@
 import { router } from 'expo-router'
 import React, { useState } from 'react'
-import SuperTokens from 'supertokens-react-native'
 import { CoreClientBuilder } from '../../apiClient/CoreClientBuilder'
 import { ScreenContainer } from '../../components/ScreenContainer'
 import { StyledTextInput } from '../../components/StyledTextInput'
@@ -29,11 +28,8 @@ const NewParkingSpot: React.FC = () => {
         onPress={async () => {
           const coreClient = CoreClientBuilder.build()
           try {
-            // TODO: REMOVE
-            const userId = await SuperTokens.getUserId()
             await coreClient.parkingSpots.create({
               location: { latitude: Number(latitude), longitude: Number(longitude) },
-              ownerUserId: userId,
             })
             router.push('/parkingSpots/list')
           } catch (error) {

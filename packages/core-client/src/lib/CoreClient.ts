@@ -13,13 +13,10 @@ import {
 import { contract } from './contract'
 import {
   CreateParkingSpotRequest,
-  CreateUserRequest,
   ListParkingSpotsClosestToPointRequest,
   ListParkingSpotsClosestToPointResponse,
   ParkingSpotDto,
   UpdateParkingSpotRequest,
-  UpdateUserRequest,
-  UserDto,
 } from './model/types'
 
 export class CoreClient {
@@ -50,21 +47,6 @@ export class CoreClient {
     },
     delete: (id: string): Promise<void> => {
       return extractDeleteResponse(this.client.parkingSpots.delete({ params: { id } }))
-    },
-  }
-
-  public readonly users = {
-    create: (request: CreateUserRequest): Promise<UserDto> => {
-      return extractPostResponse(this.client.users.post({ body: request }))
-    },
-    get: (id: string): Promise<UserDto | undefined> => {
-      return extractGetByIdResponse(this.client.users.get({ params: { id } }))
-    },
-    update: (id: string, request: UpdateUserRequest): Promise<UserDto> => {
-      return extractPatchResponse(this.client.users.patch({ params: { id }, body: request }))
-    },
-    delete: (id: string): Promise<void> => {
-      return extractDeleteResponse(this.client.users.delete({ params: { id } }))
     },
   }
 }

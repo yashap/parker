@@ -1,6 +1,6 @@
 import { BaseRepository } from '../db/BaseRepository'
 
-const tables = ['ParkingSpot', 'User'] as const
+const tables = ['ParkingSpot'] as const
 type TableName = (typeof tables)[number]
 
 export class TestDbTeardown extends BaseRepository {

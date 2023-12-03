@@ -1,11 +1,13 @@
 import { ContractBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
-import { CreateParkingSpotRequestSchema } from '../model/CreateParkingSpotRequest'
-import { ListParkingSpotsClosestToPointRequestSchema } from '../model/ListParkingSpotsClosestToPointRequest'
-import { ListParkingSpotsClosestToPointResponseSchema } from '../model/ListParkingSpotsClosestToPointResponse'
-import { ParkingSpotSchema } from '../model/ParkingSpot'
-import { UpdateParkingSpotRequestSchema } from '../model/UpdateParkingSpotRequest'
+import {
+  CreateParkingSpotRequestSchema,
+  ListParkingSpotsClosestToPointRequestSchema,
+  ListParkingSpotsClosestToPointResponseSchema,
+  ParkingSpotSchema,
+  UpdateParkingSpotRequestSchema,
+} from '../model/ParkingSpot'
 
 const c = initContract()
 

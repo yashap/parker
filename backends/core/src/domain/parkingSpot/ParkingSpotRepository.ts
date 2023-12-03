@@ -2,12 +2,16 @@ import { Injectable } from '@nestjs/common'
 import { CreateParkingSpotRequest, UpdateParkingSpotRequest } from '@parker/core-client'
 import { GeoJsonPoint, Point, geoJsonToPoint } from '@parker/geography'
 import { Selectable, sql } from 'kysely'
+import { omit } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
 import { ParkingSpot as ParkingSpotDao } from '../../db/generated/db'
 import { ParkingSpot } from './ParkingSpot'
 
-type CreateParkingSpotInput = CreateParkingSpotRequest
-type UpdateParkingSpotInput = UpdateParkingSpotRequest
+export interface CreateParkingSpotInput extends CreateParkingSpotRequest {
+  ownerUserId: string
+}
+
+export type UpdateParkingSpotInput = UpdateParkingSpotRequest
 
 @Injectable()
 export class ParkingSpotRepository extends BaseRepository {
@@ -15,7 +19,8 @@ export class ParkingSpotRepository extends BaseRepository {
   private readonly fields = ['id', 'ownerUserId', this.pointFieldToGeoJson('location').as('location')] as const
 
   public async create(payload: CreateParkingSpotInput): Promise<ParkingSpot> {
-    const { location, ...rest } = payload
+    // TODO: DO SOMETHING WITH THE TIME RULES
+    const { location, ...rest } = omit(payload, 'timeRules')
     const parkingSpotDao = await this.db
       .insertInto(this.tableName)
       .values({
@@ -52,7 +57,8 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   public async update(id: string, update: UpdateParkingSpotInput): Promise<ParkingSpot> {
-    const { location, ...rest } = update
+    // TODO: DO SOMETHING WITH THE TIME RULES
+    const { location, ...rest } = omit(update, 'timeRules')
     const parkingSpotDao = await this.db
       .updateTable(this.tableName)
       .set({
@@ -75,6 +81,7 @@ export class ParkingSpotRepository extends BaseRepository {
   ): ParkingSpot {
     const { id, ownerUserId, location } = parkingSpotDao
     const locationGeoJson = JSON.parse(location) as GeoJsonPoint
-    return { id, ownerUserId, location: geoJsonToPoint(locationGeoJson) }
+    // TODO: ACTUAL TIME RULES!!!
+    return { id, ownerUserId, location: geoJsonToPoint(locationGeoJson), timeRules: [] }
   }
 }

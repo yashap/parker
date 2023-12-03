@@ -1,27 +1,22 @@
 import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
-import { User } from '../user/User'
-import { UserRepository } from '../user/UserRepository'
 import { ParkingSpot } from './ParkingSpot'
-import { ParkingSpotRepository } from './ParkingSpotRepository'
+import { CreateParkingSpotInput, ParkingSpotRepository } from './ParkingSpotRepository'
 
 describe(ParkingSpotRepository.name, () => {
-  let userRepository: UserRepository
   let parkingSpotRepository: ParkingSpotRepository
-  let user: User
   let spot: ParkingSpot
+  let userId: string
 
   beforeEach(async () => {
     parkingSpotRepository = new ParkingSpotRepository()
-    userRepository = new UserRepository()
-    const createUserInput = { email: 'the.tick@example.com', fullName: 'The Tick' }
-    user = await userRepository.create(createUserInput)
-    expect(user).toStrictEqual({
-      id: user.id,
-      ...createUserInput,
-    })
-    const createParkingSpotInput = { ownerUserId: user.id, location: { longitude: 10, latitude: 20 } }
+    userId = uuid()
+    const createParkingSpotInput: CreateParkingSpotInput = {
+      ownerUserId: userId,
+      location: { longitude: 10, latitude: 20 },
+      timeRules: [],
+    }
     spot = await parkingSpotRepository.create(createParkingSpotInput)
     expect(spot).toStrictEqual({
       id: spot.id,
@@ -44,7 +39,9 @@ describe(ParkingSpotRepository.name, () => {
       // Create 20 spots
       const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
       const allSpots: ParkingSpot[] = await Promise.all(
-        ints.map((i) => parkingSpotRepository.create({ ownerUserId: user.id, location: { longitude: i, latitude: i } }))
+        ints.map((i) =>
+          parkingSpotRepository.create({ ownerUserId: userId, location: { longitude: i, latitude: i }, timeRules: [] })
+        )
       )
 
       // But we're only going to get the 5 closest to a given point

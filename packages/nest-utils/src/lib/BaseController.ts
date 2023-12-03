@@ -5,8 +5,12 @@ export abstract class BaseController {
 
   protected getEntityOrNotFound<T>(maybeValue: T | undefined): T {
     if (!maybeValue) {
-      throw new NotFoundError(`${this.entityName} not found`)
+      throw this.buildEntityNotFoundError()
     }
-    return maybeValue
+    return maybeValue as T
+  }
+
+  protected buildEntityNotFoundError(): NotFoundError {
+    return new NotFoundError(`${this.entityName} not found`)
   }
 }

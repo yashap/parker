@@ -2,8 +2,7 @@
 
 What am I planning to work on next?
 
-- Finish user backend, making proper use of Supertokens
-  - And fix tests
+- Validate local dev works with Supertokens
 - Validate flows around bad auth
   - Handled well on BE and FE? Ideally some BE tests!
 - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?

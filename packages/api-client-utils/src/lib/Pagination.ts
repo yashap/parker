@@ -14,3 +14,8 @@ export type PaginatedResponseSchema<T extends ZodTypeAny> = ZodObject<{
   data: ZodArray<T, 'many'>
   pagination: ZodOptional<typeof PaginationSchema>
 }>
+
+export interface PaginatedResponseDto<T> {
+  data: T[]
+  pagination?: PaginationDto
+}
