@@ -1,3 +1,4 @@
+import { required } from '@parker/errors'
 import { Point } from '@parker/geography'
 import { Kysely, PostgresDialect, RawBuilder, sql } from 'kysely'
 import { Pool } from 'pg'
@@ -8,7 +9,7 @@ export abstract class BaseRepository {
   private static dbSingleton: Kysely<DB> = new Kysely<DB>({
     dialect: new PostgresDialect({
       pool: new Pool({
-        connectionString: process.env['DATABASE_URL'],
+        connectionString: required(process.env['DATABASE_URL']),
       }),
     }),
   })

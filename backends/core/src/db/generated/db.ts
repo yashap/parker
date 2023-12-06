@@ -14,15 +14,22 @@ export interface ParkingSpot {
   location: string
 }
 
-export interface User {
+export interface TimeRule {
   id: Generated<string>
   createdAt: Generated<Timestamp>
   updatedAt: Timestamp
-  email: string
-  fullName: string
+  parkingSpotId: string
+  day: string
+  startTime: string
+  endTime: string
+}
+
+export interface ValuesTimeRuleDay {
+  day: string
 }
 
 export interface DB {
   ParkingSpot: ParkingSpot
-  User: User
+  TimeRule: TimeRule
+  values_TimeRule_day: ValuesTimeRuleDay
 }
