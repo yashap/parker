@@ -1,18 +1,19 @@
 import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
-import { ParkingSpot } from './ParkingSpot'
+import { DayOfWeek, ParkingSpot } from './ParkingSpot'
 import { CreateParkingSpotInput, ParkingSpotRepository } from './ParkingSpotRepository'
 
 describe(ParkingSpotRepository.name, () => {
   let parkingSpotRepository: ParkingSpotRepository
+  let createParkingSpotInput: CreateParkingSpotInput
   let spot: ParkingSpot
   let userId: string
 
   beforeEach(async () => {
     parkingSpotRepository = new ParkingSpotRepository()
     userId = uuid()
-    const createParkingSpotInput: CreateParkingSpotInput = {
+    createParkingSpotInput = {
       ownerUserId: userId,
       location: { longitude: 10, latitude: 20 },
       timeRules: [],
@@ -21,6 +22,41 @@ describe(ParkingSpotRepository.name, () => {
     expect(spot).toStrictEqual({
       id: spot.id,
       ...createParkingSpotInput,
+    })
+  })
+
+  describe('create', () => {
+    it('creates a parking spot with time rules', async () => {
+      const spotWithTimeRules = await parkingSpotRepository.create({
+        ...createParkingSpotInput,
+        timeRules: [
+          { day: 'Monday', startTime: '01:00:00', endTime: '23:00:00' },
+          { day: 'Tuesday', startTime: '13:30:00', endTime: '15:20:00' },
+        ],
+      })
+      expect(spotWithTimeRules.timeRules).toStrictEqual([
+        { day: 'Monday', startTime: '01:00:00', endTime: '23:00:00' },
+        { day: 'Tuesday', startTime: '13:30:00', endTime: '15:20:00' },
+      ])
+      expect(await parkingSpotRepository.getById(spotWithTimeRules.id)).toStrictEqual(spotWithTimeRules)
+    })
+
+    it('rejects time rules with invalid day of week', async () => {
+      await expect(
+        parkingSpotRepository.create({
+          ...createParkingSpotInput,
+          timeRules: [{ day: 'Christmas' as DayOfWeek, startTime: '01:00:00', endTime: '23:00:00' }],
+        })
+      ).rejects.toThrow()
+    })
+
+    it('rejects time rules with invalid times', async () => {
+      await expect(
+        parkingSpotRepository.create({
+          ...createParkingSpotInput,
+          timeRules: [{ day: 'Christmas' as DayOfWeek, startTime: '01:00:00', endTime: '24:00:01' }],
+        })
+      ).rejects.toThrow()
     })
   })
 
@@ -62,6 +98,55 @@ describe(ParkingSpotRepository.name, () => {
         ...spot,
         location: { longitude: -50, latitude: 50 },
       })
+    })
+
+    it('completely replaces time rules, if updating the time rules', async () => {
+      let spotWithTimeRules = await parkingSpotRepository.create({
+        ...createParkingSpotInput,
+        timeRules: [
+          { day: 'Monday', startTime: '01:00:00', endTime: '23:00:00' },
+          { day: 'Tuesday', startTime: '13:30:00', endTime: '15:20:00' },
+        ],
+      })
+      expect(spotWithTimeRules.timeRules).toStrictEqual([
+        { day: 'Monday', startTime: '01:00:00', endTime: '23:00:00' },
+        { day: 'Tuesday', startTime: '13:30:00', endTime: '15:20:00' },
+      ])
+      expect(await parkingSpotRepository.getById(spotWithTimeRules.id)).toStrictEqual(spotWithTimeRules)
+
+      spotWithTimeRules = await parkingSpotRepository.update(spotWithTimeRules.id, {
+        timeRules: [{ day: 'Wednesday', startTime: '03:30:00', endTime: '16:45:00' }],
+      })
+      expect(spotWithTimeRules.timeRules).toStrictEqual([
+        { day: 'Wednesday', startTime: '03:30:00', endTime: '16:45:00' },
+      ])
+      expect(await parkingSpotRepository.getById(spotWithTimeRules.id)).toStrictEqual(spotWithTimeRules)
+    })
+
+    it('does not touch the time rules, if not updating the time rules', async () => {
+      let spotWithTimeRules = await parkingSpotRepository.create({
+        ...createParkingSpotInput,
+        timeRules: [
+          { day: 'Monday', startTime: '01:00:00', endTime: '23:00:00' },
+          { day: 'Tuesday', startTime: '13:30:00', endTime: '15:20:00' },
+        ],
+      })
+      expect(spotWithTimeRules.timeRules).toStrictEqual([
+        { day: 'Monday', startTime: '01:00:00', endTime: '23:00:00' },
+        { day: 'Tuesday', startTime: '13:30:00', endTime: '15:20:00' },
+      ])
+      expect(spotWithTimeRules.location).toStrictEqual({ longitude: 10, latitude: 20 })
+      expect(await parkingSpotRepository.getById(spotWithTimeRules.id)).toStrictEqual(spotWithTimeRules)
+
+      spotWithTimeRules = await parkingSpotRepository.update(spotWithTimeRules.id, {
+        location: { longitude: -50, latitude: 50 },
+      })
+      expect(spotWithTimeRules.timeRules).toStrictEqual([
+        { day: 'Monday', startTime: '01:00:00', endTime: '23:00:00' },
+        { day: 'Tuesday', startTime: '13:30:00', endTime: '15:20:00' },
+      ])
+      expect(spotWithTimeRules.location).toStrictEqual({ longitude: -50, latitude: 50 })
+      expect(await parkingSpotRepository.getById(spotWithTimeRules.id)).toStrictEqual(spotWithTimeRules)
     })
   })
 

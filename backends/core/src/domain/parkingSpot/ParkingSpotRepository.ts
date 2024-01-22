@@ -98,6 +98,7 @@ export class ParkingSpotRepository extends BaseRepository {
           .selectFrom('TimeRule')
           .select(['TimeRule.day', 'TimeRule.startTime', 'TimeRule.endTime'])
           .whereRef('TimeRule.parkingSpotId', '=', 'ParkingSpot.id')
+          // TODO: maybe better ordering? Like day of week ascending, then start time, then end time, then id as a tie breaker?
           .orderBy(['TimeRule.createdAt', 'TimeRule.id'])
       ).as('timeRules'),
     ] as const

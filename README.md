@@ -24,7 +24,7 @@ Install the following:
   - Ensure XCode is installed, with command line tools (necessary for running iOS Simulator)
   - Ensure you can open a simulated iPhone with Simulator, and it starts up properly
 
-After this, you can try running `yarn post-sync && yarn generate && yarn format && yarn lint && yarn test` to ensure everything works, before proceeding to `Dev Workflows` (below).
+After this, you can try running `yarn build-migrate && yarn generate && yarn format && yarn lint && yarn test` to ensure everything works, before proceeding to `Dev Workflows` (below).
 
 ## Dev Workflows
 
@@ -45,7 +45,7 @@ All commands below should be run from the root of this repo.
 ```bash
 # When starting work for the day, or after running git pull
 # Installs dependencies, spins up and migrates local DBs, builds everything, etc.
-yarn post-sync
+yarn build-migrate
 
 # Serve all backends (in watch mode)
 yarn serve:backend
