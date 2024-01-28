@@ -1,6 +1,6 @@
 import { Controller, UseGuards } from '@nestjs/common'
 import { contract as rootContract } from '@parker/core-client'
-import { BaseController, Endpoint, HandlerResult, handler } from '@parker/nest-utils'
+import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
 import { SessionContainer } from 'supertokens-node/recipe/session'
 import { AuthGuard, Session } from '../../auth'
 import { ParkingSpot } from './ParkingSpot'
@@ -23,7 +23,7 @@ export class ParkingSpotController extends BaseController {
         { longitude, latitude },
         limit
       )
-      return { status: 200, body: { data: parkingSpots } }
+      return { status: HttpStatus.OK, body: { data: parkingSpots } }
     })
   }
 
@@ -32,7 +32,7 @@ export class ParkingSpotController extends BaseController {
   public create(@Session() session: SessionContainer): HandlerResult<typeof contract.post> {
     return handler(contract.post, async ({ body }) => {
       const parkingSpot = await this.parkingSpotRepository.create({ ...body, ownerUserId: session.getUserId() })
-      return { status: 201, body: parkingSpot }
+      return { status: HttpStatus.CREATED, body: parkingSpot }
     })
   }
 
@@ -41,7 +41,7 @@ export class ParkingSpotController extends BaseController {
   public getById(@Session() _session: SessionContainer): HandlerResult<typeof contract.get> {
     return handler(contract.get, async ({ params: { id } }) => {
       const maybeParkingSpot = await this.parkingSpotRepository.getById(id)
-      return { status: 200, body: this.getEntityOrNotFound(maybeParkingSpot) }
+      return { status: HttpStatus.OK, body: this.getEntityOrNotFound(maybeParkingSpot) }
     })
   }
 
@@ -51,7 +51,7 @@ export class ParkingSpotController extends BaseController {
     return handler(contract.patch, async ({ params: { id }, body }) => {
       await this.getAndVerifyOwnership(id, session.getUserId())
       const parkingSpot = await this.parkingSpotRepository.update(id, body)
-      return { status: 200, body: parkingSpot }
+      return { status: HttpStatus.OK, body: parkingSpot }
     })
   }
 
@@ -61,7 +61,7 @@ export class ParkingSpotController extends BaseController {
     return handler(contract.delete, async ({ params: { id } }) => {
       await this.getAndVerifyOwnership(id, session.getUserId())
       await this.parkingSpotRepository.delete(id)
-      return { status: 204, body: undefined }
+      return { status: HttpStatus.NO_CONTENT, body: undefined }
     })
   }
 
