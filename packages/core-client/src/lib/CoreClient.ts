@@ -12,9 +12,11 @@ import {
 } from '@parker/api-client-utils'
 import { contract } from './contract'
 import {
+  CreateParkingSpotBookingRequest,
   CreateParkingSpotRequest,
   ListParkingSpotsClosestToPointRequest,
   ListParkingSpotsClosestToPointResponse,
+  ParkingSpotBookingDto,
   ParkingSpotDto,
   UpdateParkingSpotRequest,
 } from './model/types'
@@ -47,6 +49,12 @@ export class CoreClient {
     },
     delete: (id: string): Promise<void> => {
       return extractDeleteResponse(this.client.parkingSpots.delete({ params: { id } }))
+    },
+  }
+
+  public readonly parkingSpotBookings = {
+    create: (parkingSpotId: string, request: CreateParkingSpotBookingRequest): Promise<ParkingSpotBookingDto> => {
+      return extractPostResponse(this.client.parkingSpotBookings.post({ params: { parkingSpotId }, body: request }))
     },
   }
 }

@@ -2,13 +2,19 @@
 
 What am I planning to work on next?
 
-- Real implementation of time rules (landlord and BE)
-  - BE remaining:
+- Real implementation of parking spot bookings and time rules (landlord and BE)
+  - BE remaining, for time rules:
     - Tests
     - Transactions?
     - Make the times Temporal times in the BE models? Is it worth trying to do this in DTOs too?
       - Should I actually be storing times WITH time zone?  Or should I be storing TZ separately?
+  - BE remaining, for bookings:
+    - Add more than just the POST method to the API contract
+    - Implement controller
+    - Tests
+    - Same notes about using Temporal in the domain layer
 - Real implementation of place/location picking (landlord and BE)
+  - Probably a new service, that wraps Google Places API?
 - Photos of the parking spot
 - Fare rules
 - General landlord improvements

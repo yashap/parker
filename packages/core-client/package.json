@@ -13,10 +13,10 @@
   "dependencies": {
     "@parker/api-client-utils": "*",
     "@parker/errors": "*",
-    "@ts-rest/core": "^3.28.0",
+    "@ts-rest/core": "^3.33.0",
     "axios": "^1.4.0",
     "tslib": "^2.4.0",
-    "zod": "^3.22.2"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@parker/tsconfig": "*",

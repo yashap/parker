@@ -3,6 +3,7 @@
     "codegen",
     "corepack",
     "Daos",
+    "datetime",
     "Dtos",
     "emailpassword",
     "foos",

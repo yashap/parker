@@ -29,12 +29,18 @@ export const parkingSpotContract = c.router({
   get: {
     method: 'GET',
     path: '/core/parkingSpots/:id',
+    pathParams: z.object({
+      id: z.string().uuid(),
+    }),
     responses: ContractBuilder.buildGetResponses(ParkingSpotSchema),
     summary: 'Get a parking spot',
   },
   patch: {
     method: 'PATCH',
     path: '/core/parkingSpots/:id',
+    pathParams: z.object({
+      id: z.string().uuid(),
+    }),
     body: UpdateParkingSpotRequestSchema,
     responses: ContractBuilder.buildPatchResponses(ParkingSpotSchema),
     summary: 'Update a parking spot',
@@ -42,6 +48,9 @@ export const parkingSpotContract = c.router({
   delete: {
     method: 'DELETE',
     path: '/core/parkingSpots/:id',
+    pathParams: z.object({
+      id: z.string().uuid(),
+    }),
     body: z.NEVER,
     responses: ContractBuilder.buildDeleteResponses(),
     summary: 'Delete a parking spot',

@@ -2472,15 +2472,15 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@ts-rest/core@^3.28.0", "@ts-rest/core@^3.30.1":
-  version "3.30.2"
-  resolved "https://registry.yarnpkg.com/@ts-rest/core/-/core-3.30.2.tgz#4ce8c7864a22817abb2067041d63f8a68f7c1bc8"
-  integrity sha512-XPqKbHSPIk3piMGVJiutmwRhFjIkXqnu1ya5zhGOCGVkkMnguprr7VY4g+Tsks6rxeK6DoYoPoD5+LNymkfUYw==
+"@ts-rest/core@^3.33.0":
+  version "3.33.0"
+  resolved "https://registry.yarnpkg.com/@ts-rest/core/-/core-3.33.0.tgz#45d2c0134790d991e4cce5708e4609c7257cd5d6"
+  integrity sha512-EUV+VmHWXrtvjBcGURrAuW29ajKhteGGgbf//KcrEhq0pYuENJfxfg4mx23OXVOliuceY/kSXO4HiEYs9jH79g==
 
-"@ts-rest/nest@^3.30.1":
-  version "3.30.2"
-  resolved "https://registry.yarnpkg.com/@ts-rest/nest/-/nest-3.30.2.tgz#833b9c230e0279035e3e856c255e1a22222cf248"
-  integrity sha512-JnbzJeg6ujX7amI3nmuvUg1v4JZ7zaDTS30gUQLjAjWa3AbTF0xK7L756/ACE9qZpHgCqUj1qv3MvOVwvdH9kg==
+"@ts-rest/nest@^3.33.0":
+  version "3.33.0"
+  resolved "https://registry.yarnpkg.com/@ts-rest/nest/-/nest-3.33.0.tgz#c3f044b3ec4bdb5a8ec9a103af200c31cca63437"
+  integrity sha512-8FDudhG50ibAyLe1Jg2XUXmTaEFK+45F2+68iOk49Ntsk0cL7DZM0+md7I7nHKFOnA8yr6PoOKGZEU9nVwz45w==
 
 "@types/babel__core@^7.1.14":
   version "7.20.2"
@@ -11815,7 +11815,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zod@^3.22.2:
-  version "3.22.2"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.2.tgz#3add8c682b7077c05ac6f979fea6998b573e157b"
-  integrity sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==
+zod@^3.22.4:
+  version "3.22.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.4.tgz#f31c3a9386f61b1f228af56faa9255e845cf3fff"
+  integrity sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==
