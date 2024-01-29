@@ -23,10 +23,8 @@ export type CreateParkingSpotBookingRequest = z.infer<typeof CreateParkingSpotBo
 export type ListParkingSpotsClosestToPointResponse = z.infer<typeof ListParkingSpotsClosestToPointResponseSchema>
 
 // Data Models
-export type { DayOfWeekDto } from '@parker/api-client-utils'
-export type { PaginationDto } from '@parker/api-client-utils'
-export type { PointDto } from '@parker/api-client-utils'
-export type { ServerErrorDto } from '@parker/api-client-utils'
+export { DayOfWeekValues } from '@parker/api-client-utils'
+export type { DayOfWeekDto, PaginationDto, PointDto, ServerErrorDto } from '@parker/api-client-utils'
 export type ParkingSpotDto = z.infer<typeof ParkingSpotSchema>
 export type TimeRuleDto = z.infer<typeof TimeRuleSchema>
 export type ParkingSpotBookingDto = z.infer<typeof ParkingSpotBookingSchema>

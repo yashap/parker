@@ -6,13 +6,11 @@ What am I planning to work on next?
   - BE remaining, for time rules:
     - Tests
     - Transactions?
-    - Make the times Temporal times in the BE models? Is it worth trying to do this in DTOs too?
-      - Should I actually be storing times WITH time zone?  Or should I be storing TZ separately?
+    - Time zones?
   - BE remaining, for bookings:
     - Add more than just the POST method to the API contract
-    - Implement controller
+    - Implement controller, using Temporal in the domain layer
     - Tests
-    - Same notes about using Temporal in the domain layer
 - Real implementation of place/location picking (landlord and BE)
   - Probably a new service, that wraps Google Places API?
 - Photos of the parking spot
@@ -27,6 +25,7 @@ What am I planning to work on next?
   - Click one to view details, with the option to book
     - Will probably require a concept of "availability" on FE and BE, based on time rules and existing bookings
   - No payments for now, all free
+- TypeScript 
 - Validate flows around bad auth
   - Handled well on BE and FE? Ideally some BE tests!
 - E2E tests, possibly using [Maestro](https://www.mobile.dev/)

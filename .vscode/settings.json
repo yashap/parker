@@ -9,6 +9,7 @@
     "foos",
     "frontends",
     "healthcheck",
+    "Insertable",
     "isready",
     "Keycloak",
     "kysely",

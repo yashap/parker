@@ -1,5 +1,13 @@
-import { DayOfWeekDto, ParkingSpotDto, TimeRuleDto } from '@parker/core-client'
+import { ParkingSpotDto } from '@parker/core-client'
+import { TimeRule, timeRuleToDto } from '../timeRule'
 
-export type ParkingSpot = ParkingSpotDto
-export type TimeRule = TimeRuleDto
-export type DayOfWeek = DayOfWeekDto
+export type ParkingSpot = Omit<ParkingSpotDto, 'timeRules'> & {
+  timeRules: TimeRule[]
+}
+
+export const parkingSpotToDto = (parkingSpot: ParkingSpot): ParkingSpotDto => {
+  return {
+    ...parkingSpot,
+    timeRules: parkingSpot.timeRules.map(timeRuleToDto),
+  }
+}

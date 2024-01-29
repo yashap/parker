@@ -1,18 +1,29 @@
+import { Temporal } from '@js-temporal/polyfill'
 import { Injectable } from '@nestjs/common'
 import { CreateParkingSpotRequest, UpdateParkingSpotRequest } from '@parker/core-client'
 import { required } from '@parker/errors'
 import { GeoJsonPoint, Point, geoJsonToPoint } from '@parker/geography'
-import { ExpressionBuilder, Selectable, sql } from 'kysely'
+import { ExpressionBuilder, Insertable, Selectable, sql } from 'kysely'
 import { jsonArrayFrom } from 'kysely/helpers/postgres'
 import { BaseRepository } from '../../db/BaseRepository'
-import { DB, ParkingSpot as ParkingSpotDao, TimeRule as TimeRuleDao } from '../../db/generated/db'
-import { DayOfWeek, ParkingSpot } from './ParkingSpot'
+import { DB, ParkingSpot as ParkingSpotGeneratedDao, TimeRule as TimeRuleGeneratedDao } from '../../db/generated/db'
+import { DayOfWeek } from '../time/DayOfWeek'
+import { TimeRule, timeRuleToDto } from '../timeRule'
+import { ParkingSpot } from './ParkingSpot'
 
-export interface CreateParkingSpotInput extends CreateParkingSpotRequest {
-  ownerUserId: string
+type TimeRuleDao = Pick<Selectable<TimeRuleGeneratedDao>, 'day' | 'startTime' | 'endTime'>
+type ParkingSpotDao = Pick<Selectable<ParkingSpotGeneratedDao>, 'id' | 'ownerUserId' | 'location'> & {
+  timeRules: TimeRuleDao[]
 }
 
-export type UpdateParkingSpotInput = UpdateParkingSpotRequest
+export type CreateParkingSpotInput = Omit<CreateParkingSpotRequest, 'timeRules'> & {
+  ownerUserId: string
+  timeRules: TimeRule[]
+}
+
+export type UpdateParkingSpotInput = Omit<UpdateParkingSpotRequest, 'timeRules'> & {
+  timeRules?: TimeRule[]
+}
 
 @Injectable()
 export class ParkingSpotRepository extends BaseRepository {
@@ -30,7 +41,7 @@ export class ParkingSpotRepository extends BaseRepository {
     if (timeRules.length > 0) {
       await this.db
         .insertInto('TimeRule')
-        .values(timeRules.map((timeRule) => ({ ...timeRule, ...this.updatedAt(), parkingSpotId })))
+        .values(timeRules.map((timeRule) => this.timeRuleToInsertableDao(timeRule, parkingSpotId)))
         .execute()
     }
     const parkingSpot = await this.getById(parkingSpotId)
@@ -67,7 +78,7 @@ export class ParkingSpotRepository extends BaseRepository {
       if (timeRules.length > 0) {
         await this.db
           .insertInto('TimeRule')
-          .values(timeRules.map((timeRule) => ({ ...timeRule, ...this.updatedAt(), parkingSpotId: id })))
+          .values(timeRules.map((timeRule) => this.timeRuleToInsertableDao(timeRule, id)))
           .execute()
       }
     }
@@ -105,22 +116,30 @@ export class ParkingSpotRepository extends BaseRepository {
     return timeRulesFields
   }
 
-  private parkingSpotToDomain(
-    parkingSpotDao: Pick<Selectable<ParkingSpotDao>, 'id' | 'ownerUserId' | 'location'> & {
-      timeRules: Array<Pick<Selectable<TimeRuleDao>, 'day' | 'startTime' | 'endTime'>>
-    }
-  ): ParkingSpot {
+  private parkingSpotToDomain(parkingSpotDao: ParkingSpotDao): ParkingSpot {
     const { id, ownerUserId, location, timeRules } = parkingSpotDao
     const locationGeoJson = JSON.parse(location) as GeoJsonPoint
     return {
       id,
       ownerUserId,
       location: geoJsonToPoint(locationGeoJson),
-      timeRules: timeRules.map((timeRule) => ({
-        day: timeRule.day as DayOfWeek,
-        startTime: timeRule.startTime,
-        endTime: timeRule.endTime,
-      })),
+      timeRules: timeRules.map((timeRule) => this.timeRuleToDomain(timeRule)),
+    }
+  }
+
+  private timeRuleToDomain(timeRuleDao: TimeRuleDao): TimeRule {
+    return {
+      day: timeRuleDao.day as DayOfWeek,
+      startTime: Temporal.PlainTime.from(timeRuleDao.startTime),
+      endTime: Temporal.PlainTime.from(timeRuleDao.endTime),
+    }
+  }
+
+  private timeRuleToInsertableDao(timeRule: TimeRule, parkingSpotId: string): Insertable<TimeRuleGeneratedDao> {
+    return {
+      ...timeRuleToDto(timeRule),
+      ...this.updatedAt(),
+      parkingSpotId,
     }
   }
 }

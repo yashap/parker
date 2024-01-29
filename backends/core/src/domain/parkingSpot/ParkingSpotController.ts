@@ -1,8 +1,10 @@
+import { Temporal } from '@js-temporal/polyfill'
 import { Controller, UseGuards } from '@nestjs/common'
-import { contract as rootContract } from '@parker/core-client'
+import { ParkingSpotDto, TimeRuleDto, contract as rootContract } from '@parker/core-client'
 import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
 import { SessionContainer } from 'supertokens-node/recipe/session'
 import { AuthGuard, Session } from '../../auth'
+import { TimeRule } from '../timeRule'
 import { ParkingSpot } from './ParkingSpot'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
@@ -23,7 +25,10 @@ export class ParkingSpotController extends BaseController {
         { longitude, latitude },
         limit
       )
-      return { status: HttpStatus.OK, body: { data: parkingSpots } }
+      return {
+        status: HttpStatus.OK,
+        body: { data: parkingSpots.map((parkingSpot) => this.parkingSpotToDto(parkingSpot)) },
+      }
     })
   }
 
@@ -31,8 +36,12 @@ export class ParkingSpotController extends BaseController {
   @UseGuards(new AuthGuard())
   public create(@Session() session: SessionContainer): HandlerResult<typeof contract.post> {
     return handler(contract.post, async ({ body }) => {
-      const parkingSpot = await this.parkingSpotRepository.create({ ...body, ownerUserId: session.getUserId() })
-      return { status: HttpStatus.CREATED, body: parkingSpot }
+      const parkingSpot = await this.parkingSpotRepository.create({
+        ...body,
+        ownerUserId: session.getUserId(),
+        timeRules: body.timeRules.map((timeRule) => this.timeRuleFromDto(timeRule)),
+      })
+      return { status: HttpStatus.CREATED, body: this.parkingSpotToDto(parkingSpot) }
     })
   }
 
@@ -41,7 +50,7 @@ export class ParkingSpotController extends BaseController {
   public getById(@Session() _session: SessionContainer): HandlerResult<typeof contract.get> {
     return handler(contract.get, async ({ params: { id } }) => {
       const maybeParkingSpot = await this.parkingSpotRepository.getById(id)
-      return { status: HttpStatus.OK, body: this.getEntityOrNotFound(maybeParkingSpot) }
+      return { status: HttpStatus.OK, body: this.parkingSpotToDto(this.getEntityOrNotFound(maybeParkingSpot)) }
     })
   }
 
@@ -50,8 +59,11 @@ export class ParkingSpotController extends BaseController {
   public update(@Session() session: SessionContainer): HandlerResult<typeof contract.patch> {
     return handler(contract.patch, async ({ params: { id }, body }) => {
       await this.getAndVerifyOwnership(id, session.getUserId())
-      const parkingSpot = await this.parkingSpotRepository.update(id, body)
-      return { status: HttpStatus.OK, body: parkingSpot }
+      const parkingSpot = await this.parkingSpotRepository.update(id, {
+        ...body,
+        timeRules: body.timeRules ? body.timeRules.map((timeRule) => this.timeRuleFromDto(timeRule)) : undefined,
+      })
+      return { status: HttpStatus.OK, body: this.parkingSpotToDto(parkingSpot) }
     })
   }
 
@@ -72,5 +84,24 @@ export class ParkingSpotController extends BaseController {
       throw this.buildEntityNotFoundError()
     }
     return parkingSpot
+  }
+
+  private parkingSpotToDto(parkingSpot: ParkingSpot): ParkingSpotDto {
+    return {
+      ...parkingSpot,
+      timeRules: parkingSpot.timeRules.map((timeRule) => ({
+        ...timeRule,
+        startTime: timeRule.startTime.toString(),
+        endTime: timeRule.endTime.toString(),
+      })),
+    }
+  }
+
+  private timeRuleFromDto(timeRules: TimeRuleDto): TimeRule {
+    return {
+      ...timeRules,
+      startTime: Temporal.PlainTime.from(timeRules.startTime),
+      endTime: Temporal.PlainTime.from(timeRules.endTime),
+    }
   }
 }
