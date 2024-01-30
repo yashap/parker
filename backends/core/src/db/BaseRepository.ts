@@ -1,6 +1,7 @@
 import { required } from '@parker/errors'
 import { Point } from '@parker/geography'
 import { Kysely, PostgresDialect, RawBuilder, sql } from 'kysely'
+import { omit } from 'lodash'
 import { Pool } from 'pg'
 import { DB } from './generated/db'
 
@@ -33,5 +34,11 @@ export abstract class BaseRepository {
       // TODO: maybe sql NOW()
       updatedAt: new Date().toISOString(),
     }
+  }
+
+  protected withoutSystemTimestamps<T extends { createdAt: string | Date; updatedAt: string | Date }>(
+    entity: T
+  ): Omit<T, 'createdAt' | 'updatedAt'> {
+    return omit(entity)
   }
 }

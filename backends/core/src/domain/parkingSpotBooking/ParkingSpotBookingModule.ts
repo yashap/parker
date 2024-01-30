@@ -6,4 +6,4 @@ import { ParkingSpotBookingRepository } from './ParkingSpotBookingRepository'
   controllers: [ParkingSpotBookingController],
   providers: [ParkingSpotBookingRepository],
 })
-export class ParkingSpotModule {}
+export class ParkingSpotBookingModule {}

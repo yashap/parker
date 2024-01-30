@@ -34,3 +34,5 @@ What am I planning to work on next?
   - Landlord
   - Renter
   - Possibly a generic service for uploading files?
+- Maybe switch to most recent ReactNative/everything, and to pnpm instead of yarn v1 workspaces?
+  - I believe new RN supports pnpm
