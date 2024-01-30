@@ -3,7 +3,7 @@ import { contract as rootContract } from '@parker/core-client'
 import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
 import { SessionContainer } from 'supertokens-node/recipe/session'
 import { AuthGuard, Session } from '../../auth'
-import { timeRuleFromDto } from '../timeRule'
+import { timeRulesFromDto } from '../timeRule'
 import { ParkingSpot, parkingSpotToDto } from './ParkingSpot'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
@@ -38,7 +38,7 @@ export class ParkingSpotController extends BaseController {
       const parkingSpot = await this.parkingSpotRepository.create({
         ...body,
         ownerUserId: session.getUserId(),
-        timeRules: body.timeRules.map((timeRule) => timeRuleFromDto(timeRule)),
+        timeRules: timeRulesFromDto(body.timeRules),
       })
       return { status: HttpStatus.CREATED, body: parkingSpotToDto(parkingSpot) }
     })
@@ -60,7 +60,7 @@ export class ParkingSpotController extends BaseController {
       await this.getAndVerifyOwnership(id, session.getUserId())
       const parkingSpot = await this.parkingSpotRepository.update(id, {
         ...body,
-        timeRules: body.timeRules ? body.timeRules.map((timeRule) => timeRuleFromDto(timeRule)) : undefined,
+        timeRules: body.timeRules ? timeRulesFromDto(body.timeRules) : undefined,
       })
       return { status: HttpStatus.OK, body: parkingSpotToDto(parkingSpot) }
     })

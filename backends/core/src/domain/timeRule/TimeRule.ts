@@ -14,6 +14,8 @@ export const timeRuleFromDto = (timeRule: TimeRuleDto): TimeRule => {
   }
 }
 
+export const timeRulesFromDto = (timeRules: TimeRuleDto[]): TimeRule[] => timeRules.map(timeRuleFromDto)
+
 export const timeRuleToDto = (timeRule: TimeRule): TimeRuleDto => {
   return {
     ...timeRule,
