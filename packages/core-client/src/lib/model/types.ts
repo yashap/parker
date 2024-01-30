@@ -29,3 +29,4 @@ export type ParkingSpotDto = z.infer<typeof ParkingSpotSchema>
 export type TimeRuleDto = z.infer<typeof TimeRuleSchema>
 export type ParkingSpotBookingDto = z.infer<typeof ParkingSpotBookingSchema>
 export type BookingStatusDto = z.infer<typeof BookingStatusSchema>
+export const BookingStatusValues = BookingStatusSchema.Enum
