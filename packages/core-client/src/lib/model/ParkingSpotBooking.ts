@@ -12,7 +12,8 @@ export const ParkingSpotBookingSchema = z.object({
 })
 
 export const CreateParkingSpotBookingRequestSchema = ParkingSpotBookingSchema.omit({
-  id: true,
-  parkingSpotId: true,
-  status: true,
+  id: true, // Generated on the backend
+  bookedByUserId: true, // Implied from session
+  parkingSpotId: true, // Provided in the URL path
+  status: true, // Generated on the backend
 })
