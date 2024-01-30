@@ -24,10 +24,7 @@ export class ParkingSpotController extends BaseController {
         { longitude, latitude },
         limit
       )
-      return {
-        status: HttpStatus.OK,
-        body: { data: parkingSpots.map((parkingSpot) => parkingSpotToDto(parkingSpot)) },
-      }
+      return { status: HttpStatus.OK, body: { data: parkingSpots.map(parkingSpotToDto) } }
     })
   }
 
