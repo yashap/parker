@@ -8,7 +8,7 @@ const c = initContract()
 export const parkingSpotBookingContract = c.router({
   post: {
     method: 'POST',
-    path: '/core/parkingSpots/:parkingSpotId/bookings',
+    path: '/parkingSpots/:parkingSpotId/bookings',
     pathParams: z.object({
       parkingSpotId: z.string().uuid(),
     }),

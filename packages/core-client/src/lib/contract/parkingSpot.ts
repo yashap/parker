@@ -14,21 +14,21 @@ const c = initContract()
 export const parkingSpotContract = c.router({
   listClosestToPoint: {
     method: 'GET',
-    path: '/core/parkingSpots/closestToPoint',
+    path: '/parkingSpots/closestToPoint',
     query: ListParkingSpotsClosestToPointRequestSchema,
     responses: ContractBuilder.buildListResponses(ListParkingSpotsClosestToPointResponseSchema),
     summary: 'List parking spots closest to a point',
   },
   post: {
     method: 'POST',
-    path: '/core/parkingSpots',
+    path: '/parkingSpots',
     body: CreateParkingSpotRequestSchema,
     responses: ContractBuilder.buildPostResponses(ParkingSpotSchema),
     summary: 'Create a parking spot',
   },
   get: {
     method: 'GET',
-    path: '/core/parkingSpots/:id',
+    path: '/parkingSpots/:id',
     pathParams: z.object({
       id: z.string().uuid(),
     }),
@@ -37,7 +37,7 @@ export const parkingSpotContract = c.router({
   },
   patch: {
     method: 'PATCH',
-    path: '/core/parkingSpots/:id',
+    path: '/parkingSpots/:id',
     pathParams: z.object({
       id: z.string().uuid(),
     }),
@@ -47,7 +47,7 @@ export const parkingSpotContract = c.router({
   },
   delete: {
     method: 'DELETE',
-    path: '/core/parkingSpots/:id',
+    path: '/parkingSpots/:id',
     pathParams: z.object({
       id: z.string().uuid(),
     }),

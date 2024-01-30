@@ -1,11 +1,13 @@
 /* eslint-disable */
 exports.up = async (db) => {
   return db
-    .runSql(`
+    .runSql(
+      `
       CREATE TABLE IF NOT EXISTS "values_ParkingSpotBooking_status" (
         "status" TEXT NOT NULL PRIMARY KEY
       );
-    `)
+    `
+    )
     .then(() =>
       db.runSql(`
         INSERT INTO "values_ParkingSpotBooking_status" VALUES
@@ -29,8 +31,16 @@ exports.up = async (db) => {
         );
       `)
     )
-    .then(() => db.runSql('CREATE INDEX IF NOT EXISTS "ParkingSpotBooking_bookedByUserId_idx" ON "ParkingSpotBooking"("bookedByUserId");'))
-    .then(() => db.runSql('CREATE INDEX IF NOT EXISTS "ParkingSpotBooking_parkingSpotId_idx" ON "ParkingSpotBooking"("parkingSpotId");'))
+    .then(() =>
+      db.runSql(
+        'CREATE INDEX IF NOT EXISTS "ParkingSpotBooking_bookedByUserId_idx" ON "ParkingSpotBooking"("bookedByUserId");'
+      )
+    )
+    .then(() =>
+      db.runSql(
+        'CREATE INDEX IF NOT EXISTS "ParkingSpotBooking_parkingSpotId_idx" ON "ParkingSpotBooking"("parkingSpotId");'
+      )
+    )
 }
 
 exports.down = async () => {

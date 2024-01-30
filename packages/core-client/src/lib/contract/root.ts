@@ -11,5 +11,6 @@ export const contract = c.router(
   },
   {
     strictStatusCodes: true,
+    pathPrefix: '/core',
   }
 )
