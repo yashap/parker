@@ -1,10 +1,10 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { Controller, UseGuards } from '@nestjs/common'
-import { ParkingSpotBookingDto, contract as rootContract } from '@parker/core-client'
+import { contract as rootContract } from '@parker/core-client'
 import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
 import { SessionContainer } from 'supertokens-node/recipe/session'
 import { AuthGuard, Session } from '../../auth'
-import { ParkingSpotBooking } from './ParkingSpotBooking'
+import { parkingSpotBookingToDto } from './ParkingSpotBooking'
 import { ParkingSpotBookingRepository } from './ParkingSpotBookingRepository'
 
 const contract = rootContract.parkingSpotBookings
@@ -28,15 +28,7 @@ export class ParkingSpotBookingController extends BaseController {
         bookingStartsAt: Temporal.Instant.from(body.bookingStartsAt),
         bookingEndsAt: Temporal.Instant.from(body.bookingStartsAt),
       })
-      return { status: HttpStatus.CREATED, body: this.bookingToDto(parkingSpot) }
+      return { status: HttpStatus.CREATED, body: parkingSpotBookingToDto(parkingSpot) }
     })
-  }
-
-  private bookingToDto(booking: ParkingSpotBooking): ParkingSpotBookingDto {
-    return {
-      ...booking,
-      bookingStartsAt: booking.bookingStartsAt.toString(),
-      bookingEndsAt: booking.bookingEndsAt?.toString(),
-    }
   }
 }
