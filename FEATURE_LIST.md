@@ -5,7 +5,7 @@ What am I planning to work on next?
 - Real implementation of parking spot bookings and time rules (landlord and BE)
   - BE remaining, for time rules:
     - Tests
-    - Transactions in ParkingSpotRepository, where we do multiple operations?
+    - Transactions in ParkingSpotRepository, for the places where we do multiple operations?
     - Time zones?
   - BE remaining, for bookings:
     - Add more than just the POST method to the API contract
