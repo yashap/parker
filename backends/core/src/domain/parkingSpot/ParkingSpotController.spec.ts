@@ -98,16 +98,18 @@ describe(ParkingSpotController.name, () => {
       await new TestDbTeardown().clearTable('ParkingSpot')
 
       // Create 20 spots
-      const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
-      const allSpots: ParkingSpotDto[] = await Promise.all(
-        ints.map((i) =>
-          landlordCoreClient.parkingSpots.create({ location: { longitude: i, latitude: i }, timeRules: [] })
+      const allSpots: ParkingSpotDto[] = []
+      for (let idx = 0; idx < 20; idx++) {
+        allSpots.push(
+          await landlordCoreClient.parkingSpots.create({ location: { longitude: idx, latitude: idx }, timeRules: [] })
         )
-      )
+      }
+
       // But we're only going to get the 5 closest to a given point
       const location: Point = { longitude: 10, latitude: 10 }
       const fiveClosestSpots = allSpots.filter((spot) => [8, 9, 10, 11, 12].includes(spot.location.longitude))
       expect(fiveClosestSpots).toHaveLength(5) // Make sure we didn't screw up the test setup
+
       // Then get those 5 spots, verify they're the 5 closest
       const { data: foundSpots } = await landlordCoreClient.parkingSpots.listClosestToPoint({
         longitude: location.longitude,
@@ -122,16 +124,18 @@ describe(ParkingSpotController.name, () => {
       await new TestDbTeardown().clearTable('ParkingSpot')
 
       // Create 20 spots
-      const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
-      const allSpots: ParkingSpotDto[] = await Promise.all(
-        ints.map((i) =>
-          landlordCoreClient.parkingSpots.create({ location: { longitude: i, latitude: i }, timeRules: [] })
+      const allSpots: ParkingSpotDto[] = []
+      for (let idx = 0; idx < 20; idx++) {
+        allSpots.push(
+          await landlordCoreClient.parkingSpots.create({ location: { longitude: idx, latitude: idx }, timeRules: [] })
         )
-      )
+      }
+
       // But we're only going to get the 5 closest to a given point
       const location: Point = { longitude: 10, latitude: 10 }
       const fiveClosestSpots = allSpots.filter((spot) => [8, 9, 10, 11, 12].includes(spot.location.longitude))
       expect(fiveClosestSpots).toHaveLength(5) // Make sure we didn't screw up the test setup
+
       // Then get those 5 spots, verify they're the 5 closest
       const { data: foundSpots } = await renterCoreClient.parkingSpots.listClosestToPoint({
         longitude: location.longitude,

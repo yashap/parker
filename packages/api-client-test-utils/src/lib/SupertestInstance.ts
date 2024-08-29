@@ -7,13 +7,14 @@ import supertest from 'supertest'
  * use exclusively in tests
  */
 export class SupertestInstance implements ApiAxiosInstance {
-  private readonly supertest: supertest.SuperTest<supertest.Test>
+  private readonly supertest: supertest.Agent
 
   constructor(
     httpServer: unknown,
     private readonly defaultHeaders?: Record<string, string>
   ) {
-    this.supertest = supertest(httpServer)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.supertest = supertest(httpServer as any)
   }
 
   public async request(config: ApiAxiosRequest): Promise<ApiAxiosResponse> {
@@ -22,7 +23,7 @@ export class SupertestInstance implements ApiAxiosInstance {
     const pathWithQueryParams = `${url.pathname}${url.search}`
     const maybeRequestBody = config.data ? JSON.parse(config.data as string) : undefined
     const requestHeaders = { ...this.defaultHeaders, ...config.headers }
-    let response: Pick<Response, 'status' | 'body' | 'headers'> | undefined = undefined
+    let response: Pick<supertest.Response, 'status' | 'body' | 'headers'> | undefined = undefined
     if (method === 'get') {
       response = await this.supertest.get(pathWithQueryParams).set(requestHeaders).send(maybeRequestBody)
     } else if (method === 'post') {

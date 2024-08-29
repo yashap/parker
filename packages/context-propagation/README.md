@@ -35,9 +35,9 @@ export class Logger {
 }
 ```
 
-Then we just need to **set** the context when our service receives an HTTP request, and **read** the context when we log. This is why putting it in a library is important - we may want to set the context in one app/library (e.g. a **NestJS** middleware library), and read the context in another app/library (e.g. a logging library). It's key that these reads and writes access the **same instance of `ContextPropagator`**, e.g. `LogContextPropagator` above, and it's much easier to share this singleton if `LogContextPropagator` is in a library.
+Then we just need to **set** the context when our service receives an HTTP request, and **read** the context when we log. This is why putting it in a library is important - we may want to set the context in one app/library (e.g. an **Express** middleware library), and read the context in another app/library (e.g. a logging library). It's key that these reads and writes access the **same instance of `ContextPropagator`**, e.g. `LogContextPropagator` above, and it's much easier to share this singleton if `LogContextPropagator` is in a library.
 
-An example of setting this context in **NestJS** middleware, so it gets set on every request our services receives:
+An example of setting this context in **Express** middleware, so it gets set on every request our services receives:
 
 ```ts
 import { LogContextPropagator } from '@parker/logging'
@@ -55,4 +55,4 @@ export const logContextMiddleware = (request: Request, _response: Response, next
 }
 ```
 
-And that's it, as long as we add `logContextMiddleware` to our NestJS server, and use the `Logger` class for our logging, we now have `correlationId` and `userId` magically set in all of our logs!
+And that's it, as long as we add `logContextMiddleware` to our Express server, and use the `Logger` class for our logging, we now have `correlationId` and `userId` magically set in all of our logs!
