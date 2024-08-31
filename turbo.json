@@ -1,6 +1,7 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "pipeline": {
+  "globalEnv": ["NODE_ENV", "LOG_LEVEL", "JSON_LOGS", "DATABASE_URL", "PORT", "HOST_NAME", "SUPERTOKENS_CORE_URL"],
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]

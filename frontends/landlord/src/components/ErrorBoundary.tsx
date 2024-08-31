@@ -32,6 +32,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       // TODO: better UI
       return <h1>{`Something went wrong: ${this.state.error.message}`}</h1>
     }
+    // eslint-disable-next-line react/prop-types
     return this.props.children
   }
 }

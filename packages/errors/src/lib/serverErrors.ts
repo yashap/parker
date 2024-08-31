@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash'
 import { ErrorOptions, ServerError, WrapErrorOptions } from './ServerError'
 
 /**
@@ -83,6 +84,9 @@ export class UnknownError<T = unknown> extends ServerError<T> {
  */
 
 export const buildServerErrorFromDto = (dto: unknown, statusCode: number): ServerError => {
+  if (isEmpty(dto) && statusCode === 404) {
+    return new EndpointNotFoundError('Endpoint not found')
+  }
   if (ServerError.isServerErrorDto(dto)) {
     const options = { cause: dto, metadata: dto.metadata }
     if (statusCode === 400 && dto.code === InputValidationError.name) {
