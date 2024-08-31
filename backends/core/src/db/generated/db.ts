@@ -6,32 +6,32 @@ export type Generated<T> =
 export type Timestamp = ColumnType<Date, Date | string, Date | string>
 
 export interface ParkingSpot {
-  id: Generated<string>
   createdAt: Generated<Timestamp>
-  updatedAt: Timestamp
-  ownerUserId: string
+  id: Generated<string>
   location: string
+  ownerUserId: string
+  updatedAt: Timestamp
 }
 
 export interface ParkingSpotBooking {
-  id: Generated<string>
-  createdAt: Generated<Timestamp>
-  updatedAt: Timestamp
-  parkingSpotId: string
   bookedByUserId: string
-  bookingStartsAt: Timestamp
   bookingEndsAt: Timestamp | null
+  bookingStartsAt: Timestamp
+  createdAt: Generated<Timestamp>
+  id: Generated<string>
+  parkingSpotId: string
   status: string
+  updatedAt: Timestamp
 }
 
 export interface TimeRule {
-  id: Generated<string>
   createdAt: Generated<Timestamp>
-  updatedAt: Timestamp
-  parkingSpotId: string
   day: string
-  startTime: string
   endTime: string
+  id: Generated<string>
+  parkingSpotId: string
+  startTime: string
+  updatedAt: Timestamp
 }
 
 export interface ValuesParkingSpotBookingStatus {
