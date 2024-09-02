@@ -15,7 +15,7 @@ export class TransactionManager<DB> {
    *
    * Example Usage:
    *
-   * ```typescript
+   * ```ts
    * const transactionManager = new TransactionManager(db)
    *
    * type User = { id: number; name: string }
@@ -31,10 +31,10 @@ export class TransactionManager<DB> {
    *   const anne = await createUser('Anne')
    *   return { bob, anne }
    * })
-   * ```
    *
    * // Here, the create user call does not
    * const sam = await createUser('Sam')
+   * ```
    */
   public async run<T>(callback: () => Promise<T>): Promise<T> {
     const maybeActiveTransaction = ActiveTransactionContext.getContext() as Transaction<DB> | undefined
