@@ -13,8 +13,8 @@
     "eject": "expo eject",
     "format": "eslint . --ext .ts,.tsx --fix",
     "lint": "tsc --noEmit && eslint . --ext .ts,.tsx",
-    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest src/ --runInBand --passWithNoTests",
-    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest src/ --watch --runInBand --passWithNoTests"
+    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests src/",
+    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests --watch src/"
   },
   "dependencies": {
     "@parker/core-client": "*",

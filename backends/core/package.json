@@ -15,9 +15,8 @@
     "format": "eslint . --ext .ts --fix",
     "generate": "kysely-codegen --dialect postgres --exclude-pattern '(spatial_ref_sys|geography_columns|geometry_columns|migrations)' --out-file \"$(git rev-parse --show-toplevel)/backends/core/src/db/generated/db.ts\"",
     "lint": "tsc --noEmit && eslint . --ext .ts",
-    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest src/ --runInBand",
-    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --watch src/ --runInBand",
-    "foo": "db-migrate create --help"
+    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand src/",
+    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
@@ -28,6 +27,7 @@
     "@parker/core-client": "*",
     "@parker/errors": "*",
     "@parker/geography": "*",
+    "@parker/kysely-utils": "*",
     "@parker/logging": "*",
     "@parker/nest-utils": "*",
     "class-transformer": "^0.5.1",

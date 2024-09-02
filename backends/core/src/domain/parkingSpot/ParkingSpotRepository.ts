@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { CreateParkingSpotRequest, UpdateParkingSpotRequest } from '@parker/core-client'
 import { required } from '@parker/errors'
 import { GeoJsonPoint, Point, geoJsonToPoint } from '@parker/geography'
+import { QueryUtils } from '@parker/kysely-utils'
 import { ExpressionBuilder, Insertable, Selectable, sql } from 'kysely'
 import { jsonArrayFrom } from 'kysely/helpers/postgres'
 import { BaseRepository } from '../../db/BaseRepository'
@@ -27,29 +28,31 @@ export type UpdateParkingSpotInput = Omit<UpdateParkingSpotRequest, 'timeRules'>
 
 @Injectable()
 export class ParkingSpotRepository extends BaseRepository {
-  public async create(payload: CreateParkingSpotInput): Promise<ParkingSpot> {
+  public create(payload: CreateParkingSpotInput): Promise<ParkingSpot> {
     const { location, timeRules, ...rest } = payload
-    const { id: parkingSpotId } = await this.db
-      .insertInto('ParkingSpot')
-      .values({
-        ...rest,
-        location: this.pointToSql(location),
-        ...this.updatedAt(),
-      })
-      .returning(['id'])
-      .executeTakeFirstOrThrow()
-    if (timeRules.length > 0) {
-      await this.db
-        .insertInto('TimeRule')
-        .values(timeRules.map((timeRule) => this.timeRuleToInsertableDao(timeRule, parkingSpotId)))
-        .execute()
-    }
-    const parkingSpot = await this.getById(parkingSpotId)
-    return required(parkingSpot)
+    return this.runWithTransaction(async () => {
+      const { id: parkingSpotId } = await this.db()
+        .insertInto('ParkingSpot')
+        .values({
+          ...rest,
+          location: QueryUtils.pointToSql(location),
+          ...QueryUtils.updatedAt(),
+        })
+        .returning(['id'])
+        .executeTakeFirstOrThrow()
+      if (timeRules.length > 0) {
+        await this.db()
+          .insertInto('TimeRule')
+          .values(timeRules.map((timeRule) => this.timeRuleToInsertableDao(timeRule, parkingSpotId)))
+          .execute()
+      }
+      const parkingSpot = await this.getById(parkingSpotId)
+      return required(parkingSpot)
+    })
   }
 
   public async getById(id: string): Promise<ParkingSpot | undefined> {
-    const parkingSpotDao = await this.db
+    const parkingSpotDao = await this.db()
       .selectFrom('ParkingSpot')
       .select((eb) => this.buildFields(eb))
       .where('id', '=', id)
@@ -62,7 +65,7 @@ export class ParkingSpotRepository extends BaseRepository {
       return []
     }
     const { longitude, latitude } = location
-    const parkingSpotDaos = await this.db
+    const parkingSpotDaos = await this.db()
       .selectFrom('ParkingSpot')
       .select((eb) => this.buildFields(eb))
       .orderBy(sql`"location" <-> ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)`, 'asc')
@@ -71,39 +74,41 @@ export class ParkingSpotRepository extends BaseRepository {
     return parkingSpotDaos.map((dao) => this.parkingSpotToDomain(dao))
   }
 
-  public async update(id: string, update: UpdateParkingSpotInput): Promise<ParkingSpot> {
+  public update(id: string, update: UpdateParkingSpotInput): Promise<ParkingSpot> {
     const { location, timeRules, ...rest } = update
-    if (timeRules) {
-      await this.db.deleteFrom('TimeRule').where('parkingSpotId', '=', id).execute()
-      if (timeRules.length > 0) {
-        await this.db
-          .insertInto('TimeRule')
-          .values(timeRules.map((timeRule) => this.timeRuleToInsertableDao(timeRule, id)))
-          .execute()
+    return this.runWithTransaction(async () => {
+      if (timeRules) {
+        await this.db().deleteFrom('TimeRule').where('parkingSpotId', '=', id).execute()
+        if (timeRules.length > 0) {
+          await this.db()
+            .insertInto('TimeRule')
+            .values(timeRules.map((timeRule) => this.timeRuleToInsertableDao(timeRule, id)))
+            .execute()
+        }
       }
-    }
-    const parkingSpotDao = await this.db
-      .updateTable('ParkingSpot')
-      .set({
-        ...rest,
-        ...(location && { location: this.pointToSql(location) }),
-        ...this.updatedAt(),
-      })
-      .where('id', '=', id)
-      .returning((eb) => this.buildFields(eb))
-      .executeTakeFirstOrThrow()
-    return this.parkingSpotToDomain(parkingSpotDao)
+      const parkingSpotDao = await this.db()
+        .updateTable('ParkingSpot')
+        .set({
+          ...rest,
+          ...(location && { location: QueryUtils.pointToSql(location) }),
+          ...QueryUtils.updatedAt(),
+        })
+        .where('id', '=', id)
+        .returning((eb) => this.buildFields(eb))
+        .executeTakeFirstOrThrow()
+      return this.parkingSpotToDomain(parkingSpotDao)
+    })
   }
 
   public async delete(id: string): Promise<void> {
-    await this.db.deleteFrom('ParkingSpot').where('id', '=', id).execute()
+    await this.db().deleteFrom('ParkingSpot').where('id', '=', id).execute()
   }
 
   private buildFields(eb: ExpressionBuilder<DB, 'ParkingSpot'>) {
     const timeRulesFields = [
       'id',
       'ownerUserId',
-      this.pointFieldToGeoJson('location').as('location'),
+      QueryUtils.pointFieldToGeoJson('location').as('location'),
       jsonArrayFrom(
         eb
           .selectFrom('TimeRule')
@@ -138,7 +143,7 @@ export class ParkingSpotRepository extends BaseRepository {
   private timeRuleToInsertableDao(timeRule: TimeRule, parkingSpotId: string): Insertable<TimeRuleGeneratedDao> {
     return {
       ...timeRuleToDto(timeRule),
-      ...this.updatedAt(),
+      ...QueryUtils.updatedAt(),
       parkingSpotId,
     }
   }

@@ -21,14 +21,14 @@ export class ParkingSpotBookingController extends BaseController {
     return handler(contract.post, async ({ params: { parkingSpotId }, body }) => {
       // TODO: ACTUAL BUSINESS LOGIC VERIFYING THAT THIS SPOT CAN BE BOOKED AT THIS TIME!
       //  - Probably split this out into a "service" class, that verifies time rules, availability, etc.
-      const parkingSpot = await this.parkingSpotBookingRepository.create({
+      const booking = await this.parkingSpotBookingRepository.create({
         ...body,
         bookedByUserId: session.getUserId(),
         parkingSpotId,
         bookingStartsAt: Temporal.Instant.from(body.bookingStartsAt),
-        bookingEndsAt: Temporal.Instant.from(body.bookingStartsAt),
+        bookingEndsAt: body.bookingEndsAt ? Temporal.Instant.from(body.bookingEndsAt) : undefined,
       })
-      return { status: HttpStatus.CREATED, body: parkingSpotBookingToDto(parkingSpot) }
+      return { status: HttpStatus.CREATED, body: parkingSpotBookingToDto(booking) }
     })
   }
 }

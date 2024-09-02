@@ -9,8 +9,8 @@
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
     "format": "eslint . --ext .ts --fix",
     "lint": "tsc --noEmit && eslint . --ext .ts",
-    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest src/",
-    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --watch src/"
+    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand src/",
+    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },
   "dependencies": {
     "extendable-error": "^0.1.7",

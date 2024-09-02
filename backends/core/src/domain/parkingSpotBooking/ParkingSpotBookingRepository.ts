@@ -1,6 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { Injectable } from '@nestjs/common'
 import { BookingStatusValues, CreateParkingSpotBookingRequest } from '@parker/core-client'
+import { QueryUtils } from '@parker/kysely-utils'
 import { Selectable } from 'kysely'
 import { BaseRepository } from '../../db/BaseRepository'
 import { ParkingSpotBooking as ParkingSpotBookingDao } from '../../db/generated/db'
@@ -20,11 +21,11 @@ export type CreateParkingSpotBookingInput = Omit<
 @Injectable()
 export class ParkingSpotBookingRepository extends BaseRepository {
   public async create(payload: CreateParkingSpotBookingInput): Promise<ParkingSpotBooking> {
-    const bookingDao = await this.db
+    const bookingDao = await this.db()
       .insertInto('ParkingSpotBooking')
       .values({
         ...payload,
-        ...this.updatedAt(),
+        ...QueryUtils.updatedAt(),
         status: payload.status ?? BookingStatusValues.Accepted,
         bookingStartsAt: payload.bookingStartsAt.toString(),
         bookingEndsAt: payload.bookingStartsAt ? payload.bookingEndsAt?.toString() : null,
@@ -35,7 +36,7 @@ export class ParkingSpotBookingRepository extends BaseRepository {
   }
 
   public async getById(id: string): Promise<ParkingSpotBooking | undefined> {
-    const bookingDao = await this.db
+    const bookingDao = await this.db()
       .selectFrom('ParkingSpotBooking')
       .selectAll()
       .where('id', '=', id)
@@ -45,7 +46,7 @@ export class ParkingSpotBookingRepository extends BaseRepository {
 
   private bookingToDomain(booking: Selectable<ParkingSpotBookingDao>): ParkingSpotBooking {
     return {
-      ...this.withoutSystemTimestamps(booking),
+      ...QueryUtils.withoutSystemTimestamps(booking),
       status: booking.status as BookingStatus,
       bookingStartsAt: Temporal.Instant.fromEpochMilliseconds(booking.bookingStartsAt.valueOf()),
       bookingEndsAt: booking.bookingEndsAt
