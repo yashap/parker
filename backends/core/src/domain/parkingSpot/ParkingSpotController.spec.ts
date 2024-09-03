@@ -36,9 +36,10 @@ describe(ParkingSpotController.name, () => {
       timeRules: [],
     }
     parkingSpot = await landlordCoreClient.parkingSpots.create(parkingSpotPostBody)
-    const { id: parkingSpotId, ownerUserId, ...otherParkingSpotData } = parkingSpot
+    const { id: parkingSpotId, ownerUserId, timeZone, ...otherParkingSpotData } = parkingSpot
     expect(parkingSpotId).toBeDefined()
     expect(ownerUserId).toBe(landlordUserId)
+    expect(timeZone).toBe('Africa/Lagos')
     expect({ ...otherParkingSpotData }).toStrictEqual(parkingSpotPostBody)
   })
 
@@ -62,6 +63,7 @@ describe(ParkingSpotController.name, () => {
       expect(await landlordCoreClient.parkingSpots.update(parkingSpot.id, update)).toStrictEqual({
         ...parkingSpot,
         ...update,
+        timeZone: 'Etc/GMT',
       })
     })
 

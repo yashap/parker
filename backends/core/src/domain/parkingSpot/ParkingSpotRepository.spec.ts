@@ -23,6 +23,7 @@ describe(ParkingSpotRepository.name, () => {
     spot = await parkingSpotRepository.create(createParkingSpotInput)
     expect(spot).toStrictEqual({
       id: spot.id,
+      timeZone: spot.timeZone,
       ...createParkingSpotInput,
     })
   })
@@ -107,6 +108,7 @@ describe(ParkingSpotRepository.name, () => {
       await parkingSpotRepository.update(spot.id, { location: { longitude: -50, latitude: 50 } })
       expect(await parkingSpotRepository.getById(spot.id)).toEqual({
         ...spot,
+        timeZone: 'Etc/GMT+3',
         location: { longitude: -50, latitude: 50 },
       })
     })

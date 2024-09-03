@@ -12,11 +12,16 @@ export const ParkingSpotSchema = z.object({
   ownerUserId: z.string().uuid(),
   location: PointSchema,
   timeRules: z.array(TimeRuleSchema),
+  timeZone: z.string(),
 })
 
-export const CreateParkingSpotRequestSchema = ParkingSpotSchema.omit({ id: true, ownerUserId: true })
+export const CreateParkingSpotRequestSchema = ParkingSpotSchema.omit({ id: true, ownerUserId: true, timeZone: true })
 
-export const UpdateParkingSpotRequestSchema = ParkingSpotSchema.omit({ id: true, ownerUserId: true }).partial()
+export const UpdateParkingSpotRequestSchema = ParkingSpotSchema.omit({
+  id: true,
+  ownerUserId: true,
+  timeZone: true,
+}).partial()
 
 export const ListParkingSpotsClosestToPointRequestSchema = z.object({
   latitude: z.coerce.number().min(-90).max(90),

@@ -8,11 +8,13 @@ A small library to make working with [kysely](https://kysely.dev/) easier.
 const transactionManager = new TransactionManager(db)
 
 type User = { id: number; name: string }
-const createUser = (name: string): Promise<User> => transactionManager.getConnection()
-  .insertInto('User')
-  .values({ name: 'Alice' })
-  .returningAll()
-  .executeTakeFirstOrThrow()
+const createUser = (name: string): Promise<User> =>
+  transactionManager
+    .getConnection()
+    .insertInto('User')
+    .values({ name: 'Alice' })
+    .returningAll()
+    .executeTakeFirstOrThrow()
 
 const { bob, anne } = await transactionManager.run(() => {
   const bob = await createUser('Bob')

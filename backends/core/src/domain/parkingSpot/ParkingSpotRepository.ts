@@ -9,11 +9,13 @@ import { jsonArrayFrom } from 'kysely/helpers/postgres'
 import { BaseRepository } from '../../db/BaseRepository'
 import { DB, ParkingSpot as ParkingSpotGeneratedDao, TimeRule as TimeRuleGeneratedDao } from '../../db/generated/db'
 import { DayOfWeek } from '../time/DayOfWeek'
+import { TimeZoneLookup } from '../time/TimeZoneLookup'
 import { TimeRule, timeRuleToDto } from '../timeRule'
 import { ParkingSpot } from './ParkingSpot'
 
 type TimeRuleDao = Pick<Selectable<TimeRuleGeneratedDao>, 'day' | 'startTime' | 'endTime'>
-type ParkingSpotDao = Pick<Selectable<ParkingSpotGeneratedDao>, 'id' | 'ownerUserId' | 'location'> & {
+
+type ParkingSpotDao = Pick<Selectable<ParkingSpotGeneratedDao>, 'id' | 'ownerUserId' | 'location' | 'timeZone'> & {
   timeRules: TimeRuleDao[]
 }
 
@@ -36,6 +38,7 @@ export class ParkingSpotRepository extends BaseRepository {
         .values({
           ...rest,
           location: QueryUtils.pointToSql(location),
+          timeZone: TimeZoneLookup.getTimeZoneForPoint(location),
           ...QueryUtils.updatedAt(),
         })
         .returning(['id'])
@@ -91,6 +94,7 @@ export class ParkingSpotRepository extends BaseRepository {
         .set({
           ...rest,
           ...(location && { location: QueryUtils.pointToSql(location) }),
+          ...(location && { timeZone: TimeZoneLookup.getTimeZoneForPoint(location) }),
           ...QueryUtils.updatedAt(),
         })
         .where('id', '=', id)
@@ -117,18 +121,20 @@ export class ParkingSpotRepository extends BaseRepository {
           // TODO: maybe better ordering? Like day of week ascending, then start time, then end time, then id as a tie breaker?
           .orderBy(['TimeRule.createdAt', 'TimeRule.id'])
       ).as('timeRules'),
+      'timeZone',
     ] as const
     return timeRulesFields
   }
 
   private parkingSpotToDomain(parkingSpotDao: ParkingSpotDao): ParkingSpot {
-    const { id, ownerUserId, location, timeRules } = parkingSpotDao
+    const { id, ownerUserId, location, timeRules, timeZone } = parkingSpotDao
     const locationGeoJson = JSON.parse(location) as GeoJsonPoint
     return {
       id,
       ownerUserId,
       location: geoJsonToPoint(locationGeoJson),
       timeRules: timeRules.map((timeRule) => this.timeRuleToDomain(timeRule)),
+      timeZone,
     }
   }
 

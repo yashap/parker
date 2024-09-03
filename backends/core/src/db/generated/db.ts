@@ -10,6 +10,7 @@ export interface ParkingSpot {
   id: Generated<string>
   location: string
   ownerUserId: string
+  timeZone: string
   updatedAt: Timestamp
 }
 

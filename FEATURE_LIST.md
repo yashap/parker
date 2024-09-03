@@ -4,9 +4,11 @@ What am I planning to work on next?
 
 - Real implementation of parking spot bookings and time rules (landlord and BE)
   - BE remaining, for time rules:
-    - Tests
-    - Store time zone on the parking spot itself?
-      - Infer from location on save?
+    - Add the concept of "overrides" (a parking spot being available or unavailable in a very specific timestamp range, vs. standard "every Tuesday" type time rules)
+    - Time rule evaluation should be able to:
+      - Account for time rules + overrides
+      - Handle not just instants, but "is time range valid"
+      - For time range, handle ranges that go past the border of a date
   - BE remaining, for bookings:
     - Add more than just the POST method to the API contract
       - Probably an ability to get availability windows as well?
