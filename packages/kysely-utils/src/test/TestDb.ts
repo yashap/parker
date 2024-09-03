@@ -46,4 +46,8 @@ export class TestDb {
   public static async clear(): Promise<void> {
     await this.db().deleteFrom('Person').executeTakeFirst()
   }
+
+  public static async disconnect(): Promise<void> {
+    await this.db().destroy()
+  }
 }

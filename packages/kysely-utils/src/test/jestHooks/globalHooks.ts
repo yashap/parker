@@ -1,9 +1,13 @@
-import { TestDb } from '../../lib/TestDb'
+import { TestDb } from '../TestDb'
 
 beforeAll(async () => {
   await TestDb.init()
 })
 
-beforeEach(async () => {
+afterEach(async () => {
   await TestDb.clear()
+})
+
+afterAll(async () => {
+  await TestDb.disconnect()
 })

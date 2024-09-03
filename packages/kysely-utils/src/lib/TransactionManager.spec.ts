@@ -1,6 +1,6 @@
 import { Transaction } from 'kysely'
 import { ActiveTransactionContext } from './ActiveTransactionContext'
-import { Database, Person, TestDb } from './TestDb'
+import { Database, Person, TestDb } from '../test/TestDb'
 import { TransactionManager } from './TransactionManager'
 
 describe(TransactionManager.name, () => {
