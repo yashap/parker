@@ -4,6 +4,7 @@ import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@p
 import { SessionContainer } from 'supertokens-node/recipe/session'
 import { AuthGuard, Session } from '../../auth'
 import { timeRulesFromDto } from '../timeRule'
+import { timeRuleOverridesFromDto } from '../timeRuleOverride'
 import { ParkingSpot, parkingSpotToDto } from './ParkingSpot'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
@@ -36,6 +37,7 @@ export class ParkingSpotController extends BaseController {
         ...body,
         ownerUserId: session.getUserId(),
         timeRules: timeRulesFromDto(body.timeRules),
+        timeRuleOverrides: timeRuleOverridesFromDto(body.timeRuleOverrides),
       })
       return { status: HttpStatus.CREATED, body: parkingSpotToDto(parkingSpot) }
     })
@@ -58,6 +60,7 @@ export class ParkingSpotController extends BaseController {
       const parkingSpot = await this.parkingSpotRepository.update(id, {
         ...body,
         timeRules: body.timeRules ? timeRulesFromDto(body.timeRules) : undefined,
+        timeRuleOverrides: body.timeRuleOverrides ? timeRuleOverridesFromDto(body.timeRuleOverrides) : undefined,
       })
       return { status: HttpStatus.OK, body: parkingSpotToDto(parkingSpot) }
     })

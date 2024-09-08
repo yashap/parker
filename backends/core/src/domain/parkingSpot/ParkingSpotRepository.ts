@@ -1,37 +1,44 @@
-import { Temporal } from '@js-temporal/polyfill'
 import { Injectable } from '@nestjs/common'
 import { CreateParkingSpotRequest, UpdateParkingSpotRequest } from '@parker/core-client'
 import { required } from '@parker/errors'
 import { GeoJsonPoint, Point, geoJsonToPoint } from '@parker/geography'
 import { QueryUtils } from '@parker/kysely-utils'
-import { ExpressionBuilder, Insertable, Selectable, sql } from 'kysely'
+import { ExpressionBuilder, Selectable, sql } from 'kysely'
 import { jsonArrayFrom } from 'kysely/helpers/postgres'
 import { BaseRepository } from '../../db/BaseRepository'
-import { DB, ParkingSpot as ParkingSpotGeneratedDao, TimeRule as TimeRuleGeneratedDao } from '../../db/generated/db'
-import { DayOfWeek } from '../time/DayOfWeek'
+import { DB, ParkingSpot as ParkingSpotGeneratedDao } from '../../db/generated/db'
 import { TimeZoneLookup } from '../time/TimeZoneLookup'
-import { TimeRule, timeRuleToDto } from '../timeRule'
+import { TimeRule, TimeRuleDao, TimeRuleRepository } from '../timeRule'
+import { TimeRuleOverride, TimeRuleOverrideDao, TimeRuleOverrideRepository } from '../timeRuleOverride'
 import { ParkingSpot } from './ParkingSpot'
-
-type TimeRuleDao = Pick<Selectable<TimeRuleGeneratedDao>, 'day' | 'startTime' | 'endTime'>
 
 type ParkingSpotDao = Pick<Selectable<ParkingSpotGeneratedDao>, 'id' | 'ownerUserId' | 'location' | 'timeZone'> & {
   timeRules: TimeRuleDao[]
+  timeRuleOverrides: TimeRuleOverrideDao[]
 }
 
-export type CreateParkingSpotInput = Omit<CreateParkingSpotRequest, 'timeRules'> & {
+export type CreateParkingSpotInput = Omit<CreateParkingSpotRequest, 'timeRules' | 'timeRuleOverrides'> & {
   ownerUserId: string
   timeRules: TimeRule[]
+  timeRuleOverrides: TimeRuleOverride[]
 }
 
-export type UpdateParkingSpotInput = Omit<UpdateParkingSpotRequest, 'timeRules'> & {
+export type UpdateParkingSpotInput = Omit<UpdateParkingSpotRequest, 'timeRules' | 'timeRuleOverrides'> & {
   timeRules?: TimeRule[]
+  timeRuleOverrides?: TimeRuleOverride[]
 }
 
 @Injectable()
 export class ParkingSpotRepository extends BaseRepository {
+  constructor(
+    private timeRuleRepository: TimeRuleRepository,
+    private timeRuleOverrideRepository: TimeRuleOverrideRepository
+  ) {
+    super()
+  }
+
   public create(payload: CreateParkingSpotInput): Promise<ParkingSpot> {
-    const { location, timeRules, ...rest } = payload
+    const { location, timeRules, timeRuleOverrides, ...rest } = payload
     return this.runWithTransaction(async () => {
       const { id: parkingSpotId } = await this.db()
         .insertInto('ParkingSpot')
@@ -44,10 +51,10 @@ export class ParkingSpotRepository extends BaseRepository {
         .returning(['id'])
         .executeTakeFirstOrThrow()
       if (timeRules.length > 0) {
-        await this.db()
-          .insertInto('TimeRule')
-          .values(timeRules.map((timeRule) => this.timeRuleToInsertableDao(timeRule, parkingSpotId)))
-          .execute()
+        await this.timeRuleRepository.create(parkingSpotId, timeRules)
+      }
+      if (timeRuleOverrides.length > 0) {
+        await this.timeRuleOverrideRepository.create(parkingSpotId, timeRuleOverrides)
       }
       const parkingSpot = await this.getById(parkingSpotId)
       return required(parkingSpot)
@@ -78,15 +85,18 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   public update(id: string, update: UpdateParkingSpotInput): Promise<ParkingSpot> {
-    const { location, timeRules, ...rest } = update
+    const { location, timeRules, timeRuleOverrides, ...rest } = update
     return this.runWithTransaction(async () => {
       if (timeRules) {
-        await this.db().deleteFrom('TimeRule').where('parkingSpotId', '=', id).execute()
+        await this.timeRuleRepository.deleteByParkingSpotId(id)
         if (timeRules.length > 0) {
-          await this.db()
-            .insertInto('TimeRule')
-            .values(timeRules.map((timeRule) => this.timeRuleToInsertableDao(timeRule, id)))
-            .execute()
+          await this.timeRuleRepository.create(id, timeRules)
+        }
+      }
+      if (timeRuleOverrides) {
+        await this.timeRuleOverrideRepository.deleteByParkingSpotId(id)
+        if (timeRuleOverrides.length > 0) {
+          await this.timeRuleOverrideRepository.create(id, timeRuleOverrides)
         }
       }
       const parkingSpotDao = await this.db()
@@ -121,36 +131,30 @@ export class ParkingSpotRepository extends BaseRepository {
           // TODO: maybe better ordering? Like day of week ascending, then start time, then end time, then id as a tie breaker?
           .orderBy(['TimeRule.createdAt', 'TimeRule.id'])
       ).as('timeRules'),
+      jsonArrayFrom(
+        eb
+          .selectFrom('TimeRuleOverride')
+          .select(['TimeRuleOverride.isAvailable', 'TimeRuleOverride.startsAt', 'TimeRuleOverride.endsAt'])
+          .whereRef('TimeRuleOverride.parkingSpotId', '=', 'ParkingSpot.id')
+          .orderBy(['TimeRuleOverride.startsAt', 'TimeRuleOverride.endsAt', 'TimeRuleOverride.id'])
+      ).as('timeRuleOverrides'),
       'timeZone',
     ] as const
     return timeRulesFields
   }
 
   private parkingSpotToDomain(parkingSpotDao: ParkingSpotDao): ParkingSpot {
-    const { id, ownerUserId, location, timeRules, timeZone } = parkingSpotDao
+    const { id, ownerUserId, location, timeRules, timeRuleOverrides, timeZone } = parkingSpotDao
     const locationGeoJson = JSON.parse(location) as GeoJsonPoint
     return {
       id,
       ownerUserId,
       location: geoJsonToPoint(locationGeoJson),
-      timeRules: timeRules.map((timeRule) => this.timeRuleToDomain(timeRule)),
+      timeRules: timeRules.map((timeRule) => this.timeRuleRepository.timeRuleToDomain(timeRule)),
+      timeRuleOverrides: timeRuleOverrides.map((timeRule) =>
+        this.timeRuleOverrideRepository.timeRuleOverrideToDomain(timeRule)
+      ),
       timeZone,
-    }
-  }
-
-  private timeRuleToDomain(timeRuleDao: TimeRuleDao): TimeRule {
-    return {
-      day: timeRuleDao.day as DayOfWeek,
-      startTime: Temporal.PlainTime.from(timeRuleDao.startTime),
-      endTime: Temporal.PlainTime.from(timeRuleDao.endTime),
-    }
-  }
-
-  private timeRuleToInsertableDao(timeRule: TimeRule, parkingSpotId: string): Insertable<TimeRuleGeneratedDao> {
-    return {
-      ...timeRuleToDto(timeRule),
-      ...QueryUtils.updatedAt(),
-      parkingSpotId,
     }
   }
 }

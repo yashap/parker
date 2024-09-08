@@ -35,6 +35,16 @@ export interface TimeRule {
   updatedAt: Timestamp
 }
 
+export interface TimeRuleOverride {
+  createdAt: Generated<Timestamp>
+  endsAt: Timestamp
+  id: Generated<string>
+  isAvailable: boolean
+  parkingSpotId: string
+  startsAt: Timestamp
+  updatedAt: Timestamp
+}
+
 export interface ValuesParkingSpotBookingStatus {
   status: string
 }
@@ -47,6 +57,7 @@ export interface DB {
   ParkingSpot: ParkingSpot
   ParkingSpotBooking: ParkingSpotBooking
   TimeRule: TimeRule
+  TimeRuleOverride: TimeRuleOverride
   values_ParkingSpotBooking_status: ValuesParkingSpotBookingStatus
   values_TimeRule_day: ValuesTimeRuleDay
 }

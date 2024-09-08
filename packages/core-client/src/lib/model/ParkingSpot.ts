@@ -1,17 +1,14 @@
-import { DayOfWeekSchema, PointSchema, SchemaBuilder, TimeSchema } from '@parker/api-client-utils'
+import { PointSchema, SchemaBuilder } from '@parker/api-client-utils'
 import { z } from 'zod'
-
-export const TimeRuleSchema = z.object({
-  day: DayOfWeekSchema,
-  startTime: TimeSchema,
-  endTime: TimeSchema,
-})
+import { TimeRuleSchema } from './TimeRule'
+import { TimeRuleOverrideSchema } from './TimeRuleOverride'
 
 export const ParkingSpotSchema = z.object({
   id: z.string().uuid(),
   ownerUserId: z.string().uuid(),
   location: PointSchema,
   timeRules: z.array(TimeRuleSchema),
+  timeRuleOverrides: z.array(TimeRuleOverrideSchema),
   timeZone: z.string(),
 })
 
