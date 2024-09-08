@@ -2,13 +2,17 @@
 
 What am I planning to work on next?
 
+- Auth
+  - Figure out this weird bug where login fails with a "try refresh token", that only seems to be cleared by wiping the device
 - Real implementation of parking spot bookings and time rules (landlord and BE)
   - BE remaining, for time rules:
-    - Add the concept of "overrides" (a parking spot being available or unavailable in a very specific timestamp range, vs. standard "every Tuesday" type time rules)
+    - Time rule overrides have been added, but need the same level of basic test coverage as time rules
+      - Basic CRUD in parking spot controller and repository tests
     - Time rule evaluation should be able to:
       - Account for time rules + overrides
       - Handle not just instants, but "is time range valid"
       - For time range, handle ranges that go past the border of a date
+      - Maybe should all be moved out of the timeRule module, into its own module? Or into the parking spot module?
   - BE remaining, for bookings:
     - Add more than just the POST method to the API contract
       - Probably an ability to get availability windows as well?

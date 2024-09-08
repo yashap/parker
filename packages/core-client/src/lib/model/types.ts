@@ -4,7 +4,6 @@ import {
   ListParkingSpotsClosestToPointRequestSchema,
   ListParkingSpotsClosestToPointResponseSchema,
   ParkingSpotSchema,
-  TimeRuleSchema,
   UpdateParkingSpotRequestSchema,
 } from './ParkingSpot'
 import {
@@ -12,6 +11,8 @@ import {
   CreateParkingSpotBookingRequestSchema,
   ParkingSpotBookingSchema,
 } from './ParkingSpotBooking'
+import { TimeRuleSchema } from './TimeRule'
+import { TimeRuleOverrideSchema } from './TimeRuleOverride'
 
 // Requests
 export type CreateParkingSpotRequest = z.infer<typeof CreateParkingSpotRequestSchema>
@@ -27,6 +28,7 @@ export { DayOfWeekValues } from '@parker/api-client-utils'
 export type { DayOfWeekDto, PaginationDto, PointDto, ServerErrorDto } from '@parker/api-client-utils'
 export type ParkingSpotDto = z.infer<typeof ParkingSpotSchema>
 export type TimeRuleDto = z.infer<typeof TimeRuleSchema>
+export type TimeRuleOverrideDto = z.infer<typeof TimeRuleOverrideSchema>
 export type ParkingSpotBookingDto = z.infer<typeof ParkingSpotBookingSchema>
 export type BookingStatusDto = z.infer<typeof BookingStatusSchema>
 export const BookingStatusValues = BookingStatusSchema.Enum

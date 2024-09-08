@@ -3,6 +3,8 @@ import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { DayOfWeek } from '../time/DayOfWeek'
+import { TimeRuleRepository } from '../timeRule'
+import { TimeRuleOverrideRepository } from '../timeRuleOverride'
 import { ParkingSpot } from './ParkingSpot'
 import { CreateParkingSpotInput, ParkingSpotRepository } from './ParkingSpotRepository'
 
@@ -13,12 +15,13 @@ describe(ParkingSpotRepository.name, () => {
   let userId: string
 
   beforeEach(async () => {
-    parkingSpotRepository = new ParkingSpotRepository()
+    parkingSpotRepository = new ParkingSpotRepository(new TimeRuleRepository(), new TimeRuleOverrideRepository())
     userId = uuid()
     createParkingSpotInput = {
       ownerUserId: userId,
       location: { longitude: 10, latitude: 20 },
       timeRules: [],
+      timeRuleOverrides: [],
     }
     spot = await parkingSpotRepository.create(createParkingSpotInput)
     expect(spot).toStrictEqual({
@@ -88,7 +91,12 @@ describe(ParkingSpotRepository.name, () => {
       const ints: number[] = Array.from({ length: 20 }, (_, idx) => idx)
       const allSpots: ParkingSpot[] = await Promise.all(
         ints.map((i) =>
-          parkingSpotRepository.create({ ownerUserId: userId, location: { longitude: i, latitude: i }, timeRules: [] })
+          parkingSpotRepository.create({
+            ownerUserId: userId,
+            location: { longitude: i, latitude: i },
+            timeRules: [],
+            timeRuleOverrides: [],
+          })
         )
       )
 

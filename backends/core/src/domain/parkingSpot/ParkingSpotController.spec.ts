@@ -34,6 +34,7 @@ describe(ParkingSpotController.name, () => {
     const parkingSpotPostBody: CreateParkingSpotRequest = {
       location: { longitude: 10, latitude: 20 },
       timeRules: [],
+      timeRuleOverrides: [],
     }
     parkingSpot = await landlordCoreClient.parkingSpots.create(parkingSpotPostBody)
     const { id: parkingSpotId, ownerUserId, timeZone, ...otherParkingSpotData } = parkingSpot
@@ -103,7 +104,11 @@ describe(ParkingSpotController.name, () => {
       const allSpots: ParkingSpotDto[] = []
       for (let idx = 0; idx < 20; idx++) {
         allSpots.push(
-          await landlordCoreClient.parkingSpots.create({ location: { longitude: idx, latitude: idx }, timeRules: [] })
+          await landlordCoreClient.parkingSpots.create({
+            location: { longitude: idx, latitude: idx },
+            timeRules: [],
+            timeRuleOverrides: [],
+          })
         )
       }
 
@@ -129,7 +134,11 @@ describe(ParkingSpotController.name, () => {
       const allSpots: ParkingSpotDto[] = []
       for (let idx = 0; idx < 20; idx++) {
         allSpots.push(
-          await landlordCoreClient.parkingSpots.create({ location: { longitude: idx, latitude: idx }, timeRules: [] })
+          await landlordCoreClient.parkingSpots.create({
+            location: { longitude: idx, latitude: idx },
+            timeRules: [],
+            timeRuleOverrides: [],
+          })
         )
       }
 

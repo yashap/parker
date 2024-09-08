@@ -32,6 +32,8 @@ const NewParkingSpot: React.FC = () => {
               location: { latitude: Number(latitude), longitude: Number(longitude) },
               // TODO!
               timeRules: [],
+              // TODO!
+              timeRuleOverrides: [],
             })
             router.push('/parkingSpots/list')
           } catch (error) {
