@@ -11,18 +11,20 @@ export type TimeRuleOverrideDao = Pick<Selectable<TimeRuleOverrideGeneratedDao>,
 @Injectable()
 export class TimeRuleOverrideRepository extends BaseRepository {
   public async create(parkingSpotId: string, timeRuleOverrides: TimeRuleOverride[]): Promise<TimeRuleOverride[]> {
-    const createdTimeRules = await this.db()
+    const createdTimeRuleOverrides = await this.db()
       .insertInto('TimeRuleOverride')
       .values(
-        timeRuleOverrides.map((timeRuleOverride) => this.timeRuleToInsertableDao(timeRuleOverride, parkingSpotId))
+        timeRuleOverrides.map((timeRuleOverride) =>
+          this.timeRuleOverrideToInsertableDao(timeRuleOverride, parkingSpotId)
+        )
       )
       .returningAll()
       .execute()
-    return createdTimeRules.map((timeRule) => this.timeRuleOverrideToDomain(timeRule))
+    return createdTimeRuleOverrides.map((timeRule) => this.timeRuleOverrideToDomain(timeRule))
   }
 
   public async deleteByParkingSpotId(parkingSpotId: string): Promise<void> {
-    await this.db().deleteFrom('TimeRule').where('parkingSpotId', '=', parkingSpotId).execute()
+    await this.db().deleteFrom('TimeRuleOverride').where('parkingSpotId', '=', parkingSpotId).execute()
   }
 
   public timeRuleOverrideToDomain(timeRuleOverrideDao: TimeRuleOverrideDao): TimeRuleOverride {
@@ -33,7 +35,7 @@ export class TimeRuleOverrideRepository extends BaseRepository {
     }
   }
 
-  private timeRuleToInsertableDao(
+  private timeRuleOverrideToInsertableDao(
     timeRuleOverride: TimeRuleOverride,
     parkingSpotId: string
   ): Insertable<TimeRuleOverrideGeneratedDao> {

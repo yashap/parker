@@ -73,6 +73,37 @@ describe(ParkingSpotRepository.name, () => {
         })
       ).rejects.toThrow()
     })
+
+    it('creates a parking spot with time rule overrides', async () => {
+      const spotWithTimeRules = await parkingSpotRepository.create({
+        ...createParkingSpotInput,
+        timeRuleOverrides: [
+          {
+            startsAt: Temporal.Instant.from('2024-09-20T01:10:15-07:00'),
+            endsAt: Temporal.Instant.from('2024-09-20T23:30:45-07:00'),
+            isAvailable: false,
+          },
+          {
+            startsAt: Temporal.Instant.from('2024-09-27T01:10:15-07:00'),
+            endsAt: Temporal.Instant.from('2024-09-27T23:30:45-07:00'),
+            isAvailable: true,
+          },
+        ],
+      })
+      expect(spotWithTimeRules.timeRuleOverrides).toStrictEqual([
+        {
+          startsAt: Temporal.Instant.from('2024-09-20T01:10:15-07:00'),
+          endsAt: Temporal.Instant.from('2024-09-20T23:30:45-07:00'),
+          isAvailable: false,
+        },
+        {
+          startsAt: Temporal.Instant.from('2024-09-27T01:10:15-07:00'),
+          endsAt: Temporal.Instant.from('2024-09-27T23:30:45-07:00'),
+          isAvailable: true,
+        },
+      ])
+      expect(await parkingSpotRepository.getById(spotWithTimeRules.id)).toStrictEqual(spotWithTimeRules)
+    })
   })
 
   describe('getById', () => {
@@ -206,6 +237,105 @@ describe(ParkingSpotRepository.name, () => {
       ])
       expect(spotWithTimeRules.location).toStrictEqual({ longitude: -50, latitude: 50 })
       expect(await parkingSpotRepository.getById(spotWithTimeRules.id)).toStrictEqual(spotWithTimeRules)
+    })
+
+    it('completely replaces time rule overrides, if updating the time rule overrides', async () => {
+      let spotWithTimeRuleOverrides = await parkingSpotRepository.create({
+        ...createParkingSpotInput,
+        timeRuleOverrides: [
+          {
+            startsAt: Temporal.Instant.from('2024-09-20T01:10:15-07:00'),
+            endsAt: Temporal.Instant.from('2024-09-20T23:30:45-07:00'),
+            isAvailable: false,
+          },
+          {
+            startsAt: Temporal.Instant.from('2024-09-27T01:10:15-07:00'),
+            endsAt: Temporal.Instant.from('2024-09-27T23:30:45-07:00'),
+            isAvailable: true,
+          },
+        ],
+      })
+      expect(spotWithTimeRuleOverrides.timeRuleOverrides).toStrictEqual([
+        {
+          startsAt: Temporal.Instant.from('2024-09-20T01:10:15-07:00'),
+          endsAt: Temporal.Instant.from('2024-09-20T23:30:45-07:00'),
+          isAvailable: false,
+        },
+        {
+          startsAt: Temporal.Instant.from('2024-09-27T01:10:15-07:00'),
+          endsAt: Temporal.Instant.from('2024-09-27T23:30:45-07:00'),
+          isAvailable: true,
+        },
+      ])
+      expect(await parkingSpotRepository.getById(spotWithTimeRuleOverrides.id)).toStrictEqual(spotWithTimeRuleOverrides)
+
+      spotWithTimeRuleOverrides = await parkingSpotRepository.update(spotWithTimeRuleOverrides.id, {
+        timeRuleOverrides: [
+          {
+            startsAt: Temporal.Instant.from('2024-09-25T01:10:15-07:00'),
+            endsAt: Temporal.Instant.from('2024-09-25T23:30:45-07:00'),
+            isAvailable: true,
+          },
+        ],
+      })
+      expect(spotWithTimeRuleOverrides.timeRuleOverrides).toStrictEqual([
+        {
+          startsAt: Temporal.Instant.from('2024-09-25T01:10:15-07:00'),
+          endsAt: Temporal.Instant.from('2024-09-25T23:30:45-07:00'),
+          isAvailable: true,
+        },
+      ])
+      expect(await parkingSpotRepository.getById(spotWithTimeRuleOverrides.id)).toStrictEqual(spotWithTimeRuleOverrides)
+    })
+
+    it('does not touch the time rule overrides, if not updating the time rule overrides', async () => {
+      let spotWithTimeRuleOverrides = await parkingSpotRepository.create({
+        ...createParkingSpotInput,
+        timeRuleOverrides: [
+          {
+            startsAt: Temporal.Instant.from('2024-09-20T01:10:15-07:00'),
+            endsAt: Temporal.Instant.from('2024-09-20T23:30:45-07:00'),
+            isAvailable: false,
+          },
+          {
+            startsAt: Temporal.Instant.from('2024-09-27T01:10:15-07:00'),
+            endsAt: Temporal.Instant.from('2024-09-27T23:30:45-07:00'),
+            isAvailable: true,
+          },
+        ],
+      })
+      expect(spotWithTimeRuleOverrides.timeRuleOverrides).toStrictEqual([
+        {
+          startsAt: Temporal.Instant.from('2024-09-20T01:10:15-07:00'),
+          endsAt: Temporal.Instant.from('2024-09-20T23:30:45-07:00'),
+          isAvailable: false,
+        },
+        {
+          startsAt: Temporal.Instant.from('2024-09-27T01:10:15-07:00'),
+          endsAt: Temporal.Instant.from('2024-09-27T23:30:45-07:00'),
+          isAvailable: true,
+        },
+      ])
+      expect(spotWithTimeRuleOverrides.location).toStrictEqual({ longitude: 10, latitude: 20 })
+      expect(await parkingSpotRepository.getById(spotWithTimeRuleOverrides.id)).toStrictEqual(spotWithTimeRuleOverrides)
+
+      spotWithTimeRuleOverrides = await parkingSpotRepository.update(spotWithTimeRuleOverrides.id, {
+        location: { longitude: -50, latitude: 50 },
+      })
+      expect(spotWithTimeRuleOverrides.timeRuleOverrides).toStrictEqual([
+        {
+          startsAt: Temporal.Instant.from('2024-09-20T01:10:15-07:00'),
+          endsAt: Temporal.Instant.from('2024-09-20T23:30:45-07:00'),
+          isAvailable: false,
+        },
+        {
+          startsAt: Temporal.Instant.from('2024-09-27T01:10:15-07:00'),
+          endsAt: Temporal.Instant.from('2024-09-27T23:30:45-07:00'),
+          isAvailable: true,
+        },
+      ])
+      expect(spotWithTimeRuleOverrides.location).toStrictEqual({ longitude: -50, latitude: 50 })
+      expect(await parkingSpotRepository.getById(spotWithTimeRuleOverrides.id)).toStrictEqual(spotWithTimeRuleOverrides)
     })
   })
 
