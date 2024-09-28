@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { isArray, isString } from 'lodash'
+import Supertokens from 'supertokens-react-native'
 
 enum FormFieldId {
   email = 'email',
@@ -99,6 +100,7 @@ export class AuthClient {
   public constructor(private axiosInstance: AxiosInstance) {}
 
   public async signUp(details: EmailLogInDetails): Promise<User> {
+    await this.logOut()
     const { data } = await this.axiosInstance.post<LogInResponse>(this.paths.signUp, this.buildFormBody(details))
     if (data.status === EmailPasswordStatusCode.Ok) {
       return data.user
@@ -109,6 +111,7 @@ export class AuthClient {
   }
 
   public async logIn(details: EmailLogInDetails): Promise<User> {
+    await this.logOut()
     const { data } = await this.axiosInstance.post(this.paths.logIn, this.buildFormBody(details))
     if (data.status === EmailPasswordStatusCode.Ok) {
       return data.user
@@ -116,6 +119,10 @@ export class AuthClient {
     const errorMessage = getErrorMessage(data)
     // TODO: better error
     throw new Error(errorMessage)
+  }
+
+  public logOut(): Promise<void> {
+    return Supertokens.signOut()
   }
 
   private buildFormBody({ email, password }: EmailLogInDetails): LogInRequestBody {
