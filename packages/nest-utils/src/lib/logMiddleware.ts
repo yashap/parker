@@ -1,7 +1,7 @@
 import { ServerError } from '@parker/errors'
 import { Logger, Payload } from '@parker/logging'
 import { Request, Response } from 'express'
-import { keys } from 'lodash'
+import { keys, pick } from 'lodash'
 import { NestFunctionalMiddleware } from './NestFunctionalMiddleware'
 import { onResponseComplete } from './onResponseComplete'
 
@@ -13,7 +13,12 @@ const getStatusCode = (res: Response, error?: Error): number => {
   return errorStatus ?? res.statusCode
 }
 
-const logResponse = (req: Request, res: Response, startMilliseconds: number, error?: Error): void => {
+const logResponse = (
+  req: Pick<Request, 'method' | 'path' | 'query'>,
+  res: Response,
+  startMilliseconds: number,
+  error?: Error
+): void => {
   const queryKeys = keys(req.query)
   const status = getStatusCode(res, error)
   const payload: Payload = {
@@ -39,7 +44,9 @@ const logResponse = (req: Request, res: Response, startMilliseconds: number, err
 
 export const logMiddleware: NestFunctionalMiddleware = (req, res, next) => {
   const startMilliseconds = Date.now()
-  onResponseComplete(res)((error) => logResponse(req, res, startMilliseconds, error))
+  // In case request gets mutated, get it on the way in
+  const request = pick(req, ['method', 'path', 'query'])
+  onResponseComplete(res)((error) => logResponse(request, res, startMilliseconds, error))
   if (next) {
     try {
       next()

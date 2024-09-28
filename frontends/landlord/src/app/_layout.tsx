@@ -5,6 +5,7 @@ import FlashMessage from 'react-native-flash-message'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import 'react-native-url-polyfill/auto'
 import SuperTokens from 'supertokens-react-native'
+import { LogoutButton } from '../components/auth/LogoutButton'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { config } from '../config'
 
@@ -34,10 +35,15 @@ const Layout: React.FC = () => (
             */}
           <Stack.Screen name='signUp' options={{ headerShown: false }} />
           <Stack.Screen name='logIn' options={{ headerShown: false }} />
-          <Stack.Screen name='parkingSpots/list' options={{ title: 'Your Parking Spots' }} />
-          <Stack.Screen name='parkingSpots/new' options={{ title: 'Add Parking Spot' }} />
+          <Stack.Screen
+            name='parkingSpots/list'
+            options={{ title: 'Your Parking Spots', headerRight: () => <LogoutButton /> }}
+          />
+          <Stack.Screen
+            name='parkingSpots/new'
+            options={{ title: 'Add Parking Spot', headerRight: () => <LogoutButton /> }}
+          />
         </Stack>
-        {/* </AuthProvider> */}
       </ErrorBoundary>
       <FlashMessage
         position='bottom'

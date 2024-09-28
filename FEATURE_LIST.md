@@ -2,8 +2,6 @@
 
 What am I planning to work on next?
 
-- Auth
-  - Figure out this weird bug where login fails with a "try refresh token", that only seems to be cleared by wiping the device
 - Real implementation of parking spot bookings and time rules (landlord and BE)
   - BE remaining, for time rules:
     - Time rule overrides have been added, but need the same level of basic test coverage as time rules
