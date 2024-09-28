@@ -5,6 +5,7 @@ import { GeoJsonPoint, Point, geoJsonToPoint } from '@parker/geography'
 import { QueryUtils } from '@parker/kysely-utils'
 import { ExpressionBuilder, Selectable, sql } from 'kysely'
 import { jsonArrayFrom } from 'kysely/helpers/postgres'
+import { isString } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
 import { DB, ParkingSpot as ParkingSpotGeneratedDao } from '../../db/generated/db'
 import { TimeZoneLookup } from '../time/TimeZoneLookup'
@@ -151,9 +152,17 @@ export class ParkingSpotRepository extends BaseRepository {
       ownerUserId,
       location: geoJsonToPoint(locationGeoJson),
       timeRules: timeRules.map((timeRule) => this.timeRuleRepository.timeRuleToDomain(timeRule)),
-      timeRuleOverrides: timeRuleOverrides.map((timeRule) =>
-        this.timeRuleOverrideRepository.timeRuleOverrideToDomain(timeRule)
-      ),
+      timeRuleOverrides: timeRuleOverrides.map((timeRuleOverride) => {
+        // Seems like when we select them out using jsonArrayFrom, the timestamps are strings, not Date objects
+        const { startsAt, endsAt, ...rest } = timeRuleOverride
+        const startsAtDate = isString(startsAt) ? new Date(startsAt) : startsAt
+        const endsAtDate = isString(endsAt) ? new Date(endsAt) : endsAt
+        return this.timeRuleOverrideRepository.timeRuleOverrideToDomain({
+          startsAt: startsAtDate,
+          endsAt: endsAtDate,
+          ...rest,
+        })
+      }),
       timeZone,
     }
   }
