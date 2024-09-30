@@ -4,7 +4,6 @@ What am I planning to work on next?
 
 - Real implementation of parking spot bookings and time rules (BE)
   - BE remaining, for time rules/overrides:
-    - Add tests to ParkingSpotController.spec.ts related to basic CRUD for time rules/overrides
     - Time rule evaluation should be able to:
       - Account for time rules + overrides
       - Handle not just instants, but "is time range valid"

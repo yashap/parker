@@ -7,8 +7,8 @@ exports.up = async (db) => {
       db.runSql(`
         CREATE TABLE IF NOT EXISTS "ParkingSpot" (
           "id" UUID NOT NULL DEFAULT uuid_generate_v1() PRIMARY KEY,
-          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          "updatedAt" TIMESTAMP(3) NOT NULL,
+          "createdAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
           "ownerUserId" UUID NOT NULL,
           "location" GEOMETRY(POINT, 4326) NOT NULL
         );
@@ -42,8 +42,8 @@ exports.up = async (db) => {
       db.runSql(`
         CREATE TABLE IF NOT EXISTS "TimeRule" (
           "id" UUID NOT NULL DEFAULT uuid_generate_v1() PRIMARY KEY,
-          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          "updatedAt" TIMESTAMP(3) NOT NULL,
+          "createdAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
           "parkingSpotId" UUID NOT NULL REFERENCES "ParkingSpot"("id") ON DELETE CASCADE ON UPDATE CASCADE,
           "day" TEXT NOT NULL REFERENCES "values_TimeRule_day"("day"),
           "startTime" TIME WITHOUT TIME ZONE NOT NULL,
