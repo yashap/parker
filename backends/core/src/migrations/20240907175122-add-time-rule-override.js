@@ -5,11 +5,11 @@ exports.up = async (db) => {
       `
         CREATE TABLE IF NOT EXISTS "TimeRuleOverride" (
           "id" UUID NOT NULL DEFAULT uuid_generate_v1() PRIMARY KEY,
-          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          "updatedAt" TIMESTAMP(3) NOT NULL,
+          "createdAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
           "parkingSpotId" UUID NOT NULL REFERENCES "ParkingSpot"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-          "startsAt" TIMESTAMP(3) NOT NULL,
-          "endsAt" TIMESTAMP(3) NOT NULL,
+          "startsAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
+          "endsAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
           "isAvailable" BOOLEAN NOT NULL
         );
       `

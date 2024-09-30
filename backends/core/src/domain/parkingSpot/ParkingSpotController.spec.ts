@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common'
 import { SupertestInstance } from '@parker/api-client-test-utils'
-import { CoreClient, CreateParkingSpotRequest, ParkingSpotDto } from '@parker/core-client'
+import { CoreClient, CreateParkingSpotRequest, ParkingSpotDto, UpdateParkingSpotRequest } from '@parker/core-client'
 import { NotFoundError } from '@parker/errors'
 import { Point } from '@parker/geography'
 import { orderBy } from 'lodash'
@@ -56,11 +56,45 @@ describe(ParkingSpotController.name, () => {
     it('should verify that a parking spot does not exist', async () => {
       expect(await landlordCoreClient.parkingSpots.get(uuid())).toBeUndefined()
     })
+
+    it('should work for a parking spot with time rules and time rule overrides', async () => {
+      const input: CreateParkingSpotRequest = {
+        location: { longitude: 10, latitude: 20 },
+        timeRules: [
+          {
+            day: 'Monday',
+            startTime: '01:00:00',
+            endTime: '23:00:00',
+          },
+          {
+            day: 'Tuesday',
+            startTime: '13:30:00',
+            endTime: '15:20:00',
+          },
+        ],
+        timeRuleOverrides: [
+          {
+            startsAt: '2024-09-20T01:10:15Z',
+            endsAt: '2024-09-20T23:30:45Z',
+            isAvailable: false,
+          },
+          {
+            startsAt: '2024-09-27T01:10:15Z',
+            endsAt: '2024-09-27T23:30:45Z',
+            isAvailable: true,
+          },
+        ],
+      }
+      parkingSpot = await landlordCoreClient.parkingSpots.create(input)
+      expect(await landlordCoreClient.parkingSpots.get(parkingSpot.id)).toStrictEqual(parkingSpot)
+      expect(parkingSpot.timeRules).toStrictEqual(input.timeRules)
+      expect(parkingSpot.timeRuleOverrides).toStrictEqual(input.timeRuleOverrides)
+    })
   })
 
   describe('update', () => {
     it('landlord should be able to update a parking spot', async () => {
-      const update = { location: { longitude: 2, latitude: 3 } }
+      const update: UpdateParkingSpotRequest = { location: { longitude: 2, latitude: 3 } }
       expect(await landlordCoreClient.parkingSpots.update(parkingSpot.id, update)).toStrictEqual({
         ...parkingSpot,
         ...update,
@@ -69,11 +103,69 @@ describe(ParkingSpotController.name, () => {
     })
 
     it('renter should not be able to update a parking spot', async () => {
-      const update = { location: { longitude: 2, latitude: 3 } }
+      const update: UpdateParkingSpotRequest = { location: { longitude: 2, latitude: 3 } }
       await expect(renterCoreClient.parkingSpots.update(parkingSpot.id, update)).rejects.toThrow(NotFoundError)
 
       // And assert it wasn't modified
       expect(await renterCoreClient.parkingSpots.get(parkingSpot.id)).toStrictEqual(parkingSpot)
+    })
+
+    it('should be able to replace time rules and time rule overrides', async () => {
+      const update1: UpdateParkingSpotRequest = {
+        timeRules: [
+          {
+            day: 'Saturday',
+            startTime: '03:00:00',
+            endTime: '22:00:00',
+          },
+        ],
+        timeRuleOverrides: [
+          {
+            startsAt: '2023-09-20T01:10:15Z',
+            endsAt: '2023-09-20T23:30:45Z',
+            isAvailable: false,
+          },
+        ],
+      }
+      const parkingSpotWithUpdate1 = await landlordCoreClient.parkingSpots.update(parkingSpot.id, update1)
+      expect(parkingSpotWithUpdate1).toStrictEqual({
+        ...parkingSpot,
+        ...update1,
+      })
+      expect(await landlordCoreClient.parkingSpots.get(parkingSpot.id)).toStrictEqual(parkingSpotWithUpdate1)
+
+      const update2: UpdateParkingSpotRequest = {
+        timeRules: [
+          {
+            day: 'Monday',
+            startTime: '01:00:00',
+            endTime: '23:00:00',
+          },
+          {
+            day: 'Tuesday',
+            startTime: '13:30:00',
+            endTime: '15:20:00',
+          },
+        ],
+        timeRuleOverrides: [
+          {
+            startsAt: '2024-09-20T01:10:15Z',
+            endsAt: '2024-09-20T23:30:45Z',
+            isAvailable: false,
+          },
+          {
+            startsAt: '2024-09-27T01:10:15Z',
+            endsAt: '2024-09-27T23:30:45Z',
+            isAvailable: true,
+          },
+        ],
+      }
+      const parkingSpotWithUpdate2 = await landlordCoreClient.parkingSpots.update(parkingSpot.id, update2)
+      expect(parkingSpotWithUpdate2).toStrictEqual({
+        ...parkingSpot,
+        ...update2,
+      })
+      expect(await landlordCoreClient.parkingSpots.get(parkingSpot.id)).toStrictEqual(parkingSpotWithUpdate2)
     })
   })
 
