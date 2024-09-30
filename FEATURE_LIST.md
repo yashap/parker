@@ -2,6 +2,8 @@
 
 What am I planning to work on next?
 
+- Better create parking spot FE
+  - With time rules and overrides, and properly viewing your parking spot(s)
 - Real implementation of parking spot bookings and time rules (BE)
   - BE remaining, for time rules/overrides:
     - Time rule evaluation should be able to:
@@ -14,8 +16,6 @@ What am I planning to work on next?
       - Probably an ability to get availability windows as well?
     - Proper implementation of business logic around bookings (e.g. based on availability, time rules, etc.)
     - Tests
-- Better create parking spot FE
-  - With time rules and overrides, and properly viewing your parking spot(s)
 - Real implementation of place/location picking (landlord and BE)
   - Probably a new service, that wraps Google Places API?
 - General landlord improvements
