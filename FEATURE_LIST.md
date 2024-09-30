@@ -4,6 +4,13 @@ What am I planning to work on next?
 
 - Better create parking spot FE
   - With time rules and overrides, and properly viewing your parking spot(s)
+- General landlord improvements
+  - Form lib?
+  - Styling
+  - [Default font styles](https://tailwindcss.com/docs/font-family) and whatnot for tailwind?
+  - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
+- Real implementation of place/location picking (landlord and BE)
+  - Probably a new service, that wraps Google Places API?
 - Real implementation of parking spot bookings and time rules (BE)
   - BE remaining, for time rules/overrides:
     - Time rule evaluation should be able to:
@@ -16,13 +23,6 @@ What am I planning to work on next?
       - Probably an ability to get availability windows as well?
     - Proper implementation of business logic around bookings (e.g. based on availability, time rules, etc.)
     - Tests
-- Real implementation of place/location picking (landlord and BE)
-  - Probably a new service, that wraps Google Places API?
-- General landlord improvements
-  - Form lib?
-  - Styling
-  - [Default font styles](https://tailwindcss.com/docs/font-family) and whatnot for tailwind?
-  - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
 - Create a simple renter app, that lets you book a parking spot
   - View spots near you on a map
   - Click one to view details, with the option to book
@@ -32,7 +32,6 @@ What am I planning to work on next?
 - TypeScript migrations
 - Validate flows around bad auth
   - Handled well on BE and FE? Ideally some BE tests!
-- E2E tests, possibly using [Maestro](https://www.mobile.dev/)
 - Photos of the parking spot
   - BE
   - Landlord
@@ -40,3 +39,4 @@ What am I planning to work on next?
   - Possibly a generic service for uploading files?
 - Maybe switch to pnpm instead of yarn v1 workspaces?
   - I believe new RN supports pnpm
+- E2E tests, possibly using [Maestro](https://www.mobile.dev/)
