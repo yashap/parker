@@ -86,10 +86,9 @@ describe(ParkingSpotController.name, () => {
         ],
       }
       parkingSpot = await landlordCoreClient.parkingSpots.create(input)
-      const fetchedParkingSpot = await landlordCoreClient.parkingSpots.get(parkingSpot.id)
-      expect(fetchedParkingSpot?.timeRules).toStrictEqual(input.timeRules)
-      expect(fetchedParkingSpot?.timeRuleOverrides).toStrictEqual(input.timeRuleOverrides)
       expect(await landlordCoreClient.parkingSpots.get(parkingSpot.id)).toStrictEqual(parkingSpot)
+      expect(parkingSpot.timeRules).toStrictEqual(input.timeRules)
+      expect(parkingSpot.timeRuleOverrides).toStrictEqual(input.timeRuleOverrides)
     })
   })
 

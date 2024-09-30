@@ -6,8 +6,8 @@ export const ParkingSpotBookingSchema = z.object({
   id: z.string().uuid(),
   parkingSpotId: z.string().uuid(),
   bookedByUserId: z.string().uuid(),
-  bookingStartsAt: z.string().datetime({ offset: true }),
-  bookingEndsAt: z.string().datetime({ offset: true }).optional(),
+  bookingStartsAt: z.string().datetime(),
+  bookingEndsAt: z.string().datetime().optional(),
   status: BookingStatusSchema,
 })
 
