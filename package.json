@@ -20,7 +20,7 @@
     "email": "open http://127.0.0.1:4436",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run format",
     "generate": "turbo run generate && yarn format && yarn build",
-    "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint",
+    "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint --force",
     "serve:backend": "turbo run serve --filter='./backends/*' --parallel",
     "serve:landlord": "yarn workspace @parker/landlord serve",
     "test": "turbo run test",
