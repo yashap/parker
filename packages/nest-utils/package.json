@@ -15,7 +15,9 @@
   "dependencies": {
     "@nestjs/common": "^10.4.1",
     "@nestjs/core": "^10.4.1",
+    "@parker/api-client-utils": "*",
     "@parker/correlation-id-propagator": "*",
+    "@parker/errors": "*",
     "@parker/logging": "*",
     "@ts-rest/core": "^3.51.0",
     "@ts-rest/nest": "^3.51.0",
@@ -28,8 +30,7 @@
   },
   "devDependencies": {
     "@parker/api-client-test-utils": "*",
-    "@parker/api-client-utils": "*",
-    "@parker/errors": "*",
+    "@parker/eslint-config": "*",
     "@parker/tsconfig": "*",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
@@ -37,7 +38,6 @@
     "@types/node": "^22.5.0",
     "@types/uuid": "^10.0.0",
     "eslint": "^8.57.0",
-    "eslint-config-custom": "*",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "typescript": "^5.5.4",

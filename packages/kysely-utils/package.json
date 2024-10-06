@@ -20,11 +20,11 @@
     "tslib": "^2.7.0"
   },
   "devDependencies": {
+    "@parker/eslint-config": "*",
     "@parker/tsconfig": "*",
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.0",
     "eslint": "^8.57.0",
-    "eslint-config-custom": "*",
     "jest": "^29.7.0",
     "pg": "^8.12.0",
     "ts-jest": "^29.2.5",

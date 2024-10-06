@@ -11,6 +11,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "build:force": "turbo run build --force",
     "build-migrate": "yarn install && yarn db:migrate-up && yarn db:migrate-up:test && yarn build",
     "clean": "yarn db:clean && turbo run clean && rm -rf node_modules/",
     "db:clean": "docker rm -f -v parker_postgres_dev parker_postgres_test && docker volume rm -f parker_postgres_data_dev parker_postgres_data_test",

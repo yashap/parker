@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-undef
 module.exports = {
-  root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['import', 'unused-imports'],
   extends: [
@@ -11,7 +10,6 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:prettier/recommended',
-    'plugin:react/recommended',
   ],
   ignorePatterns: ['**/dist/*'],
   rules: {
@@ -30,13 +28,5 @@ module.exports = {
         'newlines-between': 'never',
       },
     ],
-    'react/jsx-key': 'off',
-    'react/react-in-jsx-scope': 'off',
-  },
-  settings: {
-    react: {
-      version: 'detect',
-    },
-    'import/ignore': ['react-native'],
   },
 }
