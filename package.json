@@ -11,6 +11,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "build:force": "turbo run build --force",
     "build-migrate": "yarn install && yarn db:migrate-up && yarn db:migrate-up:test && yarn build",
     "clean": "yarn db:clean && turbo run clean && rm -rf node_modules/",
     "db:clean": "docker rm -f -v parker_postgres_dev parker_postgres_test && docker volume rm -f parker_postgres_data_dev parker_postgres_data_test",
@@ -19,7 +20,7 @@
     "email": "open http://127.0.0.1:4436",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run format",
     "generate": "turbo run generate && yarn format && yarn build",
-    "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint",
+    "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint --force",
     "serve:backend": "turbo run serve --filter='./backends/*' --parallel",
     "serve:landlord": "yarn workspace @parker/landlord serve",
     "test": "turbo run test",

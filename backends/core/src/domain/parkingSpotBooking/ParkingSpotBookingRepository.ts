@@ -28,7 +28,7 @@ export class ParkingSpotBookingRepository extends BaseRepository {
         ...QueryUtils.updatedAt(),
         status: payload.status ?? BookingStatusValues.Accepted,
         bookingStartsAt: payload.bookingStartsAt.toString(),
-        bookingEndsAt: payload.bookingStartsAt ? payload.bookingEndsAt?.toString() : null,
+        bookingEndsAt: payload.bookingEndsAt ? payload.bookingEndsAt.toString() : null,
       })
       .returningAll()
       .executeTakeFirstOrThrow()

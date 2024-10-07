@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
-    "format": "eslint . --ext .ts --fix",
-    "lint": "tsc --noEmit && eslint . --ext .ts",
+    "format": "eslint \"src/**\" --fix",
+    "lint": "tsc --noEmit && eslint \"src/**\"",
     "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand src/",
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },
@@ -21,13 +21,13 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@parker/eslint-config": "*",
     "@parker/tsconfig": "*",
     "@types/node": "^22.5.0",
     "@types/supertest": "^6.0.2",
     "eslint": "^8.57.0",
-    "eslint-config-custom": "*",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
-    "typescript": "^5.5.4"
+    "typescript": "~5.5.4"
   }
 }

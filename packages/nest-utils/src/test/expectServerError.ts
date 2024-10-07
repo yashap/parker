@@ -1,9 +1,7 @@
 import { ServerError } from '@parker/errors'
 
-interface ServerErrorConstructor<E extends ServerError> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  new (...args: any[]): E
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ServerErrorConstructor<E extends ServerError> = new (...args: any[]) => E
 
 export const expectServerError = async <E extends ServerError>(
   maybeFailed: Promise<unknown>,

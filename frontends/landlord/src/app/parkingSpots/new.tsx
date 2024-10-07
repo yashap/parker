@@ -13,18 +13,23 @@ const NewParkingSpot: React.FC = () => {
     <ScreenContainer className='items-center justify-top'>
       <StyledTextInput
         placeholder='Latitude'
-        onChangeText={(newLatitude) => setLatitude(newLatitude)}
+        onChangeText={(newLatitude) => {
+          setLatitude(newLatitude)
+        }}
         defaultValue={latitude}
       />
       <StyledTextInput
         placeholder='Longitude'
-        onChangeText={(newLongitude) => setLongitude(newLongitude)}
+        onChangeText={(newLongitude) => {
+          setLongitude(newLongitude)
+        }}
         defaultValue={longitude}
       />
       {/* TODO: maybe switch to Link component? https://docs.expo.dev/routing/navigating-pages/ */}
       <SubmitButton
         title='Submit'
         className='w-11/12'
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onPress={async () => {
           const coreClient = CoreClientBuilder.build()
           try {

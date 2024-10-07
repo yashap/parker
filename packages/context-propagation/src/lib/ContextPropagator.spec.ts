@@ -20,7 +20,7 @@ describe(ContextPropagator.name, () => {
   const getDeeplyNestedContext = async (): Promise<Context> => {
     try {
       throw Error('trigger error')
-    } catch (error) {
+    } catch (_error) {
       return await funcB()
     }
   }

@@ -17,7 +17,9 @@ export const TestOnly = (_target: unknown, methodName: string, descriptor: Prope
     if (process.env['NODE_ENV']?.toLowerCase() !== 'test') {
       throw new Error(`${methodName} is a test only method, can only be called from tests`)
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const result = descriptor.value.apply(this, args)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return result
   },
 })

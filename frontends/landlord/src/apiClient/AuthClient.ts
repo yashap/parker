@@ -19,7 +19,7 @@ enum EmailPasswordStatusCode {
   EmailVerificationInvalidTokenError = 'EMAIL_VERIFICATION_INVALID_TOKEN_ERROR',
 }
 
-const emailPasswordStatusCodeValues: Set<EmailPasswordStatusCode> = new Set(Object.values(EmailPasswordStatusCode))
+const emailPasswordStatusCodeValues = new Set<EmailPasswordStatusCode>(Object.values(EmailPasswordStatusCode))
 
 interface FormField {
   id: FormFieldId
@@ -52,7 +52,7 @@ export interface LogInSuccessResponse {
 
 export interface LogInFieldErrorResponse {
   status: EmailPasswordStatusCode.FieldError
-  formFields: Array<{ error: string; id: string }>
+  formFields: { error: string; id: string }[]
 }
 
 export interface LogInErrorResponse {
@@ -61,6 +61,7 @@ export interface LogInErrorResponse {
 
 const getErrorMessage = (error: LogInFieldErrorResponse | LogInErrorResponse): string => {
   if (!emailPasswordStatusCodeValues.has(error.status)) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return `Unexpected error: ${error.status ?? JSON.stringify(error)}`
   }
 
@@ -112,7 +113,8 @@ export class AuthClient {
 
   public async logIn(details: EmailLogInDetails): Promise<User> {
     await this.logOut()
-    const { data } = await this.axiosInstance.post(this.paths.logIn, this.buildFormBody(details))
+    const response = await this.axiosInstance.post(this.paths.logIn, this.buildFormBody(details))
+    const data = response.data as LogInResponse
     if (data.status === EmailPasswordStatusCode.Ok) {
       return data.user
     }

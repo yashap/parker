@@ -13,7 +13,7 @@ interface TestAuthData {
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  private static isMocked: boolean = false
+  private static isMocked = false
 
   constructor(private readonly verifyOptions?: VerifySessionOptions) {}
 
@@ -30,6 +30,7 @@ export class AuthGuard implements CanActivate {
 
     // verifySession mutates the response object if the session is invalid (e.g. no token, stale token, etc.)
     await verifySession(this.verifyOptions)(ctx.getRequest(), resp, (res) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       err = res
     })
 
@@ -40,7 +41,9 @@ export class AuthGuard implements CanActivate {
       })
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (err) {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw err
     }
 
@@ -70,8 +73,7 @@ export class AuthGuard implements CanActivate {
     const request = ctx.getRequest<SessionRequest>()
     // TODO: other fields?
     const session: Pick<SessionContainer, 'getUserId'> = {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      getUserId(_userContext?: any): string {
+      getUserId(): string {
         const testAuthData = JSON.parse(request.get('x-test-auth-header') ?? '{}') as TestAuthData
         return testAuthData.userId
       },

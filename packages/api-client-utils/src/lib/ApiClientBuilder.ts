@@ -38,7 +38,12 @@ export class ApiClientBuilder {
           headers,
           data: body,
         })
-        return { status: response.status, body: response.data, headers: response.headers }
+        return {
+          status: response.status,
+          body: response.data,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          headers: response.headers,
+        }
       },
     })
   }

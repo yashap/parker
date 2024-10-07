@@ -1,4 +1,4 @@
-import { AppRouter, AppRoute } from '@ts-rest/core'
+import { AppRoute, AppRouter } from '@ts-rest/core'
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest'
 
 // A decorator for our endpoints

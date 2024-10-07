@@ -11,7 +11,7 @@ export const PaginationSchema = z.object(
 export type PaginationDto = z.infer<typeof PaginationSchema>
 
 export type PaginatedResponseSchema<T extends ZodTypeAny> = ZodObject<{
-  data: ZodArray<T, 'many'>
+  data: ZodArray<T>
   pagination: ZodOptional<typeof PaginationSchema>
 }>
 

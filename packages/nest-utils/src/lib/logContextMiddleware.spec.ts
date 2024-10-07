@@ -33,6 +33,7 @@ describe(logContextMiddleware.name, () => {
 
     // Kick off 3 concurrent requests
     let callsCompleted = 0
+    /* eslint-disable @typescript-eslint/no-misused-promises */
     logContextMiddleware(request, response, async () => {
       await sleep(50)
       correlationId1 = CorrelationIdPropagator.getContext()
@@ -48,6 +49,7 @@ describe(logContextMiddleware.name, () => {
       correlationId3 = CorrelationIdPropagator.getContext()
       callsCompleted += 1
     })
+    /* eslint-enable @typescript-eslint/no-misused-promises */
 
     // Wait for all 3 concurrent requests to complete
     while (callsCompleted < 3) {

@@ -14,7 +14,7 @@ export class Database {
     }),
   })
 
-  private static transactionManager: TransactionManager<DB> = new TransactionManager(Database.dbSingleton)
+  private static transactionManager = new TransactionManager<DB>(Database.dbSingleton)
 
   public static getConnection(): Transaction<DB> | Kysely<DB> {
     return this.transactionManager.getConnection()

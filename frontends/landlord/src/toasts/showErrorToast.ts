@@ -1,7 +1,7 @@
 import { ServerError } from '@parker/errors'
 import { showToast } from './showToast'
 
-const LAST_RESORT_ERROR_MESSAGE: string = 'Something went wrong'
+const LAST_RESORT_ERROR_MESSAGE = 'Something went wrong'
 
 export const showErrorToast = (error: unknown, defaultErrorMessage?: string) => {
   // TODO: maybe an error instanceof ServerError check?
