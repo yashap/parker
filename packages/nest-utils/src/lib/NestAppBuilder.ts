@@ -19,6 +19,7 @@ export class NestAppBuilder {
      * For an API just serving json, would rather not deal with Etag caching, which is mostly useful for large static
      * assets (images, videos, etc.), not small JSON responses.
      */
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     app.getHttpAdapter().getInstance().set('etag', false)
     app.use(logContextMiddleware, logMiddleware)
     const httpAdapter = app.getHttpAdapter()

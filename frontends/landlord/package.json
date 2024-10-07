@@ -11,8 +11,8 @@
     "serve:any": "EXPO_USE_METRO_WORKSPACE_ROOT=1 expo start",
     "serve:web": "EXPO_USE_METRO_WORKSPACE_ROOT=1 expo start --web",
     "eject": "expo eject",
-    "format": "eslint . --ext .ts,.tsx --fix",
-    "lint": "tsc --noEmit && eslint . --ext .ts,.tsx",
+    "format": "eslint \"src/**\" --fix",
+    "lint": "tsc --noEmit && eslint \"src/**\"",
     "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests src/",
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests --watch src/"
   },

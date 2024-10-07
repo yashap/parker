@@ -53,7 +53,7 @@ const contract = c.router({
 export type FooClient = ApiClient<typeof contract>
 
 export class FooRepository {
-  private static currentId: number = 1
+  private static currentId = 1
   private static foos: Foo[] = []
 
   public static createFoo(body: CreateFooRequest): Foo {

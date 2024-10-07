@@ -1,5 +1,6 @@
 import { ApiAxiosInstance, ApiAxiosRequest, ApiAxiosResponse } from '@parker/api-client-utils'
 import { buildServerErrorFromDto } from '@parker/errors'
+import { Server } from 'http'
 import supertest from 'supertest'
 
 /**
@@ -13,15 +14,14 @@ export class SupertestInstance implements ApiAxiosInstance {
     httpServer: unknown,
     private readonly defaultHeaders?: Record<string, string>
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.supertest = supertest(httpServer as any)
+    this.supertest = supertest(httpServer as Server)
   }
 
   public async request(config: ApiAxiosRequest): Promise<ApiAxiosResponse> {
     const method = config.method.toLowerCase()
     const url = new URL(config.url)
     const pathWithQueryParams = `${url.pathname}${url.search}`
-    const maybeRequestBody = config.data ? JSON.parse(config.data as string) : undefined
+    const maybeRequestBody = config.data ? (JSON.parse(config.data as string) as object) : undefined
     const requestHeaders = { ...this.defaultHeaders, ...config.headers }
     let response: Pick<supertest.Response, 'status' | 'body' | 'headers'> | undefined = undefined
     if (method === 'get') {

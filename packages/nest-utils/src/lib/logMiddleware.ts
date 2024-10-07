@@ -46,7 +46,10 @@ export const logMiddleware: NestFunctionalMiddleware = (req, res, next) => {
   const startMilliseconds = Date.now()
   // In case request gets mutated, get it on the way in
   const request = pick(req, ['method', 'path', 'query'])
-  onResponseComplete(res)((error) => logResponse(request, res, startMilliseconds, error))
+  onResponseComplete(res)((error) => {
+    logResponse(request, res, startMilliseconds, error)
+  })
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (next) {
     try {
       next()

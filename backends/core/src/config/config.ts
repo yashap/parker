@@ -1,6 +1,6 @@
 import { Configuration } from './Configuration'
 
-const port: number = Number(process.env['PORT'] ?? 3501)
+const port = Number(process.env['PORT'] ?? 3501)
 const hostName: string = process.env['HOST_NAME'] ?? 'http://localhost'
 
 export const config: Configuration = {

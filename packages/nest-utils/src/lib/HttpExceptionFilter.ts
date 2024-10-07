@@ -21,13 +21,14 @@ import { RequestValidationError, ResponseValidationError as TsRestResponseValida
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter<unknown> {
   private readonly logger: Logger = new Logger(HttpExceptionFilter.name)
-  private static endpointNotFoundRegex: RegExp = /^Cannot (GET|POST|PATCH|PUT|DELETE) \//
+  private static endpointNotFoundRegex = /^Cannot (GET|POST|PATCH|PUT|DELETE) \//
 
   constructor(private readonly server: HttpServer<unknown, unknown>) {}
 
   public catch(error: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const status = HttpExceptionFilter.getStatus(error)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const response = ctx.getResponse()
     const responseBody = HttpExceptionFilter.getServerErrorDto(error)
     if (status >= 500) {

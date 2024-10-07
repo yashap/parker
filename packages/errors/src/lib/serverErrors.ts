@@ -65,13 +65,13 @@ export class ResponseValidationError<T = unknown> extends ServerError<T> {
 }
 
 export class UnknownError<T = unknown> extends ServerError<T> {
-  constructor(message: string, httpStatusCode: number = 500, options: ErrorOptions<T> = {}) {
+  constructor(message: string, httpStatusCode = 500, options: ErrorOptions<T> = {}) {
     super(httpStatusCode, message, options)
   }
 
   public static wrap<A = unknown>(
     error: Error,
-    httpStatusCode: number = 500,
+    httpStatusCode = 500,
     optionOverrides: WrapErrorOptions<A> = {}
   ): UnknownError<A> {
     const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)

@@ -38,7 +38,7 @@ enum AnsiColors {
 
 const getLevel = (): LogLevel => {
   const defaultLogLevel = LogLevel.Info
-  switch ((process.env['LOG_LEVEL'] ?? defaultLogLevel).toLowerCase()) {
+  switch ((process.env['LOG_LEVEL'] ?? defaultLogLevel).toLowerCase() as LogLevel) {
     case LogLevel.Off:
       return LogLevel.Off
     case LogLevel.Error:
@@ -65,12 +65,14 @@ const getFormat = (): winston.Logform.Format => {
     winston.format.timestamp({ format: 'hh:mm:ss' }),
     winston.format.align(),
     winston.format.printf((log) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { timestamp, level, name, message, error, ...metadata } = log
       const metadataString =
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         metadata && Object.keys(metadata).length > 0
           ? ` ${AnsiColors.Cyan}${JSON.stringify(metadata)}${AnsiColors.Yellow}`
           : ''
-      const errorString = error ? `\n  ${error.stack ? error.stack : toString(error)}` : ''
+      const errorString = error ? `\n  ${(error as Error).stack ? (error as Error).stack : toString(error)}` : ''
       return `${timestamp} ${level} [${name}]: ${message}${metadataString}${errorString}`
     })
   )

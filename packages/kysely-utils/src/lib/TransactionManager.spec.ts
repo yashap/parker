@@ -45,7 +45,7 @@ describe(TransactionManager.name, () => {
   })
 
   it('transaction should rollback if an error is thrown', async () => {
-    expect(
+    await expect(
       transactionManager.run(async () => {
         await createPerson('Alice')
         await createPerson('Bob')

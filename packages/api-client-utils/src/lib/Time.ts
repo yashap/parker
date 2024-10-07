@@ -10,7 +10,7 @@ export const TimeSchema = z.string().refine((value: string) => {
     }
     Temporal.PlainTime.from(value)
     return true
-  } catch (error) {
+  } catch (_error) {
     return false
   }
 })

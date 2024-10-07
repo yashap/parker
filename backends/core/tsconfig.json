@@ -7,6 +7,6 @@
     "rootDir": "./src",
     "baseUrl": "./"
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["src", "src/migrations/20230825195436-initial-migration.js"]
+  "exclude": ["node_modules", "dist", "src/migrations"],
+  "include": ["src"]
 }

@@ -35,7 +35,7 @@ export class ContextPropagator<T> {
 
   private createStorage(): AsyncLocalStorage<T> | undefined {
     // Do not import CLS on platforms other than Node.js.
-    if (!process?.versions?.node) {
+    if (!process.versions.node) {
       return undefined
     }
 

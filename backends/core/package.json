@@ -12,9 +12,9 @@
     "db:migrate-up": "yarn db:init && NODE_PATH=./src DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:5440/core?schema=public' db-migrate --migrations-dir src/migrations up",
     "db:migrate-up:test": "yarn db:init:test && NODE_PATH=./src DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:5441/core?schema=public' db-migrate --migrations-dir src/migrations up",
     "serve": "nest start --watch",
-    "format": "eslint . --ext .ts --fix",
+    "format": "eslint \"src/**\" --fix",
     "generate": "kysely-codegen --dialect postgres --exclude-pattern '(spatial_ref_sys|geography_columns|geometry_columns|migrations)' --out-file \"$(git rev-parse --show-toplevel)/backends/core/src/db/generated/db.ts\"",
-    "lint": "tsc --noEmit && eslint . --ext .ts",
+    "lint": "tsc --noEmit && eslint \"src/**\"",
     "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand src/",
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },

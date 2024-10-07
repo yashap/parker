@@ -1,5 +1,5 @@
 import { router } from 'expo-router'
-import * as React from 'react'
+import { FC } from 'react'
 import { Linking, StyleSheet, View } from 'react-native'
 import { Button, Caption, Card, Divider, Headline, Subheading, Text, TextInput } from 'react-native-paper'
 import { AuthClientBuilder } from '../../apiClient/AuthClientBuilder'
@@ -40,13 +40,18 @@ const logIn = async ({ email, password }: Pick<LogInProps, 'email' | 'password'>
   }
 }
 
-export const LogIn: React.FC<LogInProps> = ({ email, password, setEmail, setPassword }) => (
+export const LogIn: FC<LogInProps> = ({ email, password, setEmail, setPassword }) => (
   <Card style={styles.card}>
     <View style={styles.textContainer}>
       <Headline>Log in</Headline>
       <Subheading>
         {"Don't have an account? "}
-        <Text style={styles.urlText} onPress={() => router.replace('/signUp')}>
+        <Text
+          style={styles.urlText}
+          onPress={() => {
+            router.replace('/signUp')
+          }}
+        >
           Sign up
         </Text>
       </Subheading>
@@ -68,7 +73,7 @@ export const LogIn: React.FC<LogInProps> = ({ email, password, setEmail, setPass
         By signing up, you agree to our{' '}
         <Text
           style={styles.urlText}
-          onPress={() => Linking.openURL('https://supertokens.com/legal/terms-and-conditions')}
+          onPress={() => void Linking.openURL('https://supertokens.com/legal/terms-and-conditions')}
         >
           Terms of Service
         </Text>{' '}
@@ -76,7 +81,7 @@ export const LogIn: React.FC<LogInProps> = ({ email, password, setEmail, setPass
         <Text
           style={styles.urlText}
           onPress={() => {
-            Linking.openURL('https://supertokens.com/legal/privacy-policy')
+            void Linking.openURL('https://supertokens.com/legal/privacy-policy')
           }}
         >
           Privacy Policy

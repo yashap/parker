@@ -8,8 +8,8 @@
     "build": "tsc",
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
     "db:migrate-up:test": "../../tools/scripts/ensure_postgres_db.sh -d kysely_utils -c parker_postgres_test && ../../tools/scripts/ensure_postgres_user.sh -u kysely_utils -w kysely_utils_password -d kysely_utils -c parker_postgres_test",
-    "format": "eslint . --ext .ts --fix",
-    "lint": "tsc --noEmit && eslint . --ext .ts",
+    "format": "eslint \"src/**\" --fix",
+    "lint": "tsc --noEmit && eslint \"src/**\"",
     "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand src/",
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },

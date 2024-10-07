@@ -137,16 +137,19 @@ describe(NestAppBuilder.name, () => {
   })
 
   describe('logging', () => {
+    interface LogPayload {
+      correlationId?: string
+      error?: ServerError
+      status?: number
+      responseBody?: object
+    }
+
     let mockLog: jest.SpyInstance<void, [level: LogLevel, message: string, metadata: object]>
-    const getLogPayload = <
-      T extends { correlationId?: string; error?: ServerError; status?: number; responseBody?: object },
-    >(
-      level: LogLevel,
-      message: string
-    ): T => {
+
+    const getLogPayload = (level: LogLevel, message: string): LogPayload => {
       const logCall = mockLog.mock.calls.find((args) => args[0] === level && args[1] === message)
       expect(logCall).toBeDefined()
-      return required(logCall)[2] as T
+      return required(logCall)[2] as LogPayload
     }
 
     beforeEach(() => {

@@ -1,5 +1,5 @@
 // Important to import dotenv as early as possible
-// eslint-disable-next-line import/order
+/* eslint-disable import/order */
 import * as dotenv from 'dotenv'
 dotenv.config()
 
@@ -10,6 +10,7 @@ import { AuthModule, SuperTokensExceptionFilter } from './auth'
 import { config } from './config'
 import { ParkingSpotModule } from './domain/parkingSpot'
 import { ParkingSpotBookingModule } from './domain/parkingSpotBooking'
+import { Logger } from '@parker/logging'
 
 @Module({
   imports: [ParkingSpotModule, ParkingSpotBookingModule, AuthModule.forRoot(config.auth)],
@@ -28,4 +29,7 @@ const bootstrap = async (port: number): Promise<void> => {
   await NestAppRunner.run(app, port)
 }
 
-bootstrap(config.port)
+bootstrap(config.port).catch((error: unknown) => {
+  new Logger('Bootstrap').error('Failed to bootstrap', { error })
+  throw error
+})
