@@ -21,10 +21,18 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+
     rules: {
+      // Allow classes with only static members
       '@typescript-eslint/no-extraneous-class': 'off',
+      
+      // Allow async functions without an await in their body
       '@typescript-eslint/require-await': 'off',
+      
+      // Be less annoyingly strict about string template literals
       '@typescript-eslint/restrict-template-expressions': 'off',
+      
+      // Just causes problems, and doesn't catch anything the TypeScript compiler doesn't
       'import/named': 'off',
 
       // Allow unused variables that start with an underscore
@@ -51,11 +59,9 @@ export default tseslint.config(
         },
       ],
     },
+
     settings: {
       'import/resolver': {
-        // node: {
-        //   extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        // },
         typescript: {},
       },
     },
