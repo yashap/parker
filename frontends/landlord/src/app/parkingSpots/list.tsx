@@ -1,11 +1,13 @@
 import React from 'react'
-import { FlatList, Text } from 'react-native'
+import { FlatList, Text, View } from 'react-native'
 import { ActivityIndicator, useTheme } from 'react-native-paper'
 import { useCoreClient } from '../../apiClient/useCoreClient'
-import { ScreenContainer } from '../../components/ScreenContainer'
+import { Screen } from '../../components/Screen'
+import { useNavigationHeader } from '../../hooks/useNavigationHeader'
 import { showErrorToast } from '../../toasts/showErrorToast'
 
 const ParkingSpotList: React.FC = () => {
+  useNavigationHeader({ type: 'defaultHeader', title: 'Your Parking Spots' })
   const theme = useTheme()
   const {
     value: parkingSpotsResponse,
@@ -17,9 +19,9 @@ const ParkingSpotList: React.FC = () => {
   if (loading) {
     // TODO: better size, colors, etc?
     return (
-      <ScreenContainer>
+      <Screen>
         <ActivityIndicator animating={true} color={theme.colors.secondary} size={'large'} />
-      </ScreenContainer>
+      </Screen>
     )
   }
   if (error) {
@@ -27,12 +29,12 @@ const ParkingSpotList: React.FC = () => {
   }
 
   return (
-    <ScreenContainer>
+    <View className='pt-3'>
       <FlatList
         data={parkingSpotsResponse?.data ?? []}
         renderItem={({ item: parkingSpot }) => <Text className='text-lg p-2'>{parkingSpot.id}</Text>}
       />
-    </ScreenContainer>
+    </View>
   )
 }
 
