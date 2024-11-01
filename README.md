@@ -16,13 +16,13 @@ Install the following:
   - Then run `corepack enable`
     - `corepack` includes `yarn`, and ships with Node.js >=16.10, but you have to opt in to enabling it
     - If you run `which yarn`, it should show something like `~/.nvm/versions/node/<node_version>/bin/yarn`
-- [cmake](https://cmake.org/)
-  - On a Mac, `brew install cmake`
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
   - For your local platform, e.g. [Docker for Mac](https://docs.docker.com/desktop/install/mac-install/) for a Mac
 - [XCode](https://en.wikipedia.org/wiki/Xcode)
   - Ensure XCode is installed, with command line tools (necessary for running iOS Simulator)
   - Ensure you can open a simulated iPhone with Simulator, and it starts up properly
+- [cmake](https://cmake.org/)
+  - On a Mac, `brew install cmake`
 
 After this, you can try running `yarn build-migrate && yarn generate && yarn format && yarn lint && yarn test` to ensure everything works, before proceeding to `Dev Workflows` (below).
 
