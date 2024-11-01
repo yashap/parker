@@ -2,45 +2,49 @@ import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import FlashMessage from 'react-native-flash-message'
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { PaperProvider } from 'react-native-paper'
 import 'react-native-url-polyfill/auto'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import SuperTokens from 'supertokens-react-native'
-import { LogoutButton } from '../components/auth/LogoutButton'
 import { config } from '../config'
+import { lightTheme, useTheme } from '../theme'
 
 SuperTokens.init({
   apiDomain: config.coreUrl,
   apiBasePath: '/auth',
 })
 
-const Layout: React.FC = () => (
-  <SafeAreaProvider>
-    <SafeAreaView edges={['top', 'left', 'right']} className='flex-1  bg-green-200'>
-      <StatusBar style='auto' />
+const Router = () => {
+  const theme = useTheme()
+  return (
+    <SafeAreaView style={{ backgroundColor: theme.colors.background }} className='flex-1'>
       <Stack
         screenOptions={{
           headerBackTitle: '',
           headerBackTitleVisible: false,
           headerStyle: {
-            backgroundColor: 'rgb(187 247 208)',
+            backgroundColor: theme.colors.background,
+          },
+          headerTitleStyle: {
+            color: theme.colors.onBackground,
           },
         }}
       >
-        {/*
-              TODO: would be nicer to put this config in each component, but there's a bug where it generates
-              annoying warnings. Move these to the the individual screen components once that's fixed
-            */}
-        <Stack.Screen name='signUp' options={{ headerShown: false }} />
-        <Stack.Screen name='logIn' options={{ headerShown: false }} />
-        <Stack.Screen
-          name='parkingSpots/list'
-          options={{ title: 'Your Parking Spots', headerRight: () => <LogoutButton /> }}
-        />
-        <Stack.Screen
-          name='parkingSpots/new'
-          options={{ title: 'Add Parking Spot', headerRight: () => <LogoutButton /> }}
-        />
+        <Stack.Screen name='signUp' />
+        <Stack.Screen name='logIn' />
+        <Stack.Screen name='parkingSpots/list' />
+        <Stack.Screen name='parkingSpots/new' />
       </Stack>
+    </SafeAreaView>
+  )
+}
+
+// This is essentially the entrypoint for the application
+const Layout: React.FC = () => {
+  return (
+    <PaperProvider theme={lightTheme}>
+      <StatusBar style='auto' />
+      <Router />
       <FlashMessage
         position='bottom'
         animated={true}
@@ -48,8 +52,8 @@ const Layout: React.FC = () => (
         titleStyle={{ fontSize: 18 }}
         textStyle={{ fontSize: 14 }}
       />
-    </SafeAreaView>
-  </SafeAreaProvider>
-)
+    </PaperProvider>
+  )
+}
 
 export default Layout
