@@ -9,11 +9,5 @@ type ScreenProps = Omit<SafeAreaViewProps, 'style'> & {
 export const Screen = (props: ScreenProps) => {
   const theme = useTheme()
   const { style, ...rest } = props
-  return (
-    <SafeAreaView
-      style={{ backgroundColor: theme.colors.background, ...style }}
-      className='flex-1'
-      {...rest}
-    />
-  )
+  return <SafeAreaView style={{ backgroundColor: theme.colors.background, ...style }} className='flex-1' {...rest} />
 }
