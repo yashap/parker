@@ -8,6 +8,7 @@ export const ParkingSpotSchema = z.object({
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   ownerUserId: z.string().uuid(),
+  address: z.string(),
   location: PointSchema,
   timeRules: z.array(TimeRuleSchema),
   timeRuleOverrides: z.array(TimeRuleOverrideSchema),

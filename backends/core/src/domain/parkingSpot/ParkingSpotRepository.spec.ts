@@ -20,6 +20,7 @@ describe(ParkingSpotRepository.name, () => {
     userId = uuid()
     createParkingSpotInput = {
       ownerUserId: userId,
+      address: '90210 Fancy Street',
       location: { longitude: 10, latitude: 20 },
       timeRules: [],
       timeRuleOverrides: [],
@@ -126,6 +127,7 @@ describe(ParkingSpotRepository.name, () => {
         ints.map((i) =>
           parkingSpotRepository.create({
             ownerUserId: userId,
+            address: '90210 Fancy Street',
             location: { longitude: i, latitude: i },
             timeRules: [],
             timeRuleOverrides: [],

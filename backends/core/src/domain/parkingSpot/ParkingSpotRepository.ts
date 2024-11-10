@@ -166,6 +166,7 @@ export class ParkingSpotRepository extends BaseRepository {
       'createdAt',
       'updatedAt',
       'ownerUserId',
+      'address',
       QueryUtils.pointFieldToGeoJson('location').as('location'),
       jsonArrayFrom(
         eb
@@ -188,13 +189,15 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   private parkingSpotToDomain(parkingSpotDao: ParkingSpotDao): ParkingSpot {
-    const { id, createdAt, updatedAt, ownerUserId, location, timeRules, timeRuleOverrides, timeZone } = parkingSpotDao
+    const { id, createdAt, updatedAt, ownerUserId, address, location, timeRules, timeRuleOverrides, timeZone } =
+      parkingSpotDao
     const locationGeoJson = JSON.parse(location) as GeoJsonPoint
     return {
       id,
       createdAt: Temporal.Instant.fromEpochMilliseconds(createdAt.valueOf()),
       updatedAt: Temporal.Instant.fromEpochMilliseconds(updatedAt.valueOf()),
       ownerUserId,
+      address,
       location: geoJsonToPoint(locationGeoJson),
       timeRules: timeRules.map((timeRule) => this.timeRuleRepository.timeRuleToDomain(timeRule)),
       timeRuleOverrides: timeRuleOverrides.map((timeRuleOverride) => {

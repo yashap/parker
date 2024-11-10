@@ -10,6 +10,7 @@ exports.up = async (db) => {
           "createdAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
           "updatedAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
           "ownerUserId" UUID NOT NULL,
+          "address" TEXT NOT NULL,
           "location" GEOMETRY(POINT, 4326) NOT NULL
         );
       `)

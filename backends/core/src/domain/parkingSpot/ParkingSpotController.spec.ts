@@ -33,6 +33,7 @@ describe(ParkingSpotController.name, () => {
 
     // Setup test parking spot
     const parkingSpotPostBody: CreateParkingSpotRequest = {
+      address: '90210 Fancy Street',
       location: { longitude: 10, latitude: 20 },
       timeRules: [],
       timeRuleOverrides: [],
@@ -61,6 +62,7 @@ describe(ParkingSpotController.name, () => {
 
     it('should work for a parking spot with time rules and time rule overrides', async () => {
       const input: CreateParkingSpotRequest = {
+        address: '90210 Fancy Street',
         location: { longitude: 10, latitude: 20 },
         timeRules: [
           {
@@ -199,6 +201,7 @@ describe(ParkingSpotController.name, () => {
       for (let idx = 0; idx < 20; idx++) {
         allSpots.push(
           await landlordCoreClient.parkingSpots.create({
+            address: '90210 Fancy Street',
             location: { longitude: idx, latitude: idx },
             timeRules: [],
             timeRuleOverrides: [],
@@ -229,6 +232,7 @@ describe(ParkingSpotController.name, () => {
       for (let idx = 0; idx < 20; idx++) {
         allSpots.push(
           await landlordCoreClient.parkingSpots.create({
+            address: '90210 Fancy Street',
             location: { longitude: idx, latitude: idx },
             timeRules: [],
             timeRuleOverrides: [],
