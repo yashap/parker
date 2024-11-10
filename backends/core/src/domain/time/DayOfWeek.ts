@@ -1,3 +1,3 @@
-import { DayOfWeekDto } from '@parker/core-client'
+import { DayOfWeekDto } from '@parker/api-client-utils'
 
 export type DayOfWeek = DayOfWeekDto

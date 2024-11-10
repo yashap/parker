@@ -88,7 +88,7 @@ class FooController {
   public list(): HandlerResult<typeof contract.listFoos> {
     return handler(contract.listFoos, async ({ query }) => {
       const foos = FooRepository.listFoos(query)
-      return { status: 200, body: { data: foos } }
+      return { status: 200, body: { data: foos, pagination: {} } }
     })
   }
 }

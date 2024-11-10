@@ -1,5 +1,7 @@
+import { Temporal } from '@js-temporal/polyfill'
 import { Injectable } from '@nestjs/common'
-import { CreateParkingSpotRequest, UpdateParkingSpotRequest } from '@parker/core-client'
+import { OrderDirectionValues } from '@parker/api-client-utils'
+import { CreateParkingSpotRequest, ListParkingSpotsRequest, UpdateParkingSpotRequest } from '@parker/core-client'
 import { required } from '@parker/errors'
 import { GeoJsonPoint, Point, geoJsonToPoint } from '@parker/geography'
 import { QueryUtils } from '@parker/kysely-utils'
@@ -11,9 +13,9 @@ import { DB, ParkingSpot as ParkingSpotGeneratedDao } from '../../db/generated/d
 import { TimeZoneLookup } from '../time/TimeZoneLookup'
 import { TimeRule, TimeRuleDao, TimeRuleRepository } from '../timeRule'
 import { TimeRuleOverride, TimeRuleOverrideDao, TimeRuleOverrideRepository } from '../timeRuleOverride'
-import { ParkingSpot } from './ParkingSpot'
+import { ListParkingSpotCursor, ListParkingSpotPagination, ParkingSpot } from './ParkingSpot'
 
-type ParkingSpotDao = Pick<Selectable<ParkingSpotGeneratedDao>, 'id' | 'ownerUserId' | 'location' | 'timeZone'> & {
+type ParkingSpotDao = Selectable<ParkingSpotGeneratedDao> & {
   timeRules: TimeRuleDao[]
   timeRuleOverrides: TimeRuleOverrideDao[]
 }
@@ -28,6 +30,8 @@ export type UpdateParkingSpotInput = Omit<UpdateParkingSpotRequest, 'timeRules' 
   timeRules?: TimeRule[]
   timeRuleOverrides?: TimeRuleOverride[]
 }
+
+export type ListParikingSpotFilters = Pick<ListParkingSpotsRequest, 'ownerUserId'>
 
 @Injectable()
 export class ParkingSpotRepository extends BaseRepository {
@@ -69,6 +73,43 @@ export class ParkingSpotRepository extends BaseRepository {
       .where('id', '=', id)
       .executeTakeFirst()
     return parkingSpotDao ? this.parkingSpotToDomain(parkingSpotDao) : undefined
+  }
+
+  public async list(
+    { ownerUserId }: ListParikingSpotFilters,
+    pagination?: ListParkingSpotPagination
+  ): Promise<ParkingSpot[]> {
+    if (pagination?.limit === 0) {
+      return []
+    }
+
+    let query = this.db()
+      .selectFrom('ParkingSpot')
+      .select((eb) => this.buildFields(eb))
+
+    if (ownerUserId) {
+      query = query.where('ownerUserId', '=', ownerUserId)
+    }
+
+    if (pagination) {
+      query = query.orderBy(pagination.orderBy, pagination.orderDirection).limit(pagination.limit)
+    }
+
+    const cursor = pagination as ListParkingSpotCursor
+    if (cursor.lastOrderValueSeen) {
+      const inequality = cursor.orderDirection === OrderDirectionValues.desc ? '<' : '>'
+      query = query.where((eb) =>
+        eb.or([
+          // TODO: is this even correct?
+          // Should I be dealing with createdAt as not a number, but a Temporal.PlainTime?
+          eb('createdAt', inequality, new Date(cursor.lastOrderValueSeen)),
+          eb.and([eb('createdAt', '=', new Date(cursor.lastOrderValueSeen)), eb('id', inequality, cursor.lastIdSeen)]),
+        ])
+      )
+    }
+
+    const parkingSpotDaos = await query.execute()
+    return parkingSpotDaos.map((dao) => this.parkingSpotToDomain(dao))
   }
 
   public async listParkingSpotsClosestToLocation(location: Point, limit: number): Promise<ParkingSpot[]> {
@@ -122,6 +163,8 @@ export class ParkingSpotRepository extends BaseRepository {
   private buildFields(eb: ExpressionBuilder<DB, 'ParkingSpot'>) {
     const timeRulesFields = [
       'id',
+      'createdAt',
+      'updatedAt',
       'ownerUserId',
       QueryUtils.pointFieldToGeoJson('location').as('location'),
       jsonArrayFrom(
@@ -145,10 +188,12 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   private parkingSpotToDomain(parkingSpotDao: ParkingSpotDao): ParkingSpot {
-    const { id, ownerUserId, location, timeRules, timeRuleOverrides, timeZone } = parkingSpotDao
+    const { id, createdAt, updatedAt, ownerUserId, location, timeRules, timeRuleOverrides, timeZone } = parkingSpotDao
     const locationGeoJson = JSON.parse(location) as GeoJsonPoint
     return {
       id,
+      createdAt: Temporal.Instant.fromEpochMilliseconds(createdAt.valueOf()),
+      updatedAt: Temporal.Instant.fromEpochMilliseconds(updatedAt.valueOf()),
       ownerUserId,
       location: geoJsonToPoint(locationGeoJson),
       timeRules: timeRules.map((timeRule) => this.timeRuleRepository.timeRuleToDomain(timeRule)),

@@ -1,10 +1,12 @@
-import { ContractBuilder } from '@parker/api-client-utils'
+import { ContractBuilder, ServerErrorSchema } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
 import {
   CreateParkingSpotRequestSchema,
   ListParkingSpotsClosestToPointRequestSchema,
   ListParkingSpotsClosestToPointResponseSchema,
+  ListParkingSpotsRequestSchema,
+  ListParkingSpotsResponseSchema,
   ParkingSpotSchema,
   UpdateParkingSpotRequestSchema,
 } from '../model/ParkingSpot'
@@ -12,11 +14,24 @@ import {
 const c = initContract()
 
 export const parkingSpotContract = c.router({
+  list: {
+    method: 'GET',
+    path: '/parkingSpots',
+    query: ListParkingSpotsRequestSchema,
+    responses: ContractBuilder.buildListResponses(ListParkingSpotsResponseSchema),
+    summary: 'List parking spots',
+  },
   listClosestToPoint: {
     method: 'GET',
     path: '/parkingSpots/closestToPoint',
     query: ListParkingSpotsClosestToPointRequestSchema,
-    responses: ContractBuilder.buildListResponses(ListParkingSpotsClosestToPointResponseSchema),
+    responses: {
+      200: ListParkingSpotsClosestToPointResponseSchema,
+      400: ServerErrorSchema,
+      401: ServerErrorSchema,
+      403: ServerErrorSchema,
+      500: ServerErrorSchema,
+    },
     summary: 'List parking spots closest to a point',
   },
   post: {
