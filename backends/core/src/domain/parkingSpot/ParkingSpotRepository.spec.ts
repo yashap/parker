@@ -1,7 +1,8 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { Point } from '@parker/geography'
-import { orderBy } from 'lodash'
+import { omit, orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
+import { expectSystemTimestamps } from '../../test/expectSystemTimestamp'
 import { DayOfWeek } from '../time/DayOfWeek'
 import { TimeRuleRepository } from '../timeRule'
 import { TimeRuleOverrideRepository } from '../timeRuleOverride'
@@ -19,12 +20,14 @@ describe(ParkingSpotRepository.name, () => {
     userId = uuid()
     createParkingSpotInput = {
       ownerUserId: userId,
+      address: '90210 Fancy Street',
       location: { longitude: 10, latitude: 20 },
       timeRules: [],
       timeRuleOverrides: [],
     }
     spot = await parkingSpotRepository.create(createParkingSpotInput)
-    expect(spot).toStrictEqual({
+    expectSystemTimestamps(spot)
+    expect(omit(spot, ['createdAt', 'updatedAt'])).toStrictEqual({
       id: spot.id,
       timeZone: spot.timeZone,
       ...createParkingSpotInput,
@@ -124,6 +127,7 @@ describe(ParkingSpotRepository.name, () => {
         ints.map((i) =>
           parkingSpotRepository.create({
             ownerUserId: userId,
+            address: '90210 Fancy Street',
             location: { longitude: i, latitude: i },
             timeRules: [],
             timeRuleOverrides: [],

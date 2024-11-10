@@ -6,6 +6,7 @@ export type Generated<T> =
 export type Timestamp = ColumnType<Date, Date | string, Date | string>
 
 export interface ParkingSpot {
+  address: string
   createdAt: Generated<Timestamp>
   id: Generated<string>
   location: string

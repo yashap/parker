@@ -17,6 +17,7 @@
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests --watch src/"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
     "@parker/core-client": "*",
     "@react-native-async-storage/async-storage": "1.23.1",
     "axios": "^1.7.5",
@@ -30,6 +31,7 @@
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.53.1",
     "react-native": "0.74.5",
     "react-native-flash-message": "^0.4.2",
     "react-native-gesture-handler": "~2.16.1",

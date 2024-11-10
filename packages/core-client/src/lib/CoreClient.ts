@@ -16,6 +16,8 @@ import {
   CreateParkingSpotRequest,
   ListParkingSpotsClosestToPointRequest,
   ListParkingSpotsClosestToPointResponse,
+  ListParkingSpotsRequest,
+  ListParkingSpotsResponse,
   ParkingSpotBookingDto,
   ParkingSpotDto,
   UpdateParkingSpotRequest,
@@ -33,6 +35,9 @@ export class CoreClient {
   }
 
   public readonly parkingSpots = {
+    list: (request: ListParkingSpotsRequest): Promise<ListParkingSpotsResponse> => {
+      return extractListResponse(this.client.parkingSpots.list({ query: request }))
+    },
     listClosestToPoint: (
       request: ListParkingSpotsClosestToPointRequest
     ): Promise<ListParkingSpotsClosestToPointResponse> => {

@@ -1,5 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
-import { DayOfWeekValues } from '@parker/core-client'
+import { DayOfWeekValues } from '@parker/api-client-utils'
 import { TimeRule } from './TimeRule'
 import { TimeRuleChecker } from './TimeRuleChecker'
 

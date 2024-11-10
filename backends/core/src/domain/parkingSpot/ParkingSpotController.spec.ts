@@ -3,10 +3,11 @@ import { SupertestInstance } from '@parker/api-client-test-utils'
 import { CoreClient, CreateParkingSpotRequest, ParkingSpotDto, UpdateParkingSpotRequest } from '@parker/core-client'
 import { NotFoundError } from '@parker/errors'
 import { Point } from '@parker/geography'
-import { orderBy } from 'lodash'
+import { omit, orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { AuthGuard } from '../../auth'
 import { buildTestApp } from '../../test/buildTestApp'
+import { expectSystemTimestampStrings } from '../../test/expectSystemTimestamp'
 import { TestDbTeardown } from '../../test/TestDbTeardown'
 import { ParkingSpotController } from './ParkingSpotController'
 
@@ -32,16 +33,18 @@ describe(ParkingSpotController.name, () => {
 
     // Setup test parking spot
     const parkingSpotPostBody: CreateParkingSpotRequest = {
+      address: '90210 Fancy Street',
       location: { longitude: 10, latitude: 20 },
       timeRules: [],
       timeRuleOverrides: [],
     }
     parkingSpot = await landlordCoreClient.parkingSpots.create(parkingSpotPostBody)
-    const { id: parkingSpotId, ownerUserId, timeZone, ...otherParkingSpotData } = parkingSpot
+    const { id: parkingSpotId, ownerUserId, timeZone, createdAt, updatedAt, ...otherParkingSpotData } = parkingSpot
     expect(parkingSpotId).toBeDefined()
     expect(ownerUserId).toBe(landlordUserId)
     expect(timeZone).toBe('Africa/Lagos')
-    expect({ ...otherParkingSpotData }).toStrictEqual(parkingSpotPostBody)
+    expectSystemTimestampStrings({ createdAt, updatedAt })
+    expect(otherParkingSpotData).toStrictEqual(parkingSpotPostBody)
   })
 
   describe('getById', () => {
@@ -59,6 +62,7 @@ describe(ParkingSpotController.name, () => {
 
     it('should work for a parking spot with time rules and time rule overrides', async () => {
       const input: CreateParkingSpotRequest = {
+        address: '90210 Fancy Street',
         location: { longitude: 10, latitude: 20 },
         timeRules: [
           {
@@ -95,8 +99,8 @@ describe(ParkingSpotController.name, () => {
   describe('update', () => {
     it('landlord should be able to update a parking spot', async () => {
       const update: UpdateParkingSpotRequest = { location: { longitude: 2, latitude: 3 } }
-      expect(await landlordCoreClient.parkingSpots.update(parkingSpot.id, update)).toStrictEqual({
-        ...parkingSpot,
+      expect(omit(await landlordCoreClient.parkingSpots.update(parkingSpot.id, update), ['updatedAt'])).toStrictEqual({
+        ...omit(parkingSpot, ['updatedAt']),
         ...update,
         timeZone: 'Etc/GMT',
       })
@@ -128,8 +132,8 @@ describe(ParkingSpotController.name, () => {
         ],
       }
       const parkingSpotWithUpdate1 = await landlordCoreClient.parkingSpots.update(parkingSpot.id, update1)
-      expect(parkingSpotWithUpdate1).toStrictEqual({
-        ...parkingSpot,
+      expect(omit(parkingSpotWithUpdate1, ['updatedAt'])).toStrictEqual({
+        ...omit(parkingSpot, ['updatedAt']),
         ...update1,
       })
       expect(await landlordCoreClient.parkingSpots.get(parkingSpot.id)).toStrictEqual(parkingSpotWithUpdate1)
@@ -161,8 +165,8 @@ describe(ParkingSpotController.name, () => {
         ],
       }
       const parkingSpotWithUpdate2 = await landlordCoreClient.parkingSpots.update(parkingSpot.id, update2)
-      expect(parkingSpotWithUpdate2).toStrictEqual({
-        ...parkingSpot,
+      expect(omit(parkingSpotWithUpdate2, ['updatedAt'])).toStrictEqual({
+        ...omit(parkingSpot, ['updatedAt']),
         ...update2,
       })
       expect(await landlordCoreClient.parkingSpots.get(parkingSpot.id)).toStrictEqual(parkingSpotWithUpdate2)
@@ -197,6 +201,7 @@ describe(ParkingSpotController.name, () => {
       for (let idx = 0; idx < 20; idx++) {
         allSpots.push(
           await landlordCoreClient.parkingSpots.create({
+            address: '90210 Fancy Street',
             location: { longitude: idx, latitude: idx },
             timeRules: [],
             timeRuleOverrides: [],
@@ -227,6 +232,7 @@ describe(ParkingSpotController.name, () => {
       for (let idx = 0; idx < 20; idx++) {
         allSpots.push(
           await landlordCoreClient.parkingSpots.create({
+            address: '90210 Fancy Street',
             location: { longitude: idx, latitude: idx },
             timeRules: [],
             timeRuleOverrides: [],

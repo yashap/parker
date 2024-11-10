@@ -1,10 +1,16 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { BookingStatusDto, ParkingSpotBookingDto } from '@parker/core-client'
+import { formatInstantFields } from '@parker/time'
 
 export type BookingStatus = BookingStatusDto
 
-export type ParkingSpotBooking = Omit<ParkingSpotBookingDto, 'status' | 'bookingStartsAt' | 'bookingEndsAt'> & {
+export type ParkingSpotBooking = Omit<
+  ParkingSpotBookingDto,
+  'createdAt' | 'updatedAt' | 'status' | 'bookingStartsAt' | 'bookingEndsAt'
+> & {
   status: BookingStatus
+  createdAt: Temporal.Instant
+  updatedAt: Temporal.Instant
   bookingStartsAt: Temporal.Instant
   bookingEndsAt?: Temporal.Instant
 }
@@ -12,7 +18,7 @@ export type ParkingSpotBooking = Omit<ParkingSpotBookingDto, 'status' | 'booking
 export const parkingSpotBookingToDto = (booking: ParkingSpotBooking): ParkingSpotBookingDto => {
   return {
     ...booking,
-    bookingStartsAt: booking.bookingStartsAt.toString(),
+    ...formatInstantFields(booking, ['createdAt', 'updatedAt', 'bookingStartsAt']),
     bookingEndsAt: booking.bookingEndsAt?.toString(),
   }
 }

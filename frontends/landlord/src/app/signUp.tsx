@@ -17,7 +17,7 @@ export interface SignUpProps {
 const signUp = async ({ email, password }: Pick<SignUpProps, 'email' | 'password'>) => {
   try {
     await AuthClientBuilder.build().signUp({ email, password })
-    router.replace('/parkingSpots/new')
+    router.replace('/parkingSpots/list')
   } catch (error) {
     showErrorToast(error)
   }

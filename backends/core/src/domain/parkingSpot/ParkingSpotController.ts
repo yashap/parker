@@ -1,11 +1,19 @@
 import { Controller, UseGuards } from '@nestjs/common'
+import {
+  DEFAULT_LIMIT,
+  encodeCursor,
+  OrderDirectionValues,
+  PaginationResponseDto,
+  parsePagination,
+} from '@parker/api-client-utils'
 import { contract as rootContract } from '@parker/core-client'
 import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
+import { first, last, pick } from 'lodash'
 import { SessionContainer } from 'supertokens-node/recipe/session'
 import { AuthGuard, Session } from '../../auth'
 import { timeRulesFromDto } from '../timeRule'
 import { timeRuleOverridesFromDto } from '../timeRuleOverride'
-import { ParkingSpot, parkingSpotToDto } from './ParkingSpot'
+import { ListParkingSpotPagination, ParkingSpot, parkingSpotToDto } from './ParkingSpot'
 import { ParkingSpotRepository } from './ParkingSpotRepository'
 
 const contract = rootContract.parkingSpots
@@ -16,6 +24,45 @@ export class ParkingSpotController extends BaseController {
     super('ParkingSpot')
   }
 
+  @Endpoint(contract.list)
+  @UseGuards(new AuthGuard())
+  public list(@Session() _session: SessionContainer): HandlerResult<typeof contract.list> {
+    return handler(contract.list, async ({ query }) => {
+      const { ownerUserId } = query
+      const pagination: ListParkingSpotPagination = parsePagination<'createdAt', number>(query)
+      const parkingSpots = await this.parkingSpotRepository.list({ ownerUserId }, pagination)
+      let paginationResponse: PaginationResponseDto = {}
+      const firstParkingSpot = first(parkingSpots)
+      const lastParkingSpot = last(parkingSpots)
+      if (firstParkingSpot && lastParkingSpot) {
+        const baseCursor = pick(pagination, ['limit', 'orderBy'])
+        const next = {
+          ...baseCursor,
+          orderDirection: pagination.orderDirection,
+          lastOrderValueSeen: lastParkingSpot[pagination.orderBy],
+          lastIdSeen: lastParkingSpot.id,
+        }
+        const previous = {
+          ...baseCursor,
+          orderDirection:
+            pagination.orderDirection === OrderDirectionValues.asc
+              ? OrderDirectionValues.desc
+              : OrderDirectionValues.asc,
+          lastOrderValueSeen: firstParkingSpot[pagination.orderBy],
+          lastIdSeen: firstParkingSpot.id,
+        }
+        paginationResponse = {
+          next: encodeCursor(next),
+          previous: encodeCursor(previous),
+        }
+      }
+      return {
+        status: HttpStatus.OK,
+        body: { data: parkingSpots.map(parkingSpotToDto), pagination: paginationResponse },
+      }
+    })
+  }
+
   @Endpoint(contract.listClosestToPoint)
   @UseGuards(new AuthGuard())
   public listClosestToPoint(@Session() _session: SessionContainer): HandlerResult<typeof contract.listClosestToPoint> {
@@ -23,7 +70,7 @@ export class ParkingSpotController extends BaseController {
       const { longitude, latitude, limit } = query
       const parkingSpots = await this.parkingSpotRepository.listParkingSpotsClosestToLocation(
         { longitude, latitude },
-        limit
+        limit ?? DEFAULT_LIMIT
       )
       return { status: HttpStatus.OK, body: { data: parkingSpots.map(parkingSpotToDto) } }
     })

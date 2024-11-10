@@ -1,6 +1,5 @@
 import { Point } from '@parker/geography'
 import { RawBuilder, sql } from 'kysely'
-import { omit } from 'lodash'
 
 export class QueryUtils {
   // Returns SQL for creating a Postgres POINT value, from a Point
@@ -19,11 +18,5 @@ export class QueryUtils {
       // TODO: maybe sql NOW()
       updatedAt: new Date().toISOString(),
     }
-  }
-
-  public static withoutSystemTimestamps<T extends { createdAt: string | Date; updatedAt: string | Date }>(
-    entity: T
-  ): Omit<T, 'createdAt' | 'updatedAt'> {
-    return omit(entity)
   }
 }

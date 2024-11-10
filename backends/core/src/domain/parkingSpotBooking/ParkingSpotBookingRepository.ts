@@ -2,6 +2,7 @@ import { Temporal } from '@js-temporal/polyfill'
 import { Injectable } from '@nestjs/common'
 import { BookingStatusValues, CreateParkingSpotBookingRequest } from '@parker/core-client'
 import { QueryUtils } from '@parker/kysely-utils'
+import { parseInstantFields } from '@parker/time'
 import { Selectable } from 'kysely'
 import { BaseRepository } from '../../db/BaseRepository'
 import { ParkingSpotBooking as ParkingSpotBookingDao } from '../../db/generated/db'
@@ -46,9 +47,9 @@ export class ParkingSpotBookingRepository extends BaseRepository {
 
   private bookingToDomain(booking: Selectable<ParkingSpotBookingDao>): ParkingSpotBooking {
     return {
-      ...QueryUtils.withoutSystemTimestamps(booking),
+      ...booking,
+      ...parseInstantFields(booking, ['createdAt', 'updatedAt', 'bookingStartsAt']),
       status: booking.status as BookingStatus,
-      bookingStartsAt: Temporal.Instant.fromEpochMilliseconds(booking.bookingStartsAt.valueOf()),
       bookingEndsAt: booking.bookingEndsAt
         ? Temporal.Instant.fromEpochMilliseconds(booking.bookingEndsAt.valueOf())
         : undefined,
