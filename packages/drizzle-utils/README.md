@@ -17,15 +17,11 @@ const transactionManager = new TransactionManager(db)
 type User = typeof users.$inferSelect
 
 const createUser = async (name: string): Promise<User> => {
-  const results = await transactionManager
-    .getConnection()
-    .insert(people)
-    .values({ name: 'Alice' })
-    .returning()
+  const results = await transactionManager.getConnection().insert(people).values({ name: 'Alice' }).returning()
   return results[0]!
 }
 
-// Here, the createUser calls run against a transaction 
+// Here, the createUser calls run against a transaction
 const { bob, anne } = await transactionManager.run(async () => {
   const bob = await createUser('Bob')
   const anne = await createUser('Anne')

@@ -14,6 +14,7 @@
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },
   "dependencies": {
+    "@js-temporal/polyfill": "^0.4.4",
     "@parker/context-propagation": "*",
     "drizzle-orm": "^0.36.1",
     "tslib": "^2.7.0"

@@ -22,13 +22,13 @@ export class TransactionManager<Schema extends Record<string, unknown>> {
    *   id: integer().primaryKey().generatedAlwaysAsIdentity(),
    *   name: varchar({ length: 255 }).notNull(),
    * })
-   * 
+   *
    * const db = drizzle({ schema: { users } })
-   * 
+   *
    * const transactionManager = new TransactionManager(db)
-   * 
+   *
    * type User = typeof users.$inferSelect
-   * 
+   *
    * const createUser = async (name: string): Promise<User> => {
    *   const results = await transactionManager
    *     .getConnection()
@@ -37,14 +37,14 @@ export class TransactionManager<Schema extends Record<string, unknown>> {
    *     .returning()
    *   return results[0]!
    * }
-   * 
-   * // Here, the createUser calls run against a transaction 
+   *
+   * // Here, the createUser calls run against a transaction
    * const { bob, anne } = await transactionManager.run(async () => {
    *   const bob = await createUser('Bob')
    *   const anne = await createUser('Anne')
    *   return { bob, anne }
    * })
-   * 
+   *
    * // Here, the create user call does not
    * const sam = await createUser('Sam')
    * ```
@@ -66,8 +66,12 @@ export class TransactionManager<Schema extends Record<string, unknown>> {
    *
    * See the `run` method for more details.
    */
-  public getConnection<TQueryResult extends PgQueryResultHKT = PgQueryResultHKT>(): PgTransaction<TQueryResult, Schema, ExtractTablesWithRelations<Schema>> | NodePgDatabase<Schema> {
-    const maybeActiveTransaction = ActiveTransactionContext.getContext() as PgTransaction<TQueryResult, Schema, ExtractTablesWithRelations<Schema>> | undefined
+  public getConnection<TQueryResult extends PgQueryResultHKT = PgQueryResultHKT>():
+    | PgTransaction<TQueryResult, Schema, ExtractTablesWithRelations<Schema>>
+    | NodePgDatabase<Schema> {
+    const maybeActiveTransaction = ActiveTransactionContext.getContext() as
+      | PgTransaction<TQueryResult, Schema, ExtractTablesWithRelations<Schema>>
+      | undefined
     return maybeActiveTransaction ?? this.db
   }
 }

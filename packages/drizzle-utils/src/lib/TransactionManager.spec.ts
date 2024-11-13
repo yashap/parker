@@ -53,7 +53,6 @@ describe(TransactionManager.name, () => {
       })
     ).rejects.toEqual(new Error('Fake failure'))
 
-    
     expect(await getAllUsers()).toStrictEqual([])
   })
 
