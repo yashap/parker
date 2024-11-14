@@ -1,7 +1,7 @@
-import { ExtractTablesWithRelations } from 'drizzle-orm'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { PgQueryResultHKT, PgTransaction } from 'drizzle-orm/pg-core'
 import { ActiveTransactionContext } from './ActiveTransactionContext'
+import { DbConnection, DbTransaction } from './types'
 
 export class TransactionManager<Schema extends Record<string, unknown>> {
   constructor(private readonly db: NodePgDatabase<Schema>) {}
@@ -66,12 +66,8 @@ export class TransactionManager<Schema extends Record<string, unknown>> {
    *
    * See the `run` method for more details.
    */
-  public getConnection<TQueryResult extends PgQueryResultHKT = PgQueryResultHKT>():
-    | PgTransaction<TQueryResult, Schema, ExtractTablesWithRelations<Schema>>
-    | NodePgDatabase<Schema> {
-    const maybeActiveTransaction = ActiveTransactionContext.getContext() as
-      | PgTransaction<TQueryResult, Schema, ExtractTablesWithRelations<Schema>>
-      | undefined
+  public getConnection(): DbConnection<Schema> {
+    const maybeActiveTransaction = ActiveTransactionContext.getContext() as DbTransaction<Schema> | undefined
     return maybeActiveTransaction ?? this.db
   }
 }

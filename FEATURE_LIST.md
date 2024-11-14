@@ -2,12 +2,13 @@
 
 What am I planning to work on next?
 
+- Finish switch to Drizzle
+  - Including migrations switch
 - Tests for new LIST parkingSpots endpoint
 - Cursor stuff
   - Extract into a lib?
   - Check out the `TODO: is this even correct` and `TODO: base64` bits
   - Tests, and also api client "fetch all pages"
-- Switch to Drizzle?
 - Better create parking spot FE
   - With time rules and overrides, and properly viewing and editing your parking spot(s)
 - General landlord improvements

@@ -1,22 +1,22 @@
+import { DbConnection, TransactionManager } from '@parker/drizzle-utils'
 import { required } from '@parker/errors'
-import { TransactionManager } from '@parker/kysely-utils'
-import { Kysely, PostgresDialect, Transaction } from 'kysely'
-import { Pool } from 'pg'
-import { DB } from './generated/db'
+import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
+import * as schema from './schema'
+
+export type DatabaseSchema = typeof schema
 
 export class Database {
   // Ensure just one DB connection for the app
-  private static dbSingleton: Kysely<DB> = new Kysely<DB>({
-    dialect: new PostgresDialect({
-      pool: new Pool({
-        connectionString: required(process.env['DATABASE_URL']),
-      }),
-    }),
+  private static dbSingleton: NodePgDatabase<DatabaseSchema> = drizzle({
+    schema,
+    connection: {
+      connectionString: required(process.env['DATABASE_URL']),
+    },
   })
 
-  private static transactionManager = new TransactionManager<DB>(Database.dbSingleton)
+  private static transactionManager = new TransactionManager<DatabaseSchema>(this.dbSingleton)
 
-  public static getConnection(): Transaction<DB> | Kysely<DB> {
+  public static db(): DbConnection<DatabaseSchema> {
     return this.transactionManager.getConnection()
   }
 
