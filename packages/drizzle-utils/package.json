@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
-    "db:migrate-up:test": "../../tools/scripts/ensure_postgres_db.sh -d drizzle_utils -c parker_postgres_test && ../../tools/scripts/ensure_postgres_user.sh -u drizzle_utils -w drizzle_utils_password -d drizzle_utils -c parker_postgres_test",
+    "db:migrate-up:test": "../../tools/scripts/ensure_postgres_db.sh -d drizzle_utils -c parker_postgres_test",
     "format": "eslint \"src/**\" --fix",
     "lint": "tsc --noEmit && eslint \"src/**\"",
     "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand src/",
@@ -16,6 +16,7 @@
   "dependencies": {
     "@js-temporal/polyfill": "^0.4.4",
     "@parker/context-propagation": "*",
+    "@parker/geography": "*",
     "drizzle-orm": "^0.36.1",
     "tslib": "^2.7.0"
   },

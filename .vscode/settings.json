@@ -6,6 +6,7 @@
     "datetime",
     "Dtos",
     "emailpassword",
+    "Favourite",
     "foos",
     "frontends",
     "healthcheck",

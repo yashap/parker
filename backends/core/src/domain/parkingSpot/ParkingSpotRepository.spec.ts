@@ -7,11 +7,11 @@ import { DayOfWeek } from '../time/DayOfWeek'
 import { TimeRuleRepository } from '../timeRule'
 import { TimeRuleOverrideRepository } from '../timeRuleOverride'
 import { ParkingSpot } from './ParkingSpot'
-import { CreateParkingSpotInput, ParkingSpotRepository } from './ParkingSpotRepository'
+import { LegacyCreateParkingSpotInput, ParkingSpotRepository } from './ParkingSpotRepository'
 
 describe(ParkingSpotRepository.name, () => {
   let parkingSpotRepository: ParkingSpotRepository
-  let createParkingSpotInput: CreateParkingSpotInput
+  let createParkingSpotInput: LegacyCreateParkingSpotInput
   let spot: ParkingSpot
   let userId: string
 

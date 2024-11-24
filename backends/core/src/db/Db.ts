@@ -5,7 +5,7 @@ import * as schema from './schema'
 
 export type DatabaseSchema = typeof schema
 
-export class Database {
+export class Db {
   // Ensure just one DB connection for the app
   private static dbSingleton: NodePgDatabase<DatabaseSchema> = drizzle({
     schema,

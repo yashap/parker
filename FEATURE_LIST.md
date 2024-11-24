@@ -4,6 +4,9 @@ What am I planning to work on next?
 
 - Finish switch to Drizzle
   - Including migrations switch
+- Get Drizzle query types working properly
+  - This bug: https://github.com/drizzle-team/drizzle-orm/issues/2619
+  - Maybe relevant: https://github.com/drizzle-team/drizzle-orm/issues/2504
 - Tests for new LIST parkingSpots endpoint
 - Cursor stuff
   - Extract into a lib?

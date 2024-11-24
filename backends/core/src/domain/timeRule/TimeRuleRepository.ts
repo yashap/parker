@@ -12,7 +12,7 @@ export type TimeRuleDao = Pick<Selectable<TimeRuleGeneratedDao>, 'day' | 'startT
 @Injectable()
 export class TimeRuleRepository extends BaseRepository {
   public async create(parkingSpotId: string, timeRules: TimeRule[]): Promise<TimeRule[]> {
-    const createdTimeRules = await this.db()
+    const createdTimeRules = await this.legacyDb()
       .insertInto('TimeRule')
       .values(timeRules.map((timeRule) => this.timeRuleToInsertableDao(timeRule, parkingSpotId)))
       .returningAll()
@@ -21,7 +21,7 @@ export class TimeRuleRepository extends BaseRepository {
   }
 
   public async deleteByParkingSpotId(parkingSpotId: string): Promise<void> {
-    await this.db().deleteFrom('TimeRule').where('parkingSpotId', '=', parkingSpotId).execute()
+    await this.legacyDb().deleteFrom('TimeRule').where('parkingSpotId', '=', parkingSpotId).execute()
   }
 
   public timeRuleToDomain(timeRuleDao: TimeRuleDao): TimeRule {

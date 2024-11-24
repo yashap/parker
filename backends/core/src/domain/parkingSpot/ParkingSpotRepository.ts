@@ -15,23 +15,23 @@ import { TimeRule, TimeRuleDao, TimeRuleRepository } from '../timeRule'
 import { TimeRuleOverride, TimeRuleOverrideDao, TimeRuleOverrideRepository } from '../timeRuleOverride'
 import { ListParkingSpotCursor, ListParkingSpotPagination, ParkingSpot } from './ParkingSpot'
 
-type ParkingSpotDao = Selectable<ParkingSpotGeneratedDao> & {
+type LegacyParkingSpotDao = Selectable<ParkingSpotGeneratedDao> & {
   timeRules: TimeRuleDao[]
   timeRuleOverrides: TimeRuleOverrideDao[]
 }
 
-export type CreateParkingSpotInput = Omit<CreateParkingSpotRequest, 'timeRules' | 'timeRuleOverrides'> & {
+export type LegacyCreateParkingSpotInput = Omit<CreateParkingSpotRequest, 'timeRules' | 'timeRuleOverrides'> & {
   ownerUserId: string
   timeRules: TimeRule[]
   timeRuleOverrides: TimeRuleOverride[]
 }
 
-export type UpdateParkingSpotInput = Omit<UpdateParkingSpotRequest, 'timeRules' | 'timeRuleOverrides'> & {
+export type LegacyUpdateParkingSpotInput = Omit<UpdateParkingSpotRequest, 'timeRules' | 'timeRuleOverrides'> & {
   timeRules?: TimeRule[]
   timeRuleOverrides?: TimeRuleOverride[]
 }
 
-export type ListParikingSpotFilters = Pick<ListParkingSpotsRequest, 'ownerUserId'>
+export type LegacyListParkingSpotFilters = Pick<ListParkingSpotsRequest, 'ownerUserId'>
 
 @Injectable()
 export class ParkingSpotRepository extends BaseRepository {
@@ -42,10 +42,10 @@ export class ParkingSpotRepository extends BaseRepository {
     super()
   }
 
-  public create(payload: CreateParkingSpotInput): Promise<ParkingSpot> {
+  public create(payload: LegacyCreateParkingSpotInput): Promise<ParkingSpot> {
     const { location, timeRules, timeRuleOverrides, ...rest } = payload
-    return this.runWithTransaction(async () => {
-      const { id: parkingSpotId } = await this.db()
+    return this.legacyWithTransaction(async () => {
+      const { id: parkingSpotId } = await this.legacyDb()
         .insertInto('ParkingSpot')
         .values({
           ...rest,
@@ -67,7 +67,7 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   public async getById(id: string): Promise<ParkingSpot | undefined> {
-    const parkingSpotDao = await this.db()
+    const parkingSpotDao = await this.legacyDb()
       .selectFrom('ParkingSpot')
       .select((eb) => this.buildFields(eb))
       .where('id', '=', id)
@@ -76,14 +76,14 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   public async list(
-    { ownerUserId }: ListParikingSpotFilters,
+    { ownerUserId }: LegacyListParkingSpotFilters,
     pagination?: ListParkingSpotPagination
   ): Promise<ParkingSpot[]> {
     if (pagination?.limit === 0) {
       return []
     }
 
-    let query = this.db()
+    let query = this.legacyDb()
       .selectFrom('ParkingSpot')
       .select((eb) => this.buildFields(eb))
 
@@ -117,7 +117,7 @@ export class ParkingSpotRepository extends BaseRepository {
       return []
     }
     const { longitude, latitude } = location
-    const parkingSpotDaos = await this.db()
+    const parkingSpotDaos = await this.legacyDb()
       .selectFrom('ParkingSpot')
       .select((eb) => this.buildFields(eb))
       .orderBy(sql`"location" <-> ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)`, 'asc')
@@ -126,9 +126,9 @@ export class ParkingSpotRepository extends BaseRepository {
     return parkingSpotDaos.map((dao) => this.parkingSpotToDomain(dao))
   }
 
-  public update(id: string, update: UpdateParkingSpotInput): Promise<ParkingSpot> {
+  public update(id: string, update: LegacyUpdateParkingSpotInput): Promise<ParkingSpot> {
     const { location, timeRules, timeRuleOverrides, ...rest } = update
-    return this.runWithTransaction(async () => {
+    return this.legacyWithTransaction(async () => {
       if (timeRules) {
         await this.timeRuleRepository.deleteByParkingSpotId(id)
         if (timeRules.length > 0) {
@@ -141,7 +141,7 @@ export class ParkingSpotRepository extends BaseRepository {
           await this.timeRuleOverrideRepository.create(id, timeRuleOverrides)
         }
       }
-      const parkingSpotDao = await this.db()
+      const parkingSpotDao = await this.legacyDb()
         .updateTable('ParkingSpot')
         .set({
           ...rest,
@@ -157,7 +157,7 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   public async delete(id: string): Promise<void> {
-    await this.db().deleteFrom('ParkingSpot').where('id', '=', id).execute()
+    await this.legacyDb().deleteFrom('ParkingSpot').where('id', '=', id).execute()
   }
 
   private buildFields(eb: ExpressionBuilder<DB, 'ParkingSpot'>) {
@@ -188,7 +188,7 @@ export class ParkingSpotRepository extends BaseRepository {
     return timeRulesFields
   }
 
-  private parkingSpotToDomain(parkingSpotDao: ParkingSpotDao): ParkingSpot {
+  private parkingSpotToDomain(parkingSpotDao: LegacyParkingSpotDao): ParkingSpot {
     const { id, createdAt, updatedAt, ownerUserId, address, location, timeRules, timeRuleOverrides, timeZone } =
       parkingSpotDao
     const locationGeoJson = JSON.parse(location) as GeoJsonPoint

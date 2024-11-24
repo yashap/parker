@@ -1,10 +1,13 @@
-import { instant } from '@parker/drizzle-utils'
-import { sql } from 'drizzle-orm'
-import { uuid, pgTable, text, geometry, index, time, boolean } from 'drizzle-orm/pg-core'
+import { DayOfWeekAllValues } from '@parker/api-client-utils'
+import { BookingStatusAllValues } from '@parker/core-client'
+import { instant, point } from '@parker/drizzle-utils'
+import { relations, sql } from 'drizzle-orm'
+import { uuid, pgTable, text, time, boolean, index } from 'drizzle-orm/pg-core'
 
 const standardFields = {
   // TODO: confirm if this is what I want, and also move id, createdAt and updatedAt into drizzle-utils
-  id: uuid().primaryKey().default('uuid_generate_v1()'),
+  // TODO: maybe switch default to app-side uuid gen
+  id: uuid().default('uuid_generate_v1()'),
   createdAt: instant()
     .notNull()
     .default(sql`(NOW() AT TIME ZONE 'utc'::text)`),
@@ -20,8 +23,7 @@ export const parkingSpots = pgTable(
     ...standardFields,
     ownerUserId: uuid().notNull(),
     address: text().notNull(),
-    // TODO: maybe a custom type for this, that'll fit my personal coord type?
-    location: geometry({ type: 'point', mode: 'xy', srid: 4326 }).notNull(),
+    location: point().notNull(),
     timeZone: text().notNull(),
   },
   (table) => [
@@ -29,6 +31,11 @@ export const parkingSpots = pgTable(
     index('ParkingSpot_location_idx').using('gist', table.location),
   ]
 )
+
+export const parkingSpotsRelations = relations(parkingSpots, ({ many }) => ({
+  bookings: many(parkingSpotBookings),
+  timeRules: many(timeRules),
+}))
 
 export const parkingSpotBookings = pgTable(
   'ParkingSpotBooking',
@@ -40,7 +47,7 @@ export const parkingSpotBookings = pgTable(
     bookedByUserId: uuid().notNull(),
     bookingStartsAt: instant().notNull(),
     bookingEndsAt: instant(),
-    status: text()
+    status: text({ enum: BookingStatusAllValues })
       .notNull()
       .references(() => _values_parkingSpotBookingStatus.status),
   },
@@ -49,6 +56,13 @@ export const parkingSpotBookings = pgTable(
     index('ParkingSpotBooking_parkingSpotId_idx').on(table.parkingSpotId),
   ]
 )
+
+export const parkingSpotBookingsRelations = relations(parkingSpotBookings, ({ one }) => ({
+  parkingSpot: one(parkingSpots, {
+    fields: [parkingSpotBookings.parkingSpotId],
+    references: [parkingSpots.id],
+  }),
+}))
 
 // Accepted, Cancelled, InProgress
 export const _values_parkingSpotBookingStatus = pgTable('values_ParkingSpotBooking_status', {
@@ -62,11 +76,11 @@ export const timeRules = pgTable(
     parkingSpotId: uuid()
       .notNull()
       .references(() => parkingSpots.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-    day: text()
+    day: text({ enum: DayOfWeekAllValues })
       .notNull()
       .references(() => _values_timeRuleDay.day),
-    startTime: time({ withTimezone: false }).notNull(),
-    endTime: time({ withTimezone: false }).notNull(),
+    startTime: time('startTime', { withTimezone: false }).notNull(),
+    endTime: time('endTime', { withTimezone: false }).notNull(),
   },
   (table) => [index('TimeRule_parkingSpotId_idx').on(table.parkingSpotId)]
 )
@@ -89,74 +103,3 @@ export const timeRuleOverrides = pgTable(
   },
   (table) => [index('TimeRuleOverride_parkingSpotId_idx').on(table.parkingSpotId)]
 )
-
-// CREATE TABLE "TimeRuleOverride" (
-//   id uuid DEFAULT uuid_generate_v1() PRIMARY KEY,
-//   "createdAt" timestamp(3) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-//   "updatedAt" timestamp(3) with time zone NOT NULL,
-//   "parkingSpotId" uuid NOT NULL REFERENCES "ParkingSpot"(id) ON DELETE CASCADE ON UPDATE CASCADE,
-//   "startsAt" timestamp(3) with time zone NOT NULL,
-//   "endsAt" timestamp(3) with time zone NOT NULL,
-//   "isAvailable" boolean NOT NULL
-// );
-
-// CREATE TABLE "ParkingSpot" (
-//   id uuid DEFAULT uuid_generate_v1() PRIMARY KEY,
-//   "createdAt" timestamp(3) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-//   "updatedAt" timestamp(3) with time zone NOT NULL,
-//   "ownerUserId" uuid NOT NULL,
-//   address text NOT NULL,
-//   location geometry(Point,4326) NOT NULL,
-//   "timeZone" text NOT NULL
-// );
-// CREATE UNIQUE INDEX "ParkingSpot_pkey" ON "ParkingSpot"(id uuid_ops);
-// CREATE INDEX "ParkingSpot_ownerUserId_idx" ON "ParkingSpot"("ownerUserId" uuid_ops);
-// CREATE INDEX "ParkingSpot_location_idx" ON "ParkingSpot" USING GIST (location gist_geometry_ops_2d);
-
-// CREATE TABLE "ParkingSpotBooking" (
-//   id uuid DEFAULT uuid_generate_v1() PRIMARY KEY,
-//   "createdAt" timestamp(3) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-//   "updatedAt" timestamp(3) with time zone NOT NULL,
-//   "parkingSpotId" uuid NOT NULL REFERENCES "ParkingSpot"(id) ON DELETE CASCADE ON UPDATE CASCADE,
-//   "bookedByUserId" uuid NOT NULL,
-//   "bookingStartsAt" timestamp(3) with time zone NOT NULL,
-//   "bookingEndsAt" timestamp(3) with time zone,
-//   status text NOT NULL REFERENCES "values_ParkingSpotBooking_status"(status)
-// );
-// CREATE UNIQUE INDEX "ParkingSpotBooking_pkey" ON "ParkingSpotBooking"(id uuid_ops);
-// CREATE INDEX "ParkingSpotBooking_bookedByUserId_idx" ON "ParkingSpotBooking"("bookedByUserId" uuid_ops);
-// CREATE INDEX "ParkingSpotBooking_parkingSpotId_idx" ON "ParkingSpotBooking"("parkingSpotId" uuid_ops);
-
-// CREATE TABLE "TimeRule" (
-//   id uuid DEFAULT uuid_generate_v1() PRIMARY KEY,
-//   "createdAt" timestamp(3) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-//   "updatedAt" timestamp(3) with time zone NOT NULL,
-//   "parkingSpotId" uuid NOT NULL REFERENCES "ParkingSpot"(id) ON DELETE CASCADE ON UPDATE CASCADE,
-//   day text NOT NULL REFERENCES "values_TimeRule_day"(day),
-//   "startTime" time without time zone NOT NULL,
-//   "endTime" time without time zone NOT NULL
-// );
-// CREATE UNIQUE INDEX "TimeRule_pkey" ON "TimeRule"(id uuid_ops);
-// CREATE INDEX "TimeRule_parkingSpotId_idx" ON "TimeRule"("parkingSpotId" uuid_ops);
-
-// CREATE TABLE "TimeRuleOverride" (
-//   id uuid DEFAULT uuid_generate_v1() PRIMARY KEY,
-//   "createdAt" timestamp(3) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-//   "updatedAt" timestamp(3) with time zone NOT NULL,
-//   "parkingSpotId" uuid NOT NULL REFERENCES "ParkingSpot"(id) ON DELETE CASCADE ON UPDATE CASCADE,
-//   "startsAt" timestamp(3) with time zone NOT NULL,
-//   "endsAt" timestamp(3) with time zone NOT NULL,
-//   "isAvailable" boolean NOT NULL
-// );
-// CREATE UNIQUE INDEX "TimeRuleOverride_pkey" ON "TimeRuleOverride"(id uuid_ops);
-// CREATE INDEX "TimeRuleOverride_parkingSpotId_idx" ON "TimeRuleOverride"("parkingSpotId" uuid_ops);
-
-// CREATE TABLE "values_ParkingSpotBooking_status" (
-//   status text PRIMARY KEY
-// );
-// CREATE UNIQUE INDEX "values_ParkingSpotBooking_status_pkey" ON "values_ParkingSpotBooking_status"(status text_ops);
-
-// CREATE TABLE "values_TimeRule_day" (
-//   day text PRIMARY KEY
-// );
-// CREATE UNIQUE INDEX "values_TimeRule_day_pkey" ON "values_TimeRule_day"(day text_ops);

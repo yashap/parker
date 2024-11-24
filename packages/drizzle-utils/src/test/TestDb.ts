@@ -1,19 +1,22 @@
 import { relations } from 'drizzle-orm'
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { integer, pgTable, text } from 'drizzle-orm/pg-core'
+import { integer, serial, pgTable, text } from 'drizzle-orm/pg-core'
+import { Pool } from 'pg'
 import { instant } from '../lib/instant'
+import { point } from '../lib/point'
 
 export const users = pgTable('User', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  id: serial().primaryKey(),
   name: text().notNull(),
 })
 
 export const usersRelations = relations(users, ({ many }) => ({
   posts: many(posts),
+  favouriteLocations: many(favouriteLocations),
 }))
 
 export const posts = pgTable('Post', {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  id: serial().primaryKey(),
   authorId: integer()
     .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' })
     .notNull(),
@@ -28,11 +31,29 @@ export const postsRelations = relations(posts, ({ one }) => ({
   }),
 }))
 
+export const favouriteLocations = pgTable('FavouriteLocation', {
+  id: serial().primaryKey(),
+  userId: integer()
+    .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' })
+    .notNull(),
+  name: text().notNull(),
+  location: point().notNull(),
+})
+
+export const favouriteLocationsRelations = relations(favouriteLocations, ({ one }) => ({
+  user: one(users, {
+    fields: [favouriteLocations.userId],
+    references: [users.id],
+  }),
+}))
+
 const schema = {
   users,
   usersRelations,
   posts,
   postsRelations,
+  favouriteLocations,
+  favouriteLocationsRelations,
 }
 
 export type TestDbSchema = typeof schema
@@ -43,6 +64,9 @@ export type UserInput = typeof users.$inferInsert
 export type Post = typeof posts.$inferSelect
 export type PostInput = typeof posts.$inferInsert
 
+export type FavouriteLocation = typeof favouriteLocations.$inferSelect
+export type FavouriteLocationInput = typeof favouriteLocations.$inferInsert
+
 export class TestDb {
   private static dbSingleton: NodePgDatabase<TestDbSchema> | undefined = undefined
 
@@ -51,17 +75,21 @@ export class TestDb {
     if (!dbUrl) {
       throw new Error('DATABASE_URL is not set')
     }
-    this.dbSingleton = drizzle({
-      schema,
-      connection: {
+    this.dbSingleton = drizzle(
+      new Pool({
         connectionString: dbUrl,
-      },
-    })
+      }),
+      {
+        schema,
+      }
+    )
 
     /**
      * Would normally use drizzle-kit migrations for this sort of thing, but for tests, this works better
      */
+    await this.dbSingleton.execute('CREATE EXTENSION IF NOT EXISTS "postgis"')
     await this.dbSingleton.execute('DROP TABLE IF EXISTS "Post"')
+    await this.dbSingleton.execute('DROP TABLE IF EXISTS "FavouriteLocation"')
     await this.dbSingleton.execute('DROP TABLE IF EXISTS "User"')
     await this.dbSingleton.execute(`
       CREATE TABLE "User" (
@@ -75,6 +103,14 @@ export class TestDb {
         "authorId" INTEGER NOT NULL REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
         "message" TEXT NOT NULL,
         "sentAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL
+      )
+    `)
+    await this.dbSingleton.execute(`
+      CREATE TABLE "FavouriteLocation" (
+        "id" SERIAL PRIMARY KEY,
+        "userId" INTEGER NOT NULL REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+        "name" TEXT NOT NULL,
+        "location" GEOMETRY(POINT, 4326) NOT NULL
       )
     `)
   }
