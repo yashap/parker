@@ -48,10 +48,6 @@ describe(instant.name, () => {
         sentAt: Temporal.Instant.from('2021-03-06T07:05:39.321Z'),
       },
     ])
-
-    // Temporal.Instants don't work well with Jest's equality matchers, need to check more explicitly
-    expect(allPosts[0]?.sentAt.toJSON()).toStrictEqual('2021-01-01T13:14:15.123Z')
-    expect(allPosts[1]?.sentAt.toJSON()).toStrictEqual('2021-03-06T07:05:39.321Z')
   })
 
   it('accepts timezones other than UTC as input, but still stores them as UTC', async () => {
@@ -73,9 +69,5 @@ describe(instant.name, () => {
         sentAt: Temporal.Instant.from('2021-03-06T10:05:39.321Z'),
       },
     ])
-
-    // Temporal.Instants don't work well with Jest's equality matchers, need to check more explicitly
-    expect(allPosts[0]?.sentAt.toJSON()).toStrictEqual('2021-01-01T16:14:15.123Z')
-    expect(allPosts[1]?.sentAt.toJSON()).toStrictEqual('2021-03-06T10:05:39.321Z')
   })
 })

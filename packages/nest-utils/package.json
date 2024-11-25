@@ -31,6 +31,7 @@
   "devDependencies": {
     "@parker/api-client-test-utils": "*",
     "@parker/eslint-config": "*",
+    "@parker/test-utils": "*",
     "@parker/tsconfig": "*",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",

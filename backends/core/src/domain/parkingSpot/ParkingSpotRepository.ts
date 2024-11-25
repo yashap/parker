@@ -5,19 +5,26 @@ import { CreateParkingSpotRequest, ListParkingSpotsRequest, UpdateParkingSpotReq
 import { required } from '@parker/errors'
 import { GeoJsonPoint, Point, geoJsonToPoint } from '@parker/geography'
 import { QueryUtils } from '@parker/kysely-utils'
+import { eq } from 'drizzle-orm'
 import { ExpressionBuilder, Selectable, sql } from 'kysely'
 import { jsonArrayFrom } from 'kysely/helpers/postgres'
-import { isString } from 'lodash'
+import { isString, omit } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
+import { Db } from '../../db/Db'
 import { DB, ParkingSpot as ParkingSpotGeneratedDao } from '../../db/generated/db'
+import { parkingSpots, timeRuleOverrides, timeRules } from '../../db/schema'
 import { TimeZoneLookup } from '../time/TimeZoneLookup'
-import { TimeRule, TimeRuleDao, TimeRuleRepository } from '../timeRule'
-import { TimeRuleOverride, TimeRuleOverrideDao, TimeRuleOverrideRepository } from '../timeRuleOverride'
+import { TimeRule, TimeRuleDao as LegacyTimeRuleDao, TimeRuleRepository } from '../timeRule'
+import {
+  TimeRuleOverride,
+  TimeRuleOverrideDao as LegacyTimeRuleOverrideDao,
+  TimeRuleOverrideRepository,
+} from '../timeRuleOverride'
 import { ListParkingSpotCursor, ListParkingSpotPagination, ParkingSpot } from './ParkingSpot'
 
 type LegacyParkingSpotDao = Selectable<ParkingSpotGeneratedDao> & {
-  timeRules: TimeRuleDao[]
-  timeRuleOverrides: TimeRuleOverrideDao[]
+  timeRules: LegacyTimeRuleDao[]
+  timeRuleOverrides: LegacyTimeRuleOverrideDao[]
 }
 
 export type LegacyCreateParkingSpotInput = Omit<CreateParkingSpotRequest, 'timeRules' | 'timeRuleOverrides'> & {
@@ -42,9 +49,9 @@ export class ParkingSpotRepository extends BaseRepository {
     super()
   }
 
-  public create(payload: LegacyCreateParkingSpotInput): Promise<ParkingSpot> {
+  public async create(payload: LegacyCreateParkingSpotInput): Promise<ParkingSpot> {
     const { location, timeRules, timeRuleOverrides, ...rest } = payload
-    return this.legacyWithTransaction(async () => {
+    const parkingSpotId = await this.legacyWithTransaction(async () => {
       const { id: parkingSpotId } = await this.legacyDb()
         .insertInto('ParkingSpot')
         .values({
@@ -61,18 +68,30 @@ export class ParkingSpotRepository extends BaseRepository {
       if (timeRuleOverrides.length > 0) {
         await this.timeRuleOverrideRepository.create(parkingSpotId, timeRuleOverrides)
       }
-      const parkingSpot = await this.getById(parkingSpotId)
-      return required(parkingSpot)
+      return parkingSpotId
     })
+    const parkingSpot = await this.getById(parkingSpotId)
+    return required(parkingSpot)
   }
 
   public async getById(id: string): Promise<ParkingSpot | undefined> {
-    const parkingSpotDao = await this.legacyDb()
-      .selectFrom('ParkingSpot')
-      .select((eb) => this.buildFields(eb))
-      .where('id', '=', id)
-      .executeTakeFirst()
-    return parkingSpotDao ? this.parkingSpotToDomain(parkingSpotDao) : undefined
+    const parkingSpotList = await Db.db().select().from(parkingSpots).where(eq(parkingSpots.id, id))
+    const parkingSpot = parkingSpotList[0]
+    if (!parkingSpot) {
+      return undefined
+    }
+    const timeRuleList = await Db.db().select().from(timeRules).where(eq(timeRules.parkingSpotId, parkingSpot.id))
+    const timeRuleOverrideList = await Db.db()
+      .select()
+      .from(timeRuleOverrides)
+      .where(eq(timeRuleOverrides.parkingSpotId, parkingSpot.id))
+    return {
+      ...parkingSpot,
+      timeRules: timeRuleList.map((timeRule) => omit(timeRule, ['id', 'createdAt', 'updatedAt', 'parkingSpotId'])),
+      timeRuleOverrides: timeRuleOverrideList.map((timeRuleOverride) =>
+        omit(timeRuleOverride, ['id', 'createdAt', 'updatedAt', 'parkingSpotId'])
+      ),
+    }
   }
 
   public async list(

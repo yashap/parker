@@ -3,6 +3,7 @@ import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { integer, serial, pgTable, text } from 'drizzle-orm/pg-core'
 import { Pool } from 'pg'
 import { instant } from '../lib/instant'
+import { plainTime } from '../lib/plainTime'
 import { point } from '../lib/point'
 
 export const users = pgTable('User', {
@@ -47,6 +48,22 @@ export const favouriteLocationsRelations = relations(favouriteLocations, ({ one 
   }),
 }))
 
+export const reminders = pgTable('Reminder', {
+  id: serial().primaryKey(),
+  userId: integer()
+    .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' })
+    .notNull(),
+  description: text().notNull(),
+  time: plainTime().notNull(),
+})
+
+export const remindersRelations = relations(reminders, ({ one }) => ({
+  user: one(users, {
+    fields: [reminders.userId],
+    references: [users.id],
+  }),
+}))
+
 const schema = {
   users,
   usersRelations,
@@ -54,6 +71,8 @@ const schema = {
   postsRelations,
   favouriteLocations,
   favouriteLocationsRelations,
+  reminders,
+  remindersRelations,
 }
 
 export type TestDbSchema = typeof schema
@@ -66,6 +85,9 @@ export type PostInput = typeof posts.$inferInsert
 
 export type FavouriteLocation = typeof favouriteLocations.$inferSelect
 export type FavouriteLocationInput = typeof favouriteLocations.$inferInsert
+
+export type Reminder = typeof reminders.$inferSelect
+export type ReminderInput = typeof reminders.$inferInsert
 
 export class TestDb {
   private static dbSingleton: NodePgDatabase<TestDbSchema> | undefined = undefined
@@ -88,8 +110,9 @@ export class TestDb {
      * Would normally use drizzle-kit migrations for this sort of thing, but for tests, this works better
      */
     await this.dbSingleton.execute('CREATE EXTENSION IF NOT EXISTS "postgis"')
-    await this.dbSingleton.execute('DROP TABLE IF EXISTS "Post"')
+    await this.dbSingleton.execute('DROP TABLE IF EXISTS "Reminder"')
     await this.dbSingleton.execute('DROP TABLE IF EXISTS "FavouriteLocation"')
+    await this.dbSingleton.execute('DROP TABLE IF EXISTS "Post"')
     await this.dbSingleton.execute('DROP TABLE IF EXISTS "User"')
     await this.dbSingleton.execute(`
       CREATE TABLE "User" (
@@ -111,6 +134,14 @@ export class TestDb {
         "userId" INTEGER NOT NULL REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
         "name" TEXT NOT NULL,
         "location" GEOMETRY(POINT, 4326) NOT NULL
+      )
+    `)
+    await this.dbSingleton.execute(`
+      CREATE TABLE "Reminder" (
+        "id" SERIAL PRIMARY KEY,
+        "userId" INTEGER NOT NULL REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+        "description" TEXT NOT NULL,
+        "time" TIME WITHOUT TIME ZONE NOT NULL
       )
     `)
   }

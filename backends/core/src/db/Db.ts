@@ -9,6 +9,7 @@ export class Db {
   // Ensure just one DB connection for the app
   private static dbSingleton: NodePgDatabase<DatabaseSchema> = drizzle({
     schema,
+    casing: 'camelCase',
     connection: {
       connectionString: required(process.env['DATABASE_URL']),
     },

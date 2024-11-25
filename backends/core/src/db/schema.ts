@@ -1,13 +1,13 @@
 import { DayOfWeekAllValues } from '@parker/api-client-utils'
 import { BookingStatusAllValues } from '@parker/core-client'
-import { instant, point } from '@parker/drizzle-utils'
+import { instant, plainTime, point } from '@parker/drizzle-utils'
 import { relations, sql } from 'drizzle-orm'
-import { uuid, pgTable, text, time, boolean, index } from 'drizzle-orm/pg-core'
+import { uuid, pgTable, text, boolean, index } from 'drizzle-orm/pg-core'
 
 const standardFields = {
   // TODO: confirm if this is what I want, and also move id, createdAt and updatedAt into drizzle-utils
   // TODO: maybe switch default to app-side uuid gen
-  id: uuid().default('uuid_generate_v1()'),
+  id: uuid().primaryKey().default('uuid_generate_v1()'),
   createdAt: instant()
     .notNull()
     .default(sql`(NOW() AT TIME ZONE 'utc'::text)`),
@@ -35,6 +35,7 @@ export const parkingSpots = pgTable(
 export const parkingSpotsRelations = relations(parkingSpots, ({ many }) => ({
   bookings: many(parkingSpotBookings),
   timeRules: many(timeRules),
+  timeRuleOverrides: many(timeRuleOverrides),
 }))
 
 export const parkingSpotBookings = pgTable(
@@ -79,11 +80,18 @@ export const timeRules = pgTable(
     day: text({ enum: DayOfWeekAllValues })
       .notNull()
       .references(() => _values_timeRuleDay.day),
-    startTime: time('startTime', { withTimezone: false }).notNull(),
-    endTime: time('endTime', { withTimezone: false }).notNull(),
+    startTime: plainTime().notNull(),
+    endTime: plainTime().notNull(),
   },
   (table) => [index('TimeRule_parkingSpotId_idx').on(table.parkingSpotId)]
 )
+
+export const timeRulesRelations = relations(timeRules, ({ one }) => ({
+  parkingSpot: one(parkingSpots, {
+    fields: [timeRules.parkingSpotId],
+    references: [parkingSpots.id],
+  }),
+}))
 
 // Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 export const _values_timeRuleDay = pgTable('values_TimeRule_day', {
@@ -103,3 +111,10 @@ export const timeRuleOverrides = pgTable(
   },
   (table) => [index('TimeRuleOverride_parkingSpotId_idx').on(table.parkingSpotId)]
 )
+
+export const timeRuleOverridesRelations = relations(timeRuleOverrides, ({ one }) => ({
+  parkingSpot: one(parkingSpots, {
+    fields: [timeRuleOverrides.parkingSpotId],
+    references: [parkingSpots.id],
+  }),
+}))
