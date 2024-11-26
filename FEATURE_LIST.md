@@ -14,6 +14,7 @@ What am I planning to work on next?
   - Check out the `TODO-lib-cursor` bits
   - Tests, and also api client "fetch all pages"
 - More complete tests for the LIST parkingSpots endpoint
+- Move to absolute imports
 - Better create parking spot FE
   - With time rules and overrides, and properly viewing and editing your parking spot(s)
 - General landlord improvements
