@@ -4,19 +4,17 @@ import { omit, orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { expectSystemTimestamps } from '../../test/expectSystemTimestamp'
 import { DayOfWeek } from '../time/DayOfWeek'
-import { TimeRuleRepository } from '../timeRule'
-import { TimeRuleOverrideRepository } from '../timeRuleOverride'
 import { ParkingSpot } from './ParkingSpot'
-import { LegacyCreateParkingSpotInput, ParkingSpotRepository } from './ParkingSpotRepository'
+import { CreateParkingSpotInput, ParkingSpotRepository } from './ParkingSpotRepository'
 
 describe(ParkingSpotRepository.name, () => {
   let parkingSpotRepository: ParkingSpotRepository
-  let createParkingSpotInput: LegacyCreateParkingSpotInput
+  let createParkingSpotInput: CreateParkingSpotInput
   let spot: ParkingSpot
   let userId: string
 
   beforeEach(async () => {
-    parkingSpotRepository = new ParkingSpotRepository(new TimeRuleRepository(), new TimeRuleOverrideRepository())
+    parkingSpotRepository = new ParkingSpotRepository()
     userId = uuid()
     createParkingSpotInput = {
       ownerUserId: userId,
