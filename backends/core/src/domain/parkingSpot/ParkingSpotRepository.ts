@@ -6,7 +6,6 @@ import { Point } from '@parker/geography'
 import { and, asc, desc, eq, gt, inArray, lt, or, sql } from 'drizzle-orm'
 import { PgColumn } from 'drizzle-orm/pg-core'
 import { groupBy, isEmpty, isString, omit } from 'lodash'
-import { BaseRepository } from '../../db/BaseRepository'
 import { Db } from '../../db/Db'
 import { parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from '../../db/schema'
 import { ParkingSpotDao, ParkingSpotInputDao } from '../../db/types'
@@ -25,7 +24,7 @@ export type UpdateParkingSpotInput = Partial<Omit<CreateParkingSpotInput, 'owner
 export type ListParkingSpotFilters = Pick<ListParkingSpotsRequest, 'ownerUserId'>
 
 @Injectable()
-export class ParkingSpotRepository extends BaseRepository {
+export class ParkingSpotRepository {
   public async create(payload: CreateParkingSpotInput): Promise<ParkingSpot> {
     const { timeRules: timeRulesInput, timeRuleOverrides: timeRuleOverridesInput, ...parkingSpotInput } = payload
     return Db.runWithTransaction(async () => {

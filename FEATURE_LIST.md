@@ -3,7 +3,9 @@
 What am I planning to work on next?
 
 - Finish switch to Drizzle
-  - Including migrations switch
+  - Migrate ParkingSpotBookingRepository
+  - Switch to Drizzle migrations (confirming same schema)
+  - Delete everything Kysely related
 - Get Drizzle query types working properly
   - This bug?: https://github.com/drizzle-team/drizzle-orm/issues/2619
   - Maybe relevant: https://github.com/drizzle-team/drizzle-orm/issues/2504
@@ -39,7 +41,6 @@ What am I planning to work on next?
     - Will probably require a concept of "availability" on FE and BE, based on time rules and existing bookings
   - No payments for now, all free
 - Implement fares/fare rules/payments
-- TypeScript migrations
 - Validate flows around bad auth
   - Handled well on BE and FE? Ideally some BE tests!
 - Photos of the parking spot
