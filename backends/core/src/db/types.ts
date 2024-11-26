@@ -1,6 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { parkingSpotBookingTable, parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from './schema'
 
+// TODO: move to drizzle-utils
 type InputDao<T extends { id?: string; createdAt?: Temporal.Instant; updatedAt?: Temporal.Instant }> = Omit<
   T,
   'id' | 'createdAt' | 'updatedAt'
