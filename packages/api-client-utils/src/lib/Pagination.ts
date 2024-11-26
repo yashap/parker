@@ -59,13 +59,13 @@ export interface Cursor<K extends string, V> {
 }
 
 export const encodeCursor = <K extends string, V>(cursor: Cursor<K, V>): string => {
-  // TODO: base64
+  // TODO-lib-cursor: base64
   return JSON.stringify(cursor)
 }
 
 export const decodeCursor = <K extends string, V>(cursor: string): Cursor<K, V> => {
-  // TODO: base64
-  // TODO: validate orderBy, lastOrderValueSeen and lastIdSeen (should it take zod schemas?)
+  // TODO-lib-cursor: base64
+  // TODO-lib-cursor: validate orderBy, lastOrderValueSeen and lastIdSeen (should it take zod schemas?)
   return JSON.parse(cursor) as unknown as Cursor<K, V>
 }
 

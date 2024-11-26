@@ -107,7 +107,7 @@ const ParkingSpotList: React.FC = () => {
           <Card key={parkingSpot.id} className={cardClassName}>
             <Card.Title title={parkingSpot.address} left={ParkingSpotImage} />
             <Card.Content>
-              <Text variant='bodyMedium'>{`Coorindates: ${parkingSpot.location.longitude}, ${parkingSpot.location.latitude}`}</Text>
+              <Text variant='bodyMedium'>{`Coordinates: ${parkingSpot.location.longitude}, ${parkingSpot.location.latitude}`}</Text>
             </Card.Content>
             <Card.Actions>
               <EditParkingSpotButton />

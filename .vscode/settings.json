@@ -6,6 +6,7 @@
     "datetime",
     "Dtos",
     "emailpassword",
+    "Favourite",
     "foos",
     "frontends",
     "healthcheck",
@@ -34,7 +35,9 @@
     "toplevel",
     "tseslint",
     "turborepo",
-    "unmocked"
+    "typeof",
+    "unmocked",
+    "varchar"
   ],
   "editor.tabSize": 2,
   "files.autoSave": "afterDelay",

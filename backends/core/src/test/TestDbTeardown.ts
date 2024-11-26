@@ -12,10 +12,10 @@ export class TestDbTeardown extends BaseRepository {
   }
 
   public async clearTable(table: TableName): Promise<void> {
-    await this.db().deleteFrom(table).executeTakeFirst()
+    await this.legacyDb().deleteFrom(table).executeTakeFirst()
   }
 
   public async disconnect(): Promise<void> {
-    await this.db().destroy()
+    await this.legacyDb().destroy()
   }
 }

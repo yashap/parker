@@ -65,5 +65,7 @@ export default tseslint.config(
         typescript: {},
       },
     },
+
+    ignores: ['eslint.config.mjs'],
   }
 )

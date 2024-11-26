@@ -22,7 +22,7 @@ export type CreateParkingSpotBookingInput = Omit<
 @Injectable()
 export class ParkingSpotBookingRepository extends BaseRepository {
   public async create(payload: CreateParkingSpotBookingInput): Promise<ParkingSpotBooking> {
-    const bookingDao = await this.db()
+    const bookingDao = await this.legacyDb()
       .insertInto('ParkingSpotBooking')
       .values({
         ...payload,
@@ -37,7 +37,7 @@ export class ParkingSpotBookingRepository extends BaseRepository {
   }
 
   public async getById(id: string): Promise<ParkingSpotBooking | undefined> {
-    const bookingDao = await this.db()
+    const bookingDao = await this.legacyDb()
       .selectFrom('ParkingSpotBooking')
       .selectAll()
       .where('id', '=', id)

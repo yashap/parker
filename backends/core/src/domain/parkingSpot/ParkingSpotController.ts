@@ -31,6 +31,8 @@ export class ParkingSpotController extends BaseController {
       const { ownerUserId } = query
       const pagination: ListParkingSpotPagination = parsePagination<'createdAt', number>(query)
       const parkingSpots = await this.parkingSpotRepository.list({ ownerUserId }, pagination)
+
+      // TODO-lib-cursor: extract this generation of cursor response into a lib
       let paginationResponse: PaginationResponseDto = {}
       const firstParkingSpot = first(parkingSpots)
       const lastParkingSpot = last(parkingSpots)
@@ -56,6 +58,7 @@ export class ParkingSpotController extends BaseController {
           previous: encodeCursor(previous),
         }
       }
+
       return {
         status: HttpStatus.OK,
         body: { data: parkingSpots.map(parkingSpotToDto), pagination: paginationResponse },

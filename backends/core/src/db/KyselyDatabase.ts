@@ -4,7 +4,7 @@ import { Kysely, PostgresDialect, Transaction } from 'kysely'
 import { Pool } from 'pg'
 import { DB } from './generated/db'
 
-export class Database {
+export class KyselyDatabase {
   // Ensure just one DB connection for the app
   private static dbSingleton: Kysely<DB> = new Kysely<DB>({
     dialect: new PostgresDialect({
@@ -14,7 +14,7 @@ export class Database {
     }),
   })
 
-  private static transactionManager = new TransactionManager<DB>(Database.dbSingleton)
+  private static transactionManager = new TransactionManager<DB>(KyselyDatabase.dbSingleton)
 
   public static getConnection(): Transaction<DB> | Kysely<DB> {
     return this.transactionManager.getConnection()
