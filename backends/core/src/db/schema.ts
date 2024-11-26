@@ -1,7 +1,8 @@
+import { Temporal } from '@js-temporal/polyfill'
 import { DayOfWeekAllValues } from '@parker/api-client-utils'
 import { BookingStatusAllValues } from '@parker/core-client'
 import { instant, plainTime, point } from '@parker/drizzle-utils'
-import { relations, sql } from 'drizzle-orm'
+import { relations } from 'drizzle-orm'
 import { uuid, pgTable, text, boolean, index } from 'drizzle-orm/pg-core'
 
 const standardFields = {
@@ -10,14 +11,14 @@ const standardFields = {
   id: uuid().primaryKey().default('uuid_generate_v1()'),
   createdAt: instant()
     .notNull()
-    .default(sql`(NOW() AT TIME ZONE 'utc'::text)`),
+    .$default(() => Temporal.Now.instant()), // TODO: maybe back to .default(sql`(NOW() AT TIME ZONE 'utc'::text)`)
   updatedAt: instant()
     .notNull()
-    .default(sql`(NOW() AT TIME ZONE 'utc'::text)`)
-    .$onUpdate(() => sql`(NOW() AT TIME ZONE 'utc'::text)`),
+    .$default(() => Temporal.Now.instant())
+    .$onUpdate(() => Temporal.Now.instant()),
 }
 
-export const parkingSpots = pgTable(
+export const parkingSpotTable = pgTable(
   'ParkingSpot',
   {
     ...standardFields,
@@ -32,19 +33,19 @@ export const parkingSpots = pgTable(
   ]
 )
 
-export const parkingSpotsRelations = relations(parkingSpots, ({ many }) => ({
-  bookings: many(parkingSpotBookings),
-  timeRules: many(timeRules),
-  timeRuleOverrides: many(timeRuleOverrides),
+export const parkingSpotRelations = relations(parkingSpotTable, ({ many }) => ({
+  bookings: many(parkingSpotBookingTable),
+  timeRules: many(timeRuleTable),
+  timeRuleOverrides: many(timeRuleOverrideTable),
 }))
 
-export const parkingSpotBookings = pgTable(
+export const parkingSpotBookingTable = pgTable(
   'ParkingSpotBooking',
   {
     ...standardFields,
     parkingSpotId: uuid()
       .notNull()
-      .references(() => parkingSpots.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+      .references(() => parkingSpotTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
     bookedByUserId: uuid().notNull(),
     bookingStartsAt: instant().notNull(),
     bookingEndsAt: instant(),
@@ -58,10 +59,10 @@ export const parkingSpotBookings = pgTable(
   ]
 )
 
-export const parkingSpotBookingsRelations = relations(parkingSpotBookings, ({ one }) => ({
-  parkingSpot: one(parkingSpots, {
-    fields: [parkingSpotBookings.parkingSpotId],
-    references: [parkingSpots.id],
+export const parkingSpotBookingsRelations = relations(parkingSpotBookingTable, ({ one }) => ({
+  parkingSpot: one(parkingSpotTable, {
+    fields: [parkingSpotBookingTable.parkingSpotId],
+    references: [parkingSpotTable.id],
   }),
 }))
 
@@ -70,13 +71,13 @@ export const _values_parkingSpotBookingStatus = pgTable('values_ParkingSpotBooki
   status: text().primaryKey(),
 })
 
-export const timeRules = pgTable(
+export const timeRuleTable = pgTable(
   'TimeRule',
   {
     ...standardFields,
     parkingSpotId: uuid()
       .notNull()
-      .references(() => parkingSpots.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+      .references(() => parkingSpotTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
     day: text({ enum: DayOfWeekAllValues })
       .notNull()
       .references(() => _values_timeRuleDay.day),
@@ -86,10 +87,10 @@ export const timeRules = pgTable(
   (table) => [index('TimeRule_parkingSpotId_idx').on(table.parkingSpotId)]
 )
 
-export const timeRulesRelations = relations(timeRules, ({ one }) => ({
-  parkingSpot: one(parkingSpots, {
-    fields: [timeRules.parkingSpotId],
-    references: [parkingSpots.id],
+export const timeRuleRelations = relations(timeRuleTable, ({ one }) => ({
+  parkingSpot: one(parkingSpotTable, {
+    fields: [timeRuleTable.parkingSpotId],
+    references: [parkingSpotTable.id],
   }),
 }))
 
@@ -98,13 +99,13 @@ export const _values_timeRuleDay = pgTable('values_TimeRule_day', {
   day: text().primaryKey(),
 })
 
-export const timeRuleOverrides = pgTable(
+export const timeRuleOverrideTable = pgTable(
   'TimeRuleOverride',
   {
     ...standardFields,
     parkingSpotId: uuid()
       .notNull()
-      .references(() => parkingSpots.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+      .references(() => parkingSpotTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
     startsAt: instant().notNull(),
     endsAt: instant().notNull(),
     isAvailable: boolean().notNull(),
@@ -112,9 +113,9 @@ export const timeRuleOverrides = pgTable(
   (table) => [index('TimeRuleOverride_parkingSpotId_idx').on(table.parkingSpotId)]
 )
 
-export const timeRuleOverridesRelations = relations(timeRuleOverrides, ({ one }) => ({
-  parkingSpot: one(parkingSpots, {
-    fields: [timeRuleOverrides.parkingSpotId],
-    references: [parkingSpots.id],
+export const timeRuleOverridesRelations = relations(timeRuleOverrideTable, ({ one }) => ({
+  parkingSpot: one(parkingSpotTable, {
+    fields: [timeRuleOverrideTable.parkingSpotId],
+    references: [parkingSpotTable.id],
   }),
 }))

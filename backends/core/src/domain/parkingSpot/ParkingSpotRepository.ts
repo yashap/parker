@@ -5,14 +5,15 @@ import { CreateParkingSpotRequest, ListParkingSpotsRequest, UpdateParkingSpotReq
 import { required } from '@parker/errors'
 import { GeoJsonPoint, Point, geoJsonToPoint } from '@parker/geography'
 import { QueryUtils } from '@parker/kysely-utils'
-import { eq } from 'drizzle-orm'
-import { ExpressionBuilder, Selectable, sql } from 'kysely'
+import { and, asc, desc, eq, gt, inArray, lt, or, sql } from 'drizzle-orm'
+import { PgColumn } from 'drizzle-orm/pg-core'
+import { ExpressionBuilder, Selectable, sql as kyselySql } from 'kysely'
 import { jsonArrayFrom } from 'kysely/helpers/postgres'
-import { isString, omit } from 'lodash'
+import { groupBy, isString, omit } from 'lodash'
 import { BaseRepository } from '../../db/BaseRepository'
 import { Db } from '../../db/Db'
 import { DB, ParkingSpot as ParkingSpotGeneratedDao } from '../../db/generated/db'
-import { parkingSpots, timeRuleOverrides, timeRules } from '../../db/schema'
+import { parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from '../../db/schema'
 import { TimeZoneLookup } from '../time/TimeZoneLookup'
 import { TimeRule, TimeRuleDao as LegacyTimeRuleDao, TimeRuleRepository } from '../timeRule'
 import {
@@ -50,50 +51,52 @@ export class ParkingSpotRepository extends BaseRepository {
   }
 
   public async create(payload: LegacyCreateParkingSpotInput): Promise<ParkingSpot> {
-    const { location, timeRules, timeRuleOverrides, ...rest } = payload
-    const parkingSpotId = await this.legacyWithTransaction(async () => {
-      const { id: parkingSpotId } = await this.legacyDb()
-        .insertInto('ParkingSpot')
+    const { timeRules: timeRulesInput, timeRuleOverrides: timeRuleOverridesInput, ...parkingSpotInput } = payload
+    return Db.runWithTransaction(async () => {
+      const result = await Db.db()
+        .insert(parkingSpotTable)
         .values({
-          ...rest,
-          location: QueryUtils.pointToSql(location),
-          timeZone: TimeZoneLookup.getTimeZoneForPoint(location),
-          ...QueryUtils.updatedAt(),
+          ...parkingSpotInput,
+          timeZone: TimeZoneLookup.getTimeZoneForPoint(parkingSpotInput.location),
         })
-        .returning(['id'])
-        .executeTakeFirstOrThrow()
-      if (timeRules.length > 0) {
-        await this.timeRuleRepository.create(parkingSpotId, timeRules)
+        .returning()
+      const parkingSpotId = required(result[0]).id
+      if (timeRulesInput.length > 0) {
+        await Db.db()
+          .insert(timeRuleTable)
+          .values(timeRulesInput.map((timeRule) => ({ ...timeRule, parkingSpotId })))
       }
-      if (timeRuleOverrides.length > 0) {
-        await this.timeRuleOverrideRepository.create(parkingSpotId, timeRuleOverrides)
+      if (timeRuleOverridesInput.length > 0) {
+        await Db.db()
+          .insert(timeRuleOverrideTable)
+          .values(timeRuleOverridesInput.map((timeRuleOverride) => ({ ...timeRuleOverride, parkingSpotId })))
       }
-      return parkingSpotId
+      return required(await this.getById(parkingSpotId))
     })
-    const parkingSpot = await this.getById(parkingSpotId)
-    return required(parkingSpot)
   }
 
+  // TODO: once I get Drizzle query mode working, switch to it here
   public async getById(id: string): Promise<ParkingSpot | undefined> {
-    const parkingSpotList = await Db.db().select().from(parkingSpots).where(eq(parkingSpots.id, id))
-    const parkingSpot = parkingSpotList[0]
+    const parkingSpots = await Db.db().select().from(parkingSpotTable).where(eq(parkingSpotTable.id, id))
+    const parkingSpot = parkingSpots[0]
     if (!parkingSpot) {
       return undefined
     }
-    const timeRuleList = await Db.db().select().from(timeRules).where(eq(timeRules.parkingSpotId, parkingSpot.id))
-    const timeRuleOverrideList = await Db.db()
+    const timeRules = await Db.db().select().from(timeRuleTable).where(eq(timeRuleTable.parkingSpotId, parkingSpot.id))
+    const timeRuleOverrides = await Db.db()
       .select()
-      .from(timeRuleOverrides)
-      .where(eq(timeRuleOverrides.parkingSpotId, parkingSpot.id))
+      .from(timeRuleOverrideTable)
+      .where(eq(timeRuleOverrideTable.parkingSpotId, parkingSpot.id))
     return {
       ...parkingSpot,
-      timeRules: timeRuleList.map((timeRule) => omit(timeRule, ['id', 'createdAt', 'updatedAt', 'parkingSpotId'])),
-      timeRuleOverrides: timeRuleOverrideList.map((timeRuleOverride) =>
+      timeRules: timeRules.map((timeRule) => omit(timeRule, ['id', 'createdAt', 'updatedAt', 'parkingSpotId'])),
+      timeRuleOverrides: timeRuleOverrides.map((timeRuleOverride) =>
         omit(timeRuleOverride, ['id', 'createdAt', 'updatedAt', 'parkingSpotId'])
       ),
     }
   }
 
+  // TODO: once I get Drizzle query mode working, switch to it here
   public async list(
     { ownerUserId }: LegacyListParkingSpotFilters,
     pagination?: ListParkingSpotPagination
@@ -102,33 +105,64 @@ export class ParkingSpotRepository extends BaseRepository {
       return []
     }
 
-    let query = this.legacyDb()
-      .selectFrom('ParkingSpot')
-      .select((eb) => this.buildFields(eb))
+    let query = Db.db().select().from(parkingSpotTable).$dynamic()
 
     if (ownerUserId) {
-      query = query.where('ownerUserId', '=', ownerUserId)
+      query = query.where(eq(parkingSpotTable.ownerUserId, ownerUserId))
     }
 
+    // TODO-lib-cursor: extract this "cursor to Drizzle" stuff into a lib
     if (pagination) {
-      query = query.orderBy(pagination.orderBy, pagination.orderDirection).limit(pagination.limit)
-    }
-
-    const cursor = pagination as ListParkingSpotCursor
-    if (cursor.lastOrderValueSeen) {
-      const inequality = cursor.orderDirection === OrderDirectionValues.desc ? '<' : '>'
-      query = query.where((eb) =>
-        eb.or([
-          // TODO: is this even correct?
-          // Should I be dealing with createdAt as not a number, but a Temporal.PlainTime?
-          eb('createdAt', inequality, new Date(cursor.lastOrderValueSeen)),
-          eb.and([eb('createdAt', '=', new Date(cursor.lastOrderValueSeen)), eb('id', inequality, cursor.lastIdSeen)]),
-        ])
+      const direction = pagination.orderDirection === OrderDirectionValues.asc ? asc : desc
+      const cursor = pagination as Partial<ListParkingSpotCursor>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const field = required(
+        (parkingSpotTable as unknown as Record<string, PgColumn>)[
+          cursor.orderBy ?? (pagination.orderBy as string | undefined) ?? 'createdAt'
+        ]
       )
+      query = query.orderBy(direction(field)).limit(pagination.limit)
+
+      if (cursor.lastOrderValueSeen && cursor.lastIdSeen) {
+        const inequality = cursor.orderDirection === OrderDirectionValues.desc ? lt : gt
+        const lastSeenIsString = isString(cursor.lastOrderValueSeen)
+        // TODO-lib-cursor: maybe it'd be better to pass a function that, depending on the field, converts the value to the correct type?
+        // e.g. "parseCursor" could take a function like this?
+        const lastSeenSql = lastSeenIsString
+          ? sql.raw(`'${cursor.lastOrderValueSeen}'`)
+          : sql.raw(cursor.lastOrderValueSeen)
+        query = query.where(
+          or(
+            and(eq(field, lastSeenSql), inequality(parkingSpotTable.id, cursor.lastIdSeen)),
+            inequality(field, lastSeenSql)
+          )
+        )
+      }
     }
 
-    const parkingSpotDaos = await query.execute()
-    return parkingSpotDaos.map((dao) => this.parkingSpotToDomain(dao))
+    const parkingSpots = await query.execute()
+    const parkingSpotIds = parkingSpots.map((parkingSpot) => parkingSpot.id)
+    const timeRules = await Db.db()
+      .select()
+      .from(timeRuleTable)
+      .where(inArray(timeRuleTable.parkingSpotId, parkingSpotIds))
+    const timeRulesByParkingSpotId = groupBy(timeRules, 'parkingSpotId')
+    const timeRuleOverrides = await Db.db()
+      .select()
+      .from(timeRuleOverrideTable)
+      .where(inArray(timeRuleOverrideTable.parkingSpotId, parkingSpotIds))
+    const timeRuleOverridesByParkingSpotId = groupBy(timeRuleOverrides, 'parkingSpotId')
+    return parkingSpots.map((parkingSpot) => ({
+      ...parkingSpot,
+      timeRules:
+        timeRulesByParkingSpotId[parkingSpot.id]?.map((timeRule) =>
+          omit(timeRule, ['id', 'createdAt', 'updatedAt', 'parkingSpotId'])
+        ) ?? [],
+      timeRuleOverrides:
+        timeRuleOverridesByParkingSpotId[parkingSpot.id]?.map((timeRuleOverride) =>
+          omit(timeRuleOverride, ['id', 'createdAt', 'updatedAt', 'parkingSpotId'])
+        ) ?? [],
+    }))
   }
 
   public async listParkingSpotsClosestToLocation(location: Point, limit: number): Promise<ParkingSpot[]> {
@@ -139,7 +173,7 @@ export class ParkingSpotRepository extends BaseRepository {
     const parkingSpotDaos = await this.legacyDb()
       .selectFrom('ParkingSpot')
       .select((eb) => this.buildFields(eb))
-      .orderBy(sql`"location" <-> ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)`, 'asc')
+      .orderBy(kyselySql`"location" <-> ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)`, 'asc')
       .limit(limit)
       .execute()
     return parkingSpotDaos.map((dao) => this.parkingSpotToDomain(dao))

@@ -1,13 +1,13 @@
-import { parkingSpotBookings, parkingSpots, timeRuleOverrides, timeRules } from './schema'
+import { parkingSpotBookingTable, parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from './schema'
 
-export type ParkingSpotDao = typeof parkingSpots.$inferSelect
-export type ParkingSpotInputDao = typeof parkingSpots.$inferInsert
+export type ParkingSpotDao = typeof parkingSpotTable.$inferSelect
+export type ParkingSpotInputDao = typeof parkingSpotTable.$inferInsert
 
-export type ParkingSpotBookingDao = typeof parkingSpotBookings.$inferSelect
-export type ParkingSpotBookingInputDao = typeof parkingSpotBookings.$inferInsert
+export type ParkingSpotBookingDao = typeof parkingSpotBookingTable.$inferSelect
+export type ParkingSpotBookingInputDao = typeof parkingSpotBookingTable.$inferInsert
 
-export type TimeRuleDao = typeof timeRules.$inferSelect
-export type TimeRuleInputDao = typeof timeRules.$inferInsert
+export type TimeRuleDao = typeof timeRuleTable.$inferSelect
+export type TimeRuleInputDao = typeof timeRuleTable.$inferInsert
 
-export type TimeRuleOverrideDao = typeof timeRuleOverrides.$inferSelect
-export type TimeRuleOverrideInputDao = typeof timeRuleOverrides.$inferInsert
+export type TimeRuleOverrideDao = typeof timeRuleOverrideTable.$inferSelect
+export type TimeRuleOverrideInputDao = typeof timeRuleOverrideTable.$inferInsert

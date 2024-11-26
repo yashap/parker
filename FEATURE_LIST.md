@@ -7,11 +7,11 @@ What am I planning to work on next?
 - Get Drizzle query types working properly
   - This bug?: https://github.com/drizzle-team/drizzle-orm/issues/2619
   - Maybe relevant: https://github.com/drizzle-team/drizzle-orm/issues/2504
-- Tests for new LIST parkingSpots endpoint
 - Cursor stuff
-  - Extract into a lib?
-  - Check out the `TODO: is this even correct` and `TODO: base64` bits
+  - Extract into a lib
+  - Check out the `TODO-lib-cursor` bits
   - Tests, and also api client "fetch all pages"
+- More complete tests for the LIST parkingSpots endpoint
 - Better create parking spot FE
   - With time rules and overrides, and properly viewing and editing your parking spot(s)
 - General landlord improvements
