@@ -148,14 +148,14 @@ export class ParkingSpotRepository {
       }
       if (!isEmpty(parkingSpotUpdate)) {
         await Db.db()
-        .update(parkingSpotTable)
-        .set({
-          ...parkingSpotUpdate,
-          ...(parkingSpotUpdate.location && {
-            timeZone: TimeZoneLookup.getTimeZoneForPoint(parkingSpotUpdate.location),
-          }),
-        })
-        .where(eq(parkingSpotTable.id, id))
+          .update(parkingSpotTable)
+          .set({
+            ...parkingSpotUpdate,
+            ...(parkingSpotUpdate.location && {
+              timeZone: TimeZoneLookup.getTimeZoneForPoint(parkingSpotUpdate.location),
+            }),
+          })
+          .where(eq(parkingSpotTable.id, id))
       }
       return required(await this.getById(id))
     })
@@ -174,11 +174,14 @@ export class ParkingSpotRepository {
       .select()
       .from(timeRuleTable)
       .where(inArray(timeRuleTable.parkingSpotId, parkingSpotIds))
+      // TODO: maybe better ordering? Like day of week ascending, then start time, then end time, then id as a tie breaker?
+      .orderBy(asc(timeRuleTable.createdAt), asc(timeRuleTable.id))
     const timeRulesByParkingSpotId = groupBy(timeRules, 'parkingSpotId')
     const timeRuleOverrides = await Db.db()
       .select()
       .from(timeRuleOverrideTable)
       .where(inArray(timeRuleOverrideTable.parkingSpotId, parkingSpotIds))
+      .orderBy(asc(timeRuleOverrideTable.startsAt), asc(timeRuleOverrideTable.endsAt), asc(timeRuleOverrideTable.id))
     const timeRuleOverridesByParkingSpotId = groupBy(timeRuleOverrides, 'parkingSpotId')
     return parkingSpots.map((parkingSpot) => ({
       ...parkingSpot,
