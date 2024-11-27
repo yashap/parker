@@ -1,5 +1,6 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { TimeRuleOverrideDto } from '@parker/core-client'
+import { formatInstantFields, parseInstantFields } from '@parker/time'
 
 export type TimeRuleOverride = Omit<TimeRuleOverrideDto, 'startsAt' | 'endsAt'> & {
   startsAt: Temporal.Instant
@@ -9,8 +10,7 @@ export type TimeRuleOverride = Omit<TimeRuleOverrideDto, 'startsAt' | 'endsAt'> 
 export const timeRuleOverrideFromDto = (timeRuleOverride: TimeRuleOverrideDto): TimeRuleOverride => {
   return {
     ...timeRuleOverride,
-    startsAt: Temporal.Instant.from(timeRuleOverride.startsAt),
-    endsAt: Temporal.Instant.from(timeRuleOverride.endsAt),
+    ...parseInstantFields(timeRuleOverride, ['startsAt', 'endsAt']),
   }
 }
 
@@ -20,7 +20,6 @@ export const timeRuleOverridesFromDto = (timeRuleOverrides: TimeRuleOverrideDto[
 export const timeRuleOverrideToDto = (timeRuleOverride: TimeRuleOverride): TimeRuleOverrideDto => {
   return {
     ...timeRuleOverride,
-    startsAt: timeRuleOverride.startsAt.toString(),
-    endsAt: timeRuleOverride.endsAt.toString(),
+    ...formatInstantFields(timeRuleOverride, ['startsAt', 'endsAt']),
   }
 }
