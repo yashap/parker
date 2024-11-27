@@ -3,9 +3,8 @@
 What am I planning to work on next?
 
 - Finish switch to Drizzle
-  - Migrate ParkingSpotBookingRepository
+  - Figure out why proper delete all in TestDbTeardown doesn't work
   - Switch to Drizzle migrations (confirming same schema)
-  - Delete everything Kysely related
 - Get Drizzle query types working properly
   - This bug?: https://github.com/drizzle-team/drizzle-orm/issues/2619
   - Maybe relevant: https://github.com/drizzle-team/drizzle-orm/issues/2504

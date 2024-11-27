@@ -13,7 +13,6 @@
     "Insertable",
     "isready",
     "Keycloak",
-    "kysely",
     "Logform",
     "nativewind",
     "nestjs",
