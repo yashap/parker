@@ -17,11 +17,11 @@ describe(addTemporalEqualityTesters.name, () => {
   })
 
   it('allows you to properly compare two temporal zoned date times', () => {
-    expect(Temporal.ZonedDateTime.from('2021-01-01T00:00:00Z[UTC]')).toEqual(
-      Temporal.ZonedDateTime.from('2021-01-01T00:00:00Z[UTC]')
+    expect(Temporal.ZonedDateTime.from('2021-01-01T00:00:00+02:00[Africa/Cairo]')).toEqual(
+      Temporal.ZonedDateTime.from('2021-01-01T00:00:00+02:00[Africa/Cairo]')
     )
-    expect(Temporal.ZonedDateTime.from('2021-01-01T00:00:00Z[UTC]')).not.toEqual(
-      Temporal.ZonedDateTime.from('2021-01-01T00:00:01Z[UTC]')
+    expect(Temporal.ZonedDateTime.from('2021-01-01T00:00:00+02:00[Africa/Cairo]')).not.toEqual(
+      Temporal.ZonedDateTime.from('2021-01-01T00:00:01+02:00[Africa/Cairo]')
     )
   })
 
@@ -57,10 +57,14 @@ describe(addTemporalEqualityTesters.name, () => {
   it('has no impact unless both objects are of the same Temporal type', () => {
     expect(Temporal.Instant.from('2021-01-01T00:00:00Z')).not.toEqual(Temporal.PlainTime.from('00:00:00'))
     expect(Temporal.Instant.from('2021-01-01T00:00:00Z')).not.toEqual(10)
-    expect(Temporal.PlainTime.from('00:00:00')).not.toEqual(Temporal.ZonedDateTime.from('2021-01-01T00:00:00Z[UTC]'))
+    expect(Temporal.PlainTime.from('00:00:00')).not.toEqual(
+      Temporal.ZonedDateTime.from('2021-01-01T00:00:00+02:00[Africa/Cairo]')
+    )
     expect(Temporal.PlainTime.from('00:00:00')).not.toEqual(10)
-    expect(Temporal.ZonedDateTime.from('2021-01-01T00:00:00Z[UTC]')).not.toEqual(Temporal.PlainDate.from('2021-01-01'))
-    expect(Temporal.ZonedDateTime.from('2021-01-01T00:00:00Z[UTC]')).not.toEqual(10)
+    expect(Temporal.ZonedDateTime.from('2021-01-01T00:00:00+02:00[Africa/Cairo]')).not.toEqual(
+      Temporal.PlainDate.from('2021-01-01')
+    )
+    expect(Temporal.ZonedDateTime.from('2021-01-01T00:00:00+02:00[Africa/Cairo]')).not.toEqual(10)
     expect(Temporal.PlainDate.from('2021-01-01')).not.toEqual(Temporal.PlainDateTime.from('2021-01-01T00:00:00'))
     expect(Temporal.PlainDate.from('2021-01-01')).not.toEqual(10)
     expect(Temporal.PlainDateTime.from('2021-01-01T00:00:00')).not.toEqual(Temporal.Duration.from('PT1S'))
