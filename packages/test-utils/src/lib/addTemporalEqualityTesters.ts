@@ -1,4 +1,3 @@
-import { expect as expectGlobal } from '@jest/globals'
 import { Temporal } from '@js-temporal/polyfill'
 
 const areInstantsEqual = (a: unknown, b: unknown): boolean | undefined => {
@@ -106,6 +105,10 @@ const areDurationsEqual = (a: unknown, b: unknown): boolean | undefined => {
 }
 
 export const addTemporalEqualityTesters = () => {
+  // eslint-disable-next-line
+  const expectGlobal = require('@jest/globals').expect as {
+    addEqualityTesters(testers: unknown[]): void
+  }
   expectGlobal.addEqualityTesters([
     areInstantsEqual,
     arePlainTimesEqual,

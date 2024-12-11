@@ -1,4 +1,3 @@
-// import { expect as expectGlobal } from '@jest/globals'
 import { Temporal } from '@js-temporal/polyfill'
 import { User, users, TestDb, reminders, Reminder } from '../test/TestDb'
 import { instant } from './instant'
