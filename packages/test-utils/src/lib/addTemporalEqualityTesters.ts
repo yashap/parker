@@ -107,7 +107,7 @@ const areDurationsEqual = (a: unknown, b: unknown): boolean | undefined => {
 export const addTemporalEqualityTesters = () => {
   // eslint-disable-next-line
   const expectGlobal = require('@jest/globals').expect as {
-    addEqualityTesters(testers: unknown[]): void
+    addEqualityTesters(testers: ((a: unknown, b: unknown) => boolean | undefined)[]): void
   }
   expectGlobal.addEqualityTesters([
     areInstantsEqual,
