@@ -13,3 +13,4 @@ filename="fixtures-$pg_db-$RANDOM.sql"
 
 docker cp ./fixtures.sql "$pg_container_name:/tmp/$filename"
 docker exec -t "$pg_container_name" /bin/bash -c "PAGER='' psql ""$db_url"" -f /tmp/$filename"
+docker exec -t "$pg_container_name" /bin/bash -c "rm /tmp/$filename"

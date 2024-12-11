@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "db:init": "../../tools/scripts/ensure_postgres_db.sh -d supertokens && ../../tools/scripts/ensure_postgres_user.sh -u supertokens -w supertokens_password -d supertokens",
-    "db:migrate-up": "yarn db:init",
     "db:dump-fixtures": "../../tools/scripts/dump_fixtures.sh supertokens",
+    "db:migrate-up": "yarn db:up",
+    "db:up": "../../tools/scripts/ensure_postgres_db.sh -d supertokens && ../../tools/scripts/ensure_postgres_user.sh -u supertokens -w supertokens_password -d supertokens",
+    "db:restore-fixtures": "../../tools/scripts/restore_fixtures.sh supertokens",
     "serve": "docker rm -f supertokens && docker run --name supertokens -e POSTGRESQL_USER=\"supertokens\" -e POSTGRESQL_PASSWORD=\"supertokens_password\" -e POSTGRESQL_HOST=\"host.docker.internal\" -e POSTGRESQL_PORT=\"5440\" -e LOG_LEVEL=\"${LOG_LEVEL:-WARN}\" -p 3567:3567 --rm registry.supertokens.io/supertokens/supertokens-postgresql:9.2"
   }
 }

@@ -200,10 +200,10 @@ ALTER TABLE ONLY "public"."migrations" ALTER COLUMN "id" SET DEFAULT "nextval"('
 -- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (1, '/20230825195436-initial-migration', '2024-12-11 00:11:38.327');
-INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (2, '/20240128005238-add-bookings-table', '2024-12-11 00:11:38.35');
-INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (3, '/20240902192913-add-parking-spot-time-zone', '2024-12-11 00:11:38.355');
-INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (4, '/20240907175122-add-time-rule-override copy', '2024-12-11 00:11:38.36');
+INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (1, '/20230825195436-initial-migration', '2024-12-11 09:53:14.371');
+INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (2, '/20240128005238-add-bookings-table', '2024-12-11 09:53:14.397');
+INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (3, '/20240902192913-add-parking-spot-time-zone', '2024-12-11 09:53:14.402');
+INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (4, '/20240907175122-add-time-rule-override copy', '2024-12-11 09:53:14.407');
 
 
 --

@@ -9,6 +9,9 @@ What am I planning to work on next?
 - Get Drizzle query types working properly
   - This bug?: https://github.com/drizzle-team/drizzle-orm/issues/2619
   - Maybe relevant: https://github.com/drizzle-team/drizzle-orm/issues/2504
+- Finish "restore DB" script
+  - Make it so that the DB is wiped before restoring, and migrated after
+  - Verify that restoring works properly
 - Cursor stuff
   - Extract into a lib
   - Check out the `TODO-lib-cursor` bits
