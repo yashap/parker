@@ -9,5 +9,7 @@ pg_host=localhost
 pg_port=5432
 pg_db="$1"
 db_url="postgres://$pg_user:$pg_password@$pg_host:$pg_port/$pg_db?sslmode=disable"
+filename="fixtures-$pg_db-$RANDOM.sql"
 
-docker exec -t "$pg_container_name" /bin/bash -c "pg_dump --column-inserts --inserts --quote-all-identifiers --no-owner --disable-dollar-quoting ""$db_url""" >fixtures.sql
+docker cp ./fixtures.sql "$pg_container_name:/tmp/$filename"
+docker exec -t "$pg_container_name" /bin/bash -c "PAGER='' psql ""$db_url"" -f /tmp/$filename"

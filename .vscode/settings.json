@@ -24,6 +24,7 @@
     "pkey",
     "postgis",
     "Pressable",
+    "psql",
     "signin",
     "Signup",
     "Slurper",
