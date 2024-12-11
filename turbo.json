@@ -15,6 +15,9 @@
     "db:migrate-up:test": {
       "cache": false
     },
+    "db:dump-fixtures": {
+      "cache": false
+    },
     "format": {
       "outputs": []
     },
