@@ -6,7 +6,8 @@ set -eo pipefail
 . "$(git rev-parse --show-toplevel)/tools/scripts/db_utils.sh"
 
 pg_db="$1"
-db_url=$(get_dev_admin_db_url "$pg_db")
+admin_db_url=$(get_dev_admin_db_url "$pg_db")
+db_url="${2:-$admin_db_url}"
 pg_container_name=parker_postgres_dev
 filename="fixtures-$pg_db-$RANDOM.sql"
 

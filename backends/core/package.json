@@ -14,7 +14,7 @@
     "db:generate-migration": "yarn db:up && ../../tools/scripts/generate_db_migration.sh",
     "db:migrate-up": "yarn db:up && DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:5440/core?schema=public' yarn drizzle-kit migrate",
     "db:migrate-up:test": "yarn db:up:test && DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:5441/core?schema=public' yarn drizzle-kit migrate",
-    "db:restore-fixtures": "yarn db:clean && yarn db:up && ../../tools/scripts/restore_fixtures.sh core",
+    "db:restore-fixtures": "yarn db:clean && yarn db:up && ../../tools/scripts/restore_fixtures.sh core && yarn db:migrate-up",
     "db:up": "../../tools/scripts/ensure_postgres_db.sh -d core && ../../tools/scripts/ensure_postgres_user.sh -u core -w core_password -d core",
     "db:up:test": "../../tools/scripts/ensure_postgres_db.sh -d core -c parker_postgres_test && ../../tools/scripts/ensure_postgres_user.sh -u core -w core_password -d core -c parker_postgres_test",
     "serve": "nest start --watch",
