@@ -3,7 +3,6 @@
 What am I planning to work on next?
 
 - Finish switch to Drizzle
-  - Figure out why proper delete all in TestDbTeardown doesn't work
   - Maybe make DB types my "domain" types within core service?
 - Get Drizzle query types working properly
   - This bug?: https://github.com/drizzle-team/drizzle-orm/issues/2619
