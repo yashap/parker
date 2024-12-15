@@ -24,7 +24,7 @@ Install the following:
 - [cmake](https://cmake.org/)
   - On a Mac, `brew install cmake`
 
-After this, you can try running `yarn build-migrate && yarn generate && yarn format && yarn lint && yarn test && yarn db:restore-fixtures` to ensure everything works, before proceeding to `Dev Workflows` (below).
+After this, you can try running `yarn build-migrate && yarn format && yarn lint && yarn test && yarn db:restore-fixtures` to ensure everything works, before proceeding to `Dev Workflows` (below).
 
 ## Dev Workflows
 
@@ -59,10 +59,11 @@ yarn email
 
 # Before you push to GitHub (no CI setup yet, so do this manually!)
 yarn format && yarn test
-
-# Run code generation (after changing DB schema, etc.)
-yarn generate
 ```
+
+### Migrations
+
+See the `README.md` for each backend service for instructions about migrations.
 
 ### Email
 

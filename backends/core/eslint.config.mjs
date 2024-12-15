@@ -3,6 +3,6 @@ import baseConfig from '@parker/eslint-config/default.config.mjs'
 export default [
   ...baseConfig,
   {
-    ignores: ['src/migrations/*', 'drizzle.config.ts'],
+    ignores: ['drizzle.config.ts'],
   },
 ]

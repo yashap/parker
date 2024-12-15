@@ -1,7 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { integer, serial, pgTable, text } from 'drizzle-orm/pg-core'
-import { Pool } from 'pg'
 import { instant } from '../lib/instant'
 import { plainTime } from '../lib/plainTime'
 import { point } from '../lib/point'
@@ -63,59 +61,3 @@ export const remindersRelations = relations(reminders, ({ one }) => ({
     references: [users.id],
   }),
 }))
-
-const schema = {
-  users,
-  usersRelations,
-  posts,
-  postsRelations,
-  favouriteLocations,
-  favouriteLocationsRelations,
-  reminders,
-  remindersRelations,
-}
-
-export type TestDbSchema = typeof schema
-
-export type User = typeof users.$inferSelect
-export type UserInput = typeof users.$inferInsert
-
-export type Post = typeof posts.$inferSelect
-export type PostInput = typeof posts.$inferInsert
-
-export type FavouriteLocation = typeof favouriteLocations.$inferSelect
-export type FavouriteLocationInput = typeof favouriteLocations.$inferInsert
-
-export type Reminder = typeof reminders.$inferSelect
-export type ReminderInput = typeof reminders.$inferInsert
-
-export class TestDb {
-  private static dbSingleton: NodePgDatabase<TestDbSchema> | undefined = undefined
-
-  public static async init() {
-    const dbUrl = process.env['DATABASE_URL']
-    if (!dbUrl) {
-      throw new Error('DATABASE_URL is not set')
-    }
-    this.dbSingleton = drizzle(
-      new Pool({
-        connectionString: dbUrl,
-      }),
-      {
-        schema,
-      }
-    )
-  }
-
-  public static db(): NodePgDatabase<TestDbSchema> {
-    const db = this.dbSingleton
-    if (!db) {
-      throw new Error('TestDB not initialized (must call init before using)')
-    }
-    return db
-  }
-
-  public static async clear(): Promise<void> {
-    await this.db().delete(users)
-  }
-}

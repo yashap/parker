@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1734222488627,
+      "tag": "0000_create_extensions",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1734222502350,
+      "tag": "0001_create_initial_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1734222584406,
+      "tag": "0002_add_values_to_value_tables",
+      "breakpoints": true
+    }
+  ]
+}

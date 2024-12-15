@@ -1,0 +1,429 @@
+{
+  "id": "43621f32-5e48-4734-8d99-2f299f2a4154",
+  "prevId": "c42c654d-22e5-4bdb-91a0-9ce2723eba37",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.values_ParkingSpotBooking_status": {
+      "name": "values_ParkingSpotBooking_status",
+      "schema": "",
+      "columns": {
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.values_TimeRule_day": {
+      "name": "values_TimeRule_day",
+      "schema": "",
+      "columns": {
+        "day": {
+          "name": "day",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ParkingSpotBooking": {
+      "name": "ParkingSpotBooking",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "'uuid_generate_v1()'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parkingSpotId": {
+          "name": "parkingSpotId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bookedByUserId": {
+          "name": "bookedByUserId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bookingStartsAt": {
+          "name": "bookingStartsAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bookingEndsAt": {
+          "name": "bookingEndsAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "ParkingSpotBooking_bookedByUserId_idx": {
+          "name": "ParkingSpotBooking_bookedByUserId_idx",
+          "columns": [
+            {
+              "expression": "bookedByUserId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ParkingSpotBooking_parkingSpotId_idx": {
+          "name": "ParkingSpotBooking_parkingSpotId_idx",
+          "columns": [
+            {
+              "expression": "parkingSpotId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "ParkingSpotBooking_parkingSpotId_ParkingSpot_id_fk": {
+          "name": "ParkingSpotBooking_parkingSpotId_ParkingSpot_id_fk",
+          "tableFrom": "ParkingSpotBooking",
+          "columnsFrom": ["parkingSpotId"],
+          "tableTo": "ParkingSpot",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        },
+        "ParkingSpotBooking_status_values_ParkingSpotBooking_status_status_fk": {
+          "name": "ParkingSpotBooking_status_values_ParkingSpotBooking_status_status_fk",
+          "tableFrom": "ParkingSpotBooking",
+          "columnsFrom": ["status"],
+          "tableTo": "values_ParkingSpotBooking_status",
+          "columnsTo": ["status"],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ParkingSpot": {
+      "name": "ParkingSpot",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "'uuid_generate_v1()'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ownerUserId": {
+          "name": "ownerUserId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location": {
+          "name": "location",
+          "type": "GEOMETRY(POINT,4326)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timeZone": {
+          "name": "timeZone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "ParkingSpot_ownerUserId_idx": {
+          "name": "ParkingSpot_ownerUserId_idx",
+          "columns": [
+            {
+              "expression": "ownerUserId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ParkingSpot_location_idx": {
+          "name": "ParkingSpot_location_idx",
+          "columns": [
+            {
+              "expression": "location",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "gist",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.TimeRuleOverride": {
+      "name": "TimeRuleOverride",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "'uuid_generate_v1()'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parkingSpotId": {
+          "name": "parkingSpotId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "startsAt": {
+          "name": "startsAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endsAt": {
+          "name": "endsAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isAvailable": {
+          "name": "isAvailable",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "TimeRuleOverride_parkingSpotId_idx": {
+          "name": "TimeRuleOverride_parkingSpotId_idx",
+          "columns": [
+            {
+              "expression": "parkingSpotId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "TimeRuleOverride_parkingSpotId_ParkingSpot_id_fk": {
+          "name": "TimeRuleOverride_parkingSpotId_ParkingSpot_id_fk",
+          "tableFrom": "TimeRuleOverride",
+          "columnsFrom": ["parkingSpotId"],
+          "tableTo": "ParkingSpot",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.TimeRule": {
+      "name": "TimeRule",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "'uuid_generate_v1()'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parkingSpotId": {
+          "name": "parkingSpotId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "day": {
+          "name": "day",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "startTime": {
+          "name": "startTime",
+          "type": "TIME WITHOUT TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endTime": {
+          "name": "endTime",
+          "type": "TIME WITHOUT TIME ZONE",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "TimeRule_parkingSpotId_idx": {
+          "name": "TimeRule_parkingSpotId_idx",
+          "columns": [
+            {
+              "expression": "parkingSpotId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "TimeRule_parkingSpotId_ParkingSpot_id_fk": {
+          "name": "TimeRule_parkingSpotId_ParkingSpot_id_fk",
+          "tableFrom": "TimeRule",
+          "columnsFrom": ["parkingSpotId"],
+          "tableTo": "ParkingSpot",
+          "columnsTo": ["id"],
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
+        },
+        "TimeRule_day_values_TimeRule_day_day_fk": {
+          "name": "TimeRule_day_values_TimeRule_day_day_fk",
+          "tableFrom": "TimeRule",
+          "columnsFrom": ["day"],
+          "tableTo": "values_TimeRule_day",
+          "columnsTo": ["day"],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "views": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

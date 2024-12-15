@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
+
+# shellcheck disable=SC1091
+. "$(git rev-parse --show-toplevel)/tools/scripts/db_utils.sh"
 
 PG_HOST=localhost
 PG_PORT_CONTAINER=5432
@@ -37,16 +40,12 @@ while getopts ":u:w:d:a:c:" arg; do
 done
 
 require_arg d PG_DB 'database'
-
-run_sql() {
-    local db_url="postgres://$PG_USER:$PG_PASSWORD@$PG_HOST:$PG_PORT_CONTAINER/$PG_ADMIN_DB?sslmode=disable"
-    docker exec -t "$PG_CONTAINER_NAME" /bin/bash -c "psql $db_url -c \"$*\""
-}
+PG_DB_URL="postgres://$PG_USER:$PG_PASSWORD@$PG_HOST:$PG_PORT_CONTAINER/$PG_ADMIN_DB?sslmode=disable"
 
 # Create the database if it doesn't exist
-if ! run_sql "SELECT datname FROM pg_database WHERE datname = '$PG_DB'" | grep "$PG_DB" >/dev/null; then
+if ! run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" "SELECT datname FROM pg_database WHERE datname = '$PG_DB'" | grep "$PG_DB" >/dev/null; then
     echo "Database $PG_DB does not exist, creating it"
-    run_sql "CREATE DATABASE $PG_DB"
+    run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" "CREATE DATABASE $PG_DB"
 else
     echo "Database $PG_DB already exists, skipping creation"
 fi

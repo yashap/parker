@@ -4,6 +4,7 @@
     "corepack",
     "Daos",
     "datetime",
+    "datname",
     "Dtos",
     "emailpassword",
     "Favourite",
@@ -37,6 +38,7 @@
     "turborepo",
     "typeof",
     "unmocked",
+    "usename",
     "varchar"
   ],
   "editor.tabSize": 2,

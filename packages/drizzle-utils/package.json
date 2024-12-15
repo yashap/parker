@@ -7,7 +7,11 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
-    "db:migrate-up:test": "../../tools/scripts/ensure_postgres_db.sh -d drizzle_utils -c parker_postgres_test",
+    "db:clean:test": "yarn db:up:test && ../../tools/scripts/drop_db.sh drizzle_utils parker_postgres_test",
+    "db:generate-custom-migration": "../../tools/scripts/generate_custom_db_migration.sh",
+    "db:generate-migration": "yarn db:up:test && ../../tools/scripts/generate_db_migration.sh",
+    "db:migrate-up:test": "yarn db:up:test && yarn drizzle-kit migrate",
+    "db:up:test": "../../tools/scripts/ensure_postgres_db.sh -d drizzle_utils -c parker_postgres_test",
     "format": "eslint \"src/**\" --fix",
     "lint": "tsc --noEmit && eslint \"src/**\"",
     "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand src/",
@@ -17,7 +21,7 @@
     "@js-temporal/polyfill": "^0.4.4",
     "@parker/context-propagation": "*",
     "@parker/geography": "*",
-    "drizzle-orm": "^0.36.1",
+    "drizzle-orm": "^0.38.1",
     "tslib": "^2.7.0"
   },
   "devDependencies": {
@@ -27,6 +31,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.0",
     "@types/pg": "^8.11.10",
+    "drizzle-kit": "^0.30.0",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "pg": "^8.13.1",

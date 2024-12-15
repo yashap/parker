@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
+
+# shellcheck disable=SC1091
+. "$(git rev-parse --show-toplevel)/tools/scripts/db_utils.sh"
 
 PG_HOST=localhost
 PG_PORT_CONTAINER=5432
@@ -39,20 +42,16 @@ while getopts ":a:o:u:w:d:c:" arg; do
 done
 
 require_arg d PG_DB 'database'
-
-run_sql() {
-    local db_url="postgres://$PG_ADMIN_USER:$PG_ADMIN_PASSWORD@$PG_HOST:$PG_PORT_CONTAINER/$PG_DB?sslmode=disable"
-    docker exec -t "$PG_CONTAINER_NAME" /bin/bash -c "psql $db_url -c \"$*\""
-}
+PG_DB_URL="postgres://$PG_ADMIN_USER:$PG_ADMIN_PASSWORD@$PG_HOST:$PG_PORT_CONTAINER/$PG_DB?sslmode=disable"
 
 # Create the user (with full access to the database), if they don't exist
-if ! run_sql "SELECT usename FROM pg_catalog.pg_user WHERE usename = '$PG_NEW_USER'" | grep "$PG_NEW_USER" >/dev/null; then
+if ! run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" "SELECT usename FROM pg_catalog.pg_user WHERE usename = '$PG_NEW_USER'" | grep "$PG_NEW_USER" >/dev/null; then
     echo "User $PG_NEW_USER does not exist, creating it"
-    run_sql "CREATE USER $PG_NEW_USER WITH PASSWORD '$PG_NEW_PASSWORD'"
-    run_sql "GRANT ALL ON DATABASE $PG_DB TO $PG_NEW_USER WITH GRANT OPTION"
-    run_sql "GRANT ALL ON SCHEMA public TO $PG_NEW_USER"
-    run_sql "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $PG_NEW_USER WITH GRANT OPTION"
-    run_sql "ALTER DEFAULT PRIVILEGES IN SCHEMA PUBLIC GRANT ALL ON TABLES TO $PG_NEW_USER WITH GRANT OPTION"
+    run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" "CREATE USER $PG_NEW_USER WITH PASSWORD '$PG_NEW_PASSWORD'"
+    run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" "GRANT ALL ON DATABASE $PG_DB TO $PG_NEW_USER WITH GRANT OPTION"
+    run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" "GRANT ALL ON SCHEMA public TO $PG_NEW_USER"
+    run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $PG_NEW_USER WITH GRANT OPTION"
+    run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" "ALTER DEFAULT PRIVILEGES IN SCHEMA PUBLIC GRANT ALL ON TABLES TO $PG_NEW_USER WITH GRANT OPTION"
 else
     echo "User $PG_NEW_USER already exists, skipping creation"
 fi

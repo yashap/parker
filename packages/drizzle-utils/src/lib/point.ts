@@ -7,7 +7,7 @@ export const point = customType<{
   driverData: string
 }>({
   dataType() {
-    return 'GEOMETRY(POINT)'
+    return 'GEOMETRY(POINT,4326)'
   },
 
   fromDriver(value: string): Point {
@@ -22,5 +22,7 @@ export const point = customType<{
       throw new Error(`Latitude ${value.longitude} is out of range, must be between -90 and 90`)
     }
     return `POINT(${value.longitude} ${value.latitude})`
+    // return `ST_GeomFromText('POINT(${value.longitude} ${value.latitude})', 4326))`
+    // return `ST_SetSRID(ST_MakePoint(${value.longitude}, ${value.latitude}), 4326)`
   },
 })

@@ -1,13 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -eo pipefail
 
-pg_user=dev_admin
-pg_password=dev_admin_password
-pg_container_name=parker_postgres_dev
-pg_host=localhost
-pg_port=5432
-pg_db="$1"
-db_url="postgres://$pg_user:$pg_password@$pg_host:$pg_port/$pg_db?sslmode=disable"
+# shellcheck disable=SC1091
+. "$(git rev-parse --show-toplevel)/tools/scripts/db_utils.sh"
 
-docker exec -t "$pg_container_name" /bin/bash -c "pg_dump --column-inserts --inserts --quote-all-identifiers --no-owner --disable-dollar-quoting ""$db_url""" >fixtures.sql
+db_url=$(get_dev_admin_db_url "$1")
+container_name=parker_postgres_dev
+
+docker exec -t "$container_name" /bin/bash -c "pg_dump --column-inserts --inserts --quote-all-identifiers --no-owner --disable-dollar-quoting ""$db_url""" >fixtures.sql
