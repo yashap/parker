@@ -1,12 +1,13 @@
 import { Point } from '@parker/geography'
-import { User, users, TestDb, favouriteLocations, FavouriteLocation } from '../test/TestDb'
+import { User, TestDb, FavouriteLocation } from '../test/TestDb'
+import { favouriteLocationTable, userTable } from '../test/testSchema'
 import { instant } from './instant'
 
 describe(instant.name, () => {
   let user: User
 
   const createUser = async (name: string): Promise<User> => {
-    const result = await TestDb.db().insert(users).values({ name }).returning()
+    const result = await TestDb.db().insert(userTable).values({ name }).returning()
     expect(result).toHaveLength(1)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return result[0]!
@@ -18,7 +19,7 @@ describe(instant.name, () => {
     author: User = user
   ): Promise<FavouriteLocation> => {
     const result = await TestDb.db()
-      .insert(favouriteLocations)
+      .insert(favouriteLocationTable)
       .values({ userId: author.id, name, location })
       .returning()
     expect(result).toHaveLength(1)
@@ -27,7 +28,7 @@ describe(instant.name, () => {
   }
 
   const getAllFavouriteLocations = (): Promise<FavouriteLocation[]> => {
-    return TestDb.db().query.favouriteLocations.findMany({
+    return TestDb.db().query.favouriteLocationTable.findMany({
       orderBy: (favouriteLocations, { asc }) => [asc(favouriteLocations.name)],
     })
   }
@@ -44,12 +45,16 @@ describe(instant.name, () => {
     expect(allLocations).toStrictEqual([
       {
         id: firstLocation.id,
+        createdAt: firstLocation.createdAt,
+        updatedAt: firstLocation.updatedAt,
         userId: user.id,
         name: 'Gym',
         location: { longitude: 4.56, latitude: 1.23 },
       },
       {
         id: secondLocation.id,
+        createdAt: secondLocation.createdAt,
+        updatedAt: secondLocation.updatedAt,
         userId: user.id,
         name: 'Home',
         location: { longitude: -5.67, latitude: 2.34 },
@@ -65,12 +70,16 @@ describe(instant.name, () => {
     expect(allLocations).toStrictEqual([
       {
         id: firstLocation.id,
+        createdAt: firstLocation.createdAt,
+        updatedAt: firstLocation.updatedAt,
         userId: user.id,
         name: 'Gym',
         location: { longitude: 180, latitude: 1.23 },
       },
       {
         id: secondLocation.id,
+        createdAt: secondLocation.createdAt,
+        updatedAt: secondLocation.updatedAt,
         userId: user.id,
         name: 'Home',
         location: { longitude: -180, latitude: 2.34 },
@@ -86,12 +95,16 @@ describe(instant.name, () => {
     expect(allLocations).toStrictEqual([
       {
         id: firstLocation.id,
+        createdAt: firstLocation.createdAt,
+        updatedAt: firstLocation.updatedAt,
         userId: user.id,
         name: 'Gym',
         location: { longitude: 4.56, latitude: 90 },
       },
       {
         id: secondLocation.id,
+        createdAt: secondLocation.createdAt,
+        updatedAt: secondLocation.updatedAt,
         userId: user.id,
         name: 'Home',
         location: { longitude: -5.67, latitude: -90 },

@@ -1,26 +1,34 @@
 CREATE TABLE "FavouriteLocation" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"userId" integer NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"createdAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updatedAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"userId" uuid NOT NULL,
 	"name" text NOT NULL,
 	"location" GEOMETRY(POINT,4326) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "Post" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"authorId" integer NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"createdAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updatedAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"authorId" uuid NOT NULL,
 	"message" text NOT NULL,
 	"sentAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "Reminder" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"userId" integer NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"createdAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updatedAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"userId" uuid NOT NULL,
 	"description" text NOT NULL,
 	"time" TIME WITHOUT TIME ZONE NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "User" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"createdAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updatedAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"name" text NOT NULL
 );
 --> statement-breakpoint

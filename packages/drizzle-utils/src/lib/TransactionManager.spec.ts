@@ -1,5 +1,6 @@
 import { PgQueryResultHKT, PgTransaction } from 'drizzle-orm/pg-core'
-import { User, users, TestDb, TestDbSchema } from '../test/TestDb'
+import { User, TestDb, TestDbSchema } from '../test/TestDb'
+import { userTable } from '../test/testSchema'
 import { ActiveTransactionContext } from './ActiveTransactionContext'
 import { TransactionManager } from './TransactionManager'
 
@@ -11,14 +12,14 @@ describe(TransactionManager.name, () => {
   })
 
   const createUser = async (name: string): Promise<User> => {
-    const result = await transactionManager.getConnection().insert(users).values({ name }).returning()
+    const result = await transactionManager.getConnection().insert(userTable).values({ name }).returning()
     expect(result).toHaveLength(1)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return result[0]!
   }
 
   const getAllUsers = (): Promise<User[]> => {
-    return transactionManager.getConnection().query.users.findMany({
+    return transactionManager.getConnection().query.userTable.findMany({
       orderBy: (users, { asc }) => [asc(users.name)],
     })
   }

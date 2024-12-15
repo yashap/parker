@@ -1,26 +1,27 @@
 import { Temporal } from '@js-temporal/polyfill'
-import { User, users, TestDb, Post, posts } from '../test/TestDb'
+import { User, TestDb, Post } from '../test/TestDb'
+import { postTable, userTable } from '../test/testSchema'
 import { instant } from './instant'
 
 describe(instant.name, () => {
   let user: User
 
   const createUser = async (name: string): Promise<User> => {
-    const result = await TestDb.db().insert(users).values({ name }).returning()
+    const result = await TestDb.db().insert(userTable).values({ name }).returning()
     expect(result).toHaveLength(1)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return result[0]!
   }
 
   const createPost = async (sentAt: Temporal.Instant, message = 'Test Message', author: User = user): Promise<Post> => {
-    const result = await TestDb.db().insert(posts).values({ authorId: author.id, message, sentAt }).returning()
+    const result = await TestDb.db().insert(postTable).values({ authorId: author.id, message, sentAt }).returning()
     expect(result).toHaveLength(1)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return result[0]!
   }
 
   const getAllPosts = (): Promise<Post[]> => {
-    return TestDb.db().query.posts.findMany({
+    return TestDb.db().query.postTable.findMany({
       orderBy: (posts, { asc }) => [asc(posts.sentAt)],
     })
   }
@@ -37,12 +38,16 @@ describe(instant.name, () => {
     expect(allPosts).toStrictEqual([
       {
         id: firstPost.id,
+        createdAt: firstPost.createdAt,
+        updatedAt: firstPost.updatedAt,
         authorId: user.id,
         message: 'First Post',
         sentAt: Temporal.Instant.from('2021-01-01T13:14:15.123Z'),
       },
       {
         id: secondPost.id,
+        createdAt: secondPost.createdAt,
+        updatedAt: secondPost.updatedAt,
         authorId: user.id,
         message: 'Second Post',
         sentAt: Temporal.Instant.from('2021-03-06T07:05:39.321Z'),
@@ -58,12 +63,16 @@ describe(instant.name, () => {
     expect(allPosts).toStrictEqual([
       {
         id: firstPost.id,
+        createdAt: firstPost.createdAt,
+        updatedAt: firstPost.updatedAt,
         authorId: user.id,
         message: 'First Post',
         sentAt: Temporal.Instant.from('2021-01-01T16:14:15.123Z'),
       },
       {
         id: secondPost.id,
+        createdAt: secondPost.createdAt,
+        updatedAt: secondPost.updatedAt,
         authorId: user.id,
         message: 'Second Post',
         sentAt: Temporal.Instant.from('2021-03-06T10:05:39.321Z'),

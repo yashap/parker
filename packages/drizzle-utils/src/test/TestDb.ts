@@ -1,93 +1,20 @@
-import { relations } from 'drizzle-orm'
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { integer, serial, pgTable, text } from 'drizzle-orm/pg-core'
 import { Pool } from 'pg'
-import { instant } from '../lib/instant'
-import { plainTime } from '../lib/plainTime'
-import { point } from '../lib/point'
-
-export const users = pgTable('User', {
-  id: serial().primaryKey(),
-  name: text().notNull(),
-})
-
-export const usersRelations = relations(users, ({ many }) => ({
-  posts: many(posts),
-  favouriteLocations: many(favouriteLocations),
-}))
-
-export const posts = pgTable('Post', {
-  id: serial().primaryKey(),
-  authorId: integer()
-    .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' })
-    .notNull(),
-  message: text().notNull(),
-  sentAt: instant().notNull(),
-})
-
-export const postsRelations = relations(posts, ({ one }) => ({
-  author: one(users, {
-    fields: [posts.authorId],
-    references: [users.id],
-  }),
-}))
-
-export const favouriteLocations = pgTable('FavouriteLocation', {
-  id: serial().primaryKey(),
-  userId: integer()
-    .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' })
-    .notNull(),
-  name: text().notNull(),
-  location: point().notNull(),
-})
-
-export const favouriteLocationsRelations = relations(favouriteLocations, ({ one }) => ({
-  user: one(users, {
-    fields: [favouriteLocations.userId],
-    references: [users.id],
-  }),
-}))
-
-export const reminders = pgTable('Reminder', {
-  id: serial().primaryKey(),
-  userId: integer()
-    .references(() => users.id, { onDelete: 'cascade', onUpdate: 'cascade' })
-    .notNull(),
-  description: text().notNull(),
-  time: plainTime().notNull(),
-})
-
-export const remindersRelations = relations(reminders, ({ one }) => ({
-  user: one(users, {
-    fields: [reminders.userId],
-    references: [users.id],
-  }),
-}))
-
-const schema = {
-  users,
-  usersRelations,
-  posts,
-  postsRelations,
-  favouriteLocations,
-  favouriteLocationsRelations,
-  reminders,
-  remindersRelations,
-}
+import * as schema from '../test/testSchema'
 
 export type TestDbSchema = typeof schema
 
-export type User = typeof users.$inferSelect
-export type UserInput = typeof users.$inferInsert
+export type User = typeof schema.userTable.$inferSelect
+export type UserInput = typeof schema.userTable.$inferInsert
 
-export type Post = typeof posts.$inferSelect
-export type PostInput = typeof posts.$inferInsert
+export type Post = typeof schema.postTable.$inferSelect
+export type PostInput = typeof schema.postTable.$inferInsert
 
-export type FavouriteLocation = typeof favouriteLocations.$inferSelect
-export type FavouriteLocationInput = typeof favouriteLocations.$inferInsert
+export type FavouriteLocation = typeof schema.favouriteLocationTable.$inferSelect
+export type FavouriteLocationInput = typeof schema.favouriteLocationTable.$inferInsert
 
-export type Reminder = typeof reminders.$inferSelect
-export type ReminderInput = typeof reminders.$inferInsert
+export type Reminder = typeof schema.reminderTable.$inferSelect
+export type ReminderInput = typeof schema.reminderTable.$inferInsert
 
 export class TestDb {
   private static dbSingleton: NodePgDatabase<TestDbSchema> | undefined = undefined
@@ -116,6 +43,6 @@ export class TestDb {
   }
 
   public static async clear(): Promise<void> {
-    await this.db().delete(users)
+    await this.db().delete(schema.userTable)
   }
 }

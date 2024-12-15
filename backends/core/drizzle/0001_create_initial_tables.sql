@@ -7,9 +7,9 @@ CREATE TABLE "values_TimeRule_day" (
 );
 --> statement-breakpoint
 CREATE TABLE "ParkingSpotBooking" (
-	"id" uuid PRIMARY KEY DEFAULT uuid_generate_v1() NOT NULL,
-	"createdAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
-	"updatedAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"createdAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updatedAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"parkingSpotId" uuid NOT NULL,
 	"bookedByUserId" uuid NOT NULL,
 	"bookingStartsAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
@@ -18,9 +18,9 @@ CREATE TABLE "ParkingSpotBooking" (
 );
 --> statement-breakpoint
 CREATE TABLE "ParkingSpot" (
-	"id" uuid PRIMARY KEY DEFAULT uuid_generate_v1() NOT NULL,
-	"createdAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
-	"updatedAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"createdAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updatedAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"ownerUserId" uuid NOT NULL,
 	"address" text NOT NULL,
 	"location" GEOMETRY(POINT,4326) NOT NULL,
@@ -28,9 +28,9 @@ CREATE TABLE "ParkingSpot" (
 );
 --> statement-breakpoint
 CREATE TABLE "TimeRuleOverride" (
-	"id" uuid PRIMARY KEY DEFAULT uuid_generate_v1() NOT NULL,
-	"createdAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
-	"updatedAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"createdAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updatedAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"parkingSpotId" uuid NOT NULL,
 	"startsAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
 	"endsAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
@@ -38,9 +38,9 @@ CREATE TABLE "TimeRuleOverride" (
 );
 --> statement-breakpoint
 CREATE TABLE "TimeRule" (
-	"id" uuid PRIMARY KEY DEFAULT uuid_generate_v1() NOT NULL,
-	"createdAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
-	"updatedAt" TIMESTAMP(3) WITH TIME ZONE NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
+	"createdAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updatedAt" TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"parkingSpotId" uuid NOT NULL,
 	"day" text NOT NULL,
 	"startTime" TIME WITHOUT TIME ZONE NOT NULL,

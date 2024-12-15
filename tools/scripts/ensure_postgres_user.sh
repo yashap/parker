@@ -55,3 +55,5 @@ if ! run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" "SELECT usename FROM pg_catalog.p
 else
     echo "User $PG_NEW_USER already exists, skipping creation"
 fi
+
+# Grant the user full access to the database

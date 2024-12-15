@@ -1,12 +1,13 @@
 import { Temporal } from '@js-temporal/polyfill'
-import { User, users, TestDb, reminders, Reminder } from '../test/TestDb'
+import { User, TestDb, Reminder } from '../test/TestDb'
+import { reminderTable, userTable } from '../test/testSchema'
 import { instant } from './instant'
 
 describe(instant.name, () => {
   let user: User
 
   const createUser = async (name: string): Promise<User> => {
-    const result = await TestDb.db().insert(users).values({ name }).returning()
+    const result = await TestDb.db().insert(userTable).values({ name }).returning()
     expect(result).toHaveLength(1)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return result[0]!
@@ -17,14 +18,14 @@ describe(instant.name, () => {
     time: Temporal.PlainTime,
     author: User = user
   ): Promise<Reminder> => {
-    const result = await TestDb.db().insert(reminders).values({ userId: author.id, description, time }).returning()
+    const result = await TestDb.db().insert(reminderTable).values({ userId: author.id, description, time }).returning()
     expect(result).toHaveLength(1)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return result[0]!
   }
 
   const getAllReminders = (): Promise<Reminder[]> => {
-    return TestDb.db().query.reminders.findMany({
+    return TestDb.db().query.reminderTable.findMany({
       orderBy: (reminders, { asc }) => [asc(reminders.description)],
     })
   }
@@ -42,12 +43,16 @@ describe(instant.name, () => {
     expect(allReminders).toStrictEqual([
       {
         id: firstReminder.id,
+        createdAt: firstReminder.createdAt,
+        updatedAt: firstReminder.updatedAt,
         userId: user.id,
         description: 'Breakfast',
         time: Temporal.PlainTime.from('08:10:11'),
       },
       {
         id: secondReminder.id,
+        createdAt: secondReminder.createdAt,
+        updatedAt: secondReminder.updatedAt,
         userId: user.id,
         description: 'Lunch',
         time: Temporal.PlainTime.from('12:34:56'),

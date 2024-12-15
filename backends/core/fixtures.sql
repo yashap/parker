@@ -17,6 +17,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: drizzle; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA "drizzle";
+
+
+--
 -- Name: SCHEMA "public"; Type: COMMENT; Schema: -; Owner: -
 --
 
@@ -56,13 +63,44 @@ SET default_tablespace = '';
 SET default_table_access_method = "heap";
 
 --
+-- Name: __drizzle_migrations; Type: TABLE; Schema: drizzle; Owner: -
+--
+
+CREATE TABLE "drizzle"."__drizzle_migrations" (
+    "id" integer NOT NULL,
+    "hash" "text" NOT NULL,
+    "created_at" bigint
+);
+
+
+--
+-- Name: __drizzle_migrations_id_seq; Type: SEQUENCE; Schema: drizzle; Owner: -
+--
+
+CREATE SEQUENCE "drizzle"."__drizzle_migrations_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: __drizzle_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: drizzle; Owner: -
+--
+
+ALTER SEQUENCE "drizzle"."__drizzle_migrations_id_seq" OWNED BY "drizzle"."__drizzle_migrations"."id";
+
+
+--
 -- Name: ParkingSpot; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE "public"."ParkingSpot" (
-    "id" "uuid" DEFAULT "public"."uuid_generate_v1"() NOT NULL,
+    "id" "uuid" NOT NULL,
     "createdAt" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp(3) with time zone NOT NULL,
+    "updatedAt" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "ownerUserId" "uuid" NOT NULL,
     "address" "text" NOT NULL,
     "location" "public"."geometry"(Point,4326) NOT NULL,
@@ -75,9 +113,9 @@ CREATE TABLE "public"."ParkingSpot" (
 --
 
 CREATE TABLE "public"."ParkingSpotBooking" (
-    "id" "uuid" DEFAULT "public"."uuid_generate_v1"() NOT NULL,
+    "id" "uuid" NOT NULL,
     "createdAt" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp(3) with time zone NOT NULL,
+    "updatedAt" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "parkingSpotId" "uuid" NOT NULL,
     "bookedByUserId" "uuid" NOT NULL,
     "bookingStartsAt" timestamp(3) with time zone NOT NULL,
@@ -91,9 +129,9 @@ CREATE TABLE "public"."ParkingSpotBooking" (
 --
 
 CREATE TABLE "public"."TimeRule" (
-    "id" "uuid" DEFAULT "public"."uuid_generate_v1"() NOT NULL,
+    "id" "uuid" NOT NULL,
     "createdAt" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp(3) with time zone NOT NULL,
+    "updatedAt" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "parkingSpotId" "uuid" NOT NULL,
     "day" "text" NOT NULL,
     "startTime" time without time zone NOT NULL,
@@ -106,45 +144,14 @@ CREATE TABLE "public"."TimeRule" (
 --
 
 CREATE TABLE "public"."TimeRuleOverride" (
-    "id" "uuid" DEFAULT "public"."uuid_generate_v1"() NOT NULL,
+    "id" "uuid" NOT NULL,
     "createdAt" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp(3) with time zone NOT NULL,
+    "updatedAt" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "parkingSpotId" "uuid" NOT NULL,
     "startsAt" timestamp(3) with time zone NOT NULL,
     "endsAt" timestamp(3) with time zone NOT NULL,
     "isAvailable" boolean NOT NULL
 );
-
-
---
--- Name: migrations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE "public"."migrations" (
-    "id" integer NOT NULL,
-    "name" character varying(255) NOT NULL,
-    "run_on" timestamp without time zone NOT NULL
-);
-
-
---
--- Name: migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "public"."migrations_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "public"."migrations_id_seq" OWNED BY "public"."migrations"."id";
 
 
 --
@@ -166,10 +173,19 @@ CREATE TABLE "public"."values_TimeRule_day" (
 
 
 --
--- Name: migrations id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: __drizzle_migrations id; Type: DEFAULT; Schema: drizzle; Owner: -
 --
 
-ALTER TABLE ONLY "public"."migrations" ALTER COLUMN "id" SET DEFAULT "nextval"('"public"."migrations_id_seq"'::"regclass");
+ALTER TABLE ONLY "drizzle"."__drizzle_migrations" ALTER COLUMN "id" SET DEFAULT "nextval"('"drizzle"."__drizzle_migrations_id_seq"'::"regclass");
+
+
+--
+-- Data for Name: __drizzle_migrations; Type: TABLE DATA; Schema: drizzle; Owner: -
+--
+
+INSERT INTO "drizzle"."__drizzle_migrations" ("id", "hash", "created_at") VALUES (1, '0f1c6d7e9c45ef066f435bffab9a9f8ef643263f6360ce2f6c80ffb0a18cd840', 1734241205561);
+INSERT INTO "drizzle"."__drizzle_migrations" ("id", "hash", "created_at") VALUES (2, '836a0a52fbac6ef5d16d2d5633527b5a5d4abd60465e7fdb5d7dad9d7bfba70e', 1734241221849);
+INSERT INTO "drizzle"."__drizzle_migrations" ("id", "hash", "created_at") VALUES (3, 'ec6f7febe232fc5ff2bcc31af13364ff7c4c6948f282de75cdd4fef4be052ab9', 1734241249810);
 
 
 --
@@ -194,16 +210,6 @@ ALTER TABLE ONLY "public"."migrations" ALTER COLUMN "id" SET DEFAULT "nextval"('
 -- Data for Name: TimeRuleOverride; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-
-
---
--- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: -
---
-
-INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (1, '/20230825195436-initial-migration', '2024-12-11 09:53:14.371');
-INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (2, '/20240128005238-add-bookings-table', '2024-12-11 09:53:14.397');
-INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (3, '/20240902192913-add-parking-spot-time-zone', '2024-12-11 09:53:14.402');
-INSERT INTO "public"."migrations" ("id", "name", "run_on") VALUES (4, '/20240907175122-add-time-rule-override copy', '2024-12-11 09:53:14.407');
 
 
 --
@@ -235,10 +241,18 @@ INSERT INTO "public"."values_TimeRule_day" ("day") VALUES ('Sunday');
 
 
 --
--- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: __drizzle_migrations_id_seq; Type: SEQUENCE SET; Schema: drizzle; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."migrations_id_seq"', 4, true);
+SELECT pg_catalog.setval('"drizzle"."__drizzle_migrations_id_seq"', 3, true);
+
+
+--
+-- Name: __drizzle_migrations __drizzle_migrations_pkey; Type: CONSTRAINT; Schema: drizzle; Owner: -
+--
+
+ALTER TABLE ONLY "drizzle"."__drizzle_migrations"
+    ADD CONSTRAINT "__drizzle_migrations_pkey" PRIMARY KEY ("id");
 
 
 --
@@ -271,14 +285,6 @@ ALTER TABLE ONLY "public"."TimeRuleOverride"
 
 ALTER TABLE ONLY "public"."TimeRule"
     ADD CONSTRAINT "TimeRule_pkey" PRIMARY KEY ("id");
-
-
---
--- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "public"."migrations"
-    ADD CONSTRAINT "migrations_pkey" PRIMARY KEY ("id");
 
 
 --
@@ -340,43 +346,43 @@ CREATE INDEX "TimeRule_parkingSpotId_idx" ON "public"."TimeRule" USING "btree" (
 
 
 --
--- Name: ParkingSpotBooking ParkingSpotBooking_parkingSpotId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: ParkingSpotBooking ParkingSpotBooking_parkingSpotId_ParkingSpot_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "public"."ParkingSpotBooking"
-    ADD CONSTRAINT "ParkingSpotBooking_parkingSpotId_fkey" FOREIGN KEY ("parkingSpotId") REFERENCES "public"."ParkingSpot"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT "ParkingSpotBooking_parkingSpotId_ParkingSpot_id_fk" FOREIGN KEY ("parkingSpotId") REFERENCES "public"."ParkingSpot"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: ParkingSpotBooking ParkingSpotBooking_status_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: ParkingSpotBooking ParkingSpotBooking_status_values_ParkingSpotBooking_status_stat; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "public"."ParkingSpotBooking"
-    ADD CONSTRAINT "ParkingSpotBooking_status_fkey" FOREIGN KEY ("status") REFERENCES "public"."values_ParkingSpotBooking_status"("status");
+    ADD CONSTRAINT "ParkingSpotBooking_status_values_ParkingSpotBooking_status_stat" FOREIGN KEY ("status") REFERENCES "public"."values_ParkingSpotBooking_status"("status");
 
 
 --
--- Name: TimeRuleOverride TimeRuleOverride_parkingSpotId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: TimeRuleOverride TimeRuleOverride_parkingSpotId_ParkingSpot_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "public"."TimeRuleOverride"
-    ADD CONSTRAINT "TimeRuleOverride_parkingSpotId_fkey" FOREIGN KEY ("parkingSpotId") REFERENCES "public"."ParkingSpot"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT "TimeRuleOverride_parkingSpotId_ParkingSpot_id_fk" FOREIGN KEY ("parkingSpotId") REFERENCES "public"."ParkingSpot"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
--- Name: TimeRule TimeRule_day_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "public"."TimeRule"
-    ADD CONSTRAINT "TimeRule_day_fkey" FOREIGN KEY ("day") REFERENCES "public"."values_TimeRule_day"("day");
-
-
---
--- Name: TimeRule TimeRule_parkingSpotId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: TimeRule TimeRule_day_values_TimeRule_day_day_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY "public"."TimeRule"
-    ADD CONSTRAINT "TimeRule_parkingSpotId_fkey" FOREIGN KEY ("parkingSpotId") REFERENCES "public"."ParkingSpot"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT "TimeRule_day_values_TimeRule_day_day_fk" FOREIGN KEY ("day") REFERENCES "public"."values_TimeRule_day"("day");
+
+
+--
+-- Name: TimeRule TimeRule_parkingSpotId_ParkingSpot_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."TimeRule"
+    ADD CONSTRAINT "TimeRule_parkingSpotId_ParkingSpot_id_fk" FOREIGN KEY ("parkingSpotId") REFERENCES "public"."ParkingSpot"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -412,13 +418,6 @@ GRANT ALL ON TABLE "public"."TimeRule" TO "core" WITH GRANT OPTION;
 --
 
 GRANT ALL ON TABLE "public"."TimeRuleOverride" TO "core" WITH GRANT OPTION;
-
-
---
--- Name: TABLE "migrations"; Type: ACL; Schema: public; Owner: -
---
-
-GRANT ALL ON TABLE "public"."migrations" TO "core" WITH GRANT OPTION;
 
 
 --

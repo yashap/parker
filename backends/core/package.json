@@ -7,8 +7,8 @@
   "scripts": {
     "build": "nest build",
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
-    "db:clean": "yarn db:up && ../../tools/scripts/drop_db.sh core parker_postgres_dev",
-    "db:clean:test": "yarn db:up:test && ../../tools/scripts/drop_db.sh core parker_postgres_test",
+    "db:clean": "yarn db:up && ../../tools/scripts/drop_db.sh core parker_postgres_dev && ../../tools/scripts/drop_user.sh core parker_postgres_dev",
+    "db:clean:test": "yarn db:up:test && ../../tools/scripts/drop_db.sh core parker_postgres_test && ../../tools/scripts/drop_user.sh core parker_postgres_test",
     "db:dump-fixtures": "../../tools/scripts/dump_fixtures.sh core",
     "db:generate-custom-migration": "../../tools/scripts/generate_custom_db_migration.sh",
     "db:generate-migration": "yarn db:up && ../../tools/scripts/generate_db_migration.sh",

@@ -5,8 +5,8 @@ set -eo pipefail
 migration_name="$1"
 
 if [ "$migration_name" = '' ]; then
-  echo >&2 "Must provide a name for the migration"
-  exit 1
+    echo >&2 "Must provide a name for the migration"
+    exit 1
 fi
 
 generate_output=$(yarn drizzle-kit generate --name="$migration_name")
@@ -20,4 +20,3 @@ file_name="$(echo "$generate_output" | grep 'Your SQL migration file' | sed -e '
 sed -i '' 's/"GEOMETRY(POINT,4326)"/GEOMETRY(POINT,4326)/g' "$file_name"
 sed -i '' 's/"TIMESTAMP(3) WITH TIME ZONE"/TIMESTAMP(3) WITH TIME ZONE/g' "$file_name"
 sed -i '' 's/"TIME WITHOUT TIME ZONE"/TIME WITHOUT TIME ZONE/g' "$file_name"
-sed -i '' "s/'uuid_generate_v1()'/uuid_generate_v1()/g" "$file_name"

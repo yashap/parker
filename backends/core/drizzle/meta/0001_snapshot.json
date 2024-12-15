@@ -1,6 +1,6 @@
 {
-  "id": "c42c654d-22e5-4bdb-91a0-9ce2723eba37",
-  "prevId": "361606c9-2ba4-4736-88f3-f1b6a7e1ff66",
+  "id": "eda8c20d-404f-47a4-a736-00d7c1f2fb0f",
+  "prevId": "8b2f0287-f4c8-45bd-b23a-f9a3a54169eb",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -50,20 +50,21 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "'uuid_generate_v1()'"
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
           "type": "TIMESTAMP(3) WITH TIME ZONE",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "TIMESTAMP(3) WITH TIME ZONE",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "parkingSpotId": {
           "name": "parkingSpotId",
@@ -162,20 +163,21 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "'uuid_generate_v1()'"
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
           "type": "TIMESTAMP(3) WITH TIME ZONE",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "TIMESTAMP(3) WITH TIME ZONE",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "ownerUserId": {
           "name": "ownerUserId",
@@ -249,20 +251,21 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "'uuid_generate_v1()'"
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
           "type": "TIMESTAMP(3) WITH TIME ZONE",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "TIMESTAMP(3) WITH TIME ZONE",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "parkingSpotId": {
           "name": "parkingSpotId",
@@ -331,20 +334,21 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "'uuid_generate_v1()'"
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
           "type": "TIMESTAMP(3) WITH TIME ZONE",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "TIMESTAMP(3) WITH TIME ZONE",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "parkingSpotId": {
           "name": "parkingSpotId",

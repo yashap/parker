@@ -1,6 +1,6 @@
 {
-  "id": "d25bde03-5f40-48ba-aee7-74f4539259dc",
-  "prevId": "6ce081c1-2fbd-4606-8e46-3df3547dfe8d",
+  "id": "d48bb9ed-afde-4490-b00e-4344527420a7",
+  "prevId": "956d9e6e-68f9-4dd6-8370-1d1b1b4df8eb",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -10,13 +10,27 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true
         },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
         "userId": {
           "name": "userId",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -57,13 +71,27 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true
         },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
         "authorId": {
           "name": "authorId",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -104,13 +132,27 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true
         },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
         "userId": {
           "name": "userId",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -151,9 +193,23 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "TIMESTAMP(3) WITH TIME ZONE",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "name": {
           "name": "name",

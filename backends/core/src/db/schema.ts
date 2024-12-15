@@ -1,22 +1,8 @@
-import { Temporal } from '@js-temporal/polyfill'
 import { DayOfWeekAllValues } from '@parker/api-client-utils'
 import { BookingStatusAllValues } from '@parker/core-client'
-import { instant, plainTime, point } from '@parker/drizzle-utils'
+import { instant, plainTime, point, standardFields } from '@parker/drizzle-utils'
 import { relations } from 'drizzle-orm'
 import { uuid, pgTable, text, boolean, index } from 'drizzle-orm/pg-core'
-
-const standardFields = {
-  // TODO: confirm if this is what I want, and also move id, createdAt and updatedAt into drizzle-utils
-  // TODO: maybe switch default to app-side uuid gen, so I can use UUID v7
-  id: uuid().primaryKey().default('uuid_generate_v1()'),
-  createdAt: instant()
-    .notNull()
-    .$default(() => Temporal.Now.instant()), // TODO: maybe back to .default(sql`(NOW() AT TIME ZONE 'utc'::text)`)
-  updatedAt: instant()
-    .notNull()
-    .$default(() => Temporal.Now.instant()) // TODO: maybe back to .default(sql`(NOW() AT TIME ZONE 'utc'::text)`)
-    .$onUpdate(() => Temporal.Now.instant()), // TODO: can this use SQL too?
-}
 
 export const parkingSpotTable = pgTable(
   'ParkingSpot',
