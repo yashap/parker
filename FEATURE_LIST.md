@@ -18,6 +18,7 @@ What am I planning to work on next?
   - Tests, and also api client "fetch all pages"
 - More complete tests for the LIST parkingSpots endpoint
 - Move to absolute imports
+- Can I make supertokens migrate during normal migrations, not on startup?
 - Better create parking spot FE
   - With time rules and overrides, and properly viewing and editing your parking spot(s)
 - General landlord improvements
