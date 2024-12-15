@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@parker/eslint-config": "*",
+    "@parker/test-utils": "*",
     "@parker/tsconfig": "*",
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.0",

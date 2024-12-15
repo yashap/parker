@@ -12,7 +12,7 @@ export type ParkingSpot = Omit<ParkingSpotDto, 'createdAt' | 'updatedAt' | 'time
   timeRuleOverrides: TimeRuleOverride[]
 }
 
-export type ListParkingSpotCursor = Cursor<'createdAt', number>
+export type ListParkingSpotCursor = Cursor<'createdAt', string>
 
 export type ListParkingSpotPagination =
   | ListParkingSpotCursor

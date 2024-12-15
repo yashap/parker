@@ -11,6 +11,5 @@ afterEach(async () => {
 })
 
 afterAll(async () => {
-  await new TestDbTeardown().disconnect()
   AuthGuard.unMock()
 })

@@ -1,6 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
+
+# shellcheck disable=SC1091
+. "$(git rev-parse --show-toplevel)/tools/scripts/db_utils.sh"
 
 PG_HOST=localhost
 PG_PORT_CONTAINER=5432 # Within the container, PG runs on the standard port
@@ -33,11 +36,6 @@ if [ "$(docker ps -q -f name="$PG_CONTAINER_NAME")" ]; then
     exit 0
 fi
 
-run_sql() {
-    local db_url="postgres://$PG_USER:$PG_PASSWORD@$PG_HOST:$PG_PORT_CONTAINER/$PG_DB?sslmode=disable"
-    docker exec -t "$PG_CONTAINER_NAME" /bin/bash -c "psql $db_url -c \"$*\""
-}
-
 # Ensure we have a local volume for storing Postgres data, so we don't lose it between runs
 docker volume create "$PG_DATA_VOLUME"
 
@@ -55,11 +53,13 @@ docker run \
     -d \
     postgis/postgis:15-3.3
 
+PG_DB_URL="postgres://$PG_USER:$PG_PASSWORD@$PG_HOST:$PG_PORT_CONTAINER/$PG_DB?sslmode=disable"
+
 # Wait for the DB to come up before letting the script finish
 DB_UP=0
 while [ "$DB_UP" -eq 0 ]; do
     echo "Waiting for DB to come up ..."
-    DB_UP=$(run_sql 'SELECT 1' >/dev/null 2>&1 && echo 1 || echo 0)
+    DB_UP=$(run_sql "$PG_DB_URL" "$PG_CONTAINER_NAME" 'SELECT 1' >/dev/null 2>&1 && echo 1 || echo 0)
     if [ "$DB_UP" -eq 1 ]; then
         echo "DB is up"
     else

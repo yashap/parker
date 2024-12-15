@@ -1,6 +1,6 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { Controller, UseGuards } from '@nestjs/common'
-import { contract as rootContract } from '@parker/core-client'
+import { BookingStatusValues, contract as rootContract } from '@parker/core-client'
 import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
 import { SessionContainer } from 'supertokens-node/recipe/session'
 import { AuthGuard, Session } from '../../auth'
@@ -25,6 +25,7 @@ export class ParkingSpotBookingController extends BaseController {
         ...body,
         bookedByUserId: session.getUserId(),
         parkingSpotId,
+        status: BookingStatusValues.Accepted,
         bookingStartsAt: Temporal.Instant.from(body.bookingStartsAt),
         bookingEndsAt: body.bookingEndsAt ? Temporal.Instant.from(body.bookingEndsAt) : undefined,
       })

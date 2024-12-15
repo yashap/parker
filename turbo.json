@@ -9,16 +9,19 @@
     "clean": {
       "cache": false
     },
+    "db:dump-fixtures": {
+      "cache": false
+    },
     "db:migrate-up": {
       "cache": false
     },
     "db:migrate-up:test": {
       "cache": false
     },
-    "format": {
-      "outputs": []
+    "db:restore-fixtures": {
+      "cache": false
     },
-    "generate": {
+    "format": {
       "outputs": []
     },
     "lint": {

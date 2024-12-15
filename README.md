@@ -24,7 +24,7 @@ Install the following:
 - [cmake](https://cmake.org/)
   - On a Mac, `brew install cmake`
 
-After this, you can try running `yarn build-migrate && yarn generate && yarn format && yarn lint && yarn test` to ensure everything works, before proceeding to `Dev Workflows` (below).
+After this, you can try running `yarn build-migrate && yarn format && yarn lint && yarn test && yarn db:restore-fixtures` to ensure everything works, before proceeding to `Dev Workflows` (below).
 
 ## Dev Workflows
 
@@ -59,10 +59,11 @@ yarn email
 
 # Before you push to GitHub (no CI setup yet, so do this manually!)
 yarn format && yarn test
-
-# Run code generation (after changing DB schema, etc.)
-yarn generate
 ```
+
+### Migrations
+
+See the `README.md` for each backend service for instructions about migrations.
 
 ### Email
 
@@ -120,3 +121,11 @@ yarn clean && rm yarn.lock
 - For adding a new React Native app, copy `frontends/landlord` as an example
 
 If adding new packages becomes a pain point, we could consider writing [Turborepo custom code generators](https://turbo.build/repo/docs/core-concepts/monorepos/code-generation).
+
+### Dev fixtures
+
+For local development, it's useful to have some default users, parking spots, etc. setup, a.k.a. "local dev fixtures." We do this by taking and restoring DB snapshots.
+
+As an example, say you want to add a new parking spot to the default dev fixtures, you'd spin up your local env, add that parking spot in the UI, then run `yarn db:dump-fixtures`.
+
+Later, when people run `yarn db:restore-fixtures`, they'll get the restore the DB state you snapshotted to their local DB, e.g. they'll get that new parking spot you added.

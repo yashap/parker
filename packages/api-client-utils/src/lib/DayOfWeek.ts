@@ -7,6 +7,7 @@ export const DayOfWeekSchema = z.enum(daysOfWeek)
 export type DayOfWeekDto = z.infer<typeof DayOfWeekSchema>
 
 export const DayOfWeekValues = DayOfWeekSchema.Enum
+export const DayOfWeekAllValues = DayOfWeekSchema.options
 
 export const fromNumericDayOfWeek = (dayOfWeek: number): DayOfWeekDto => {
   const errorMessage = `Invalid day of week: ${dayOfWeek}. Must be an integer from 1 to 7`

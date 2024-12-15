@@ -1,21 +1,13 @@
-import { BaseRepository } from '../db/BaseRepository'
+import { Db } from '../db/Db'
+import { parkingSpotTable } from '../db/schema'
 
 // Don't need to explicitly list tables with foreign key ON DELETE CASCADE
-const tablesToDestroy = ['ParkingSpot'] as const
-type TableName = (typeof tablesToDestroy)[number]
+const tablesToDestroy = [parkingSpotTable]
 
-export class TestDbTeardown extends BaseRepository {
+export class TestDbTeardown {
   public async clear(): Promise<void> {
     for (const table of tablesToDestroy) {
-      await this.clearTable(table)
+      await Db.db().delete(table)
     }
-  }
-
-  public async clearTable(table: TableName): Promise<void> {
-    await this.db().deleteFrom(table).executeTakeFirst()
-  }
-
-  public async disconnect(): Promise<void> {
-    await this.db().destroy()
   }
 }

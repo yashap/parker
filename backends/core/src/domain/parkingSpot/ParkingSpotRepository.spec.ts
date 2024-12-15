@@ -4,8 +4,6 @@ import { omit, orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { expectSystemTimestamps } from '../../test/expectSystemTimestamp'
 import { DayOfWeek } from '../time/DayOfWeek'
-import { TimeRuleRepository } from '../timeRule'
-import { TimeRuleOverrideRepository } from '../timeRuleOverride'
 import { ParkingSpot } from './ParkingSpot'
 import { CreateParkingSpotInput, ParkingSpotRepository } from './ParkingSpotRepository'
 
@@ -16,7 +14,7 @@ describe(ParkingSpotRepository.name, () => {
   let userId: string
 
   beforeEach(async () => {
-    parkingSpotRepository = new ParkingSpotRepository(new TimeRuleRepository(), new TimeRuleOverrideRepository())
+    parkingSpotRepository = new ParkingSpotRepository()
     userId = uuid()
     createParkingSpotInput = {
       ownerUserId: userId,
@@ -149,11 +147,13 @@ describe(ParkingSpotRepository.name, () => {
   describe('update', () => {
     it('should update a parking spot', async () => {
       await parkingSpotRepository.update(spot.id, { location: { longitude: -50, latitude: 50 } })
-      expect(await parkingSpotRepository.getById(spot.id)).toEqual({
+      const actualAfterUpdate = await parkingSpotRepository.getById(spot.id)
+      const expectedAfterUpdate = {
         ...spot,
         timeZone: 'Etc/GMT+3',
         location: { longitude: -50, latitude: 50 },
-      })
+      }
+      expect(omit(actualAfterUpdate, ['updatedAt'])).toEqual(omit(expectedAfterUpdate, ['updatedAt']))
     })
 
     it('completely replaces time rules, if updating the time rules', async () => {

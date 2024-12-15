@@ -1,58 +1,28 @@
-import { Temporal } from '@js-temporal/polyfill'
 import { Injectable } from '@nestjs/common'
-import { BookingStatusValues, CreateParkingSpotBookingRequest } from '@parker/core-client'
-import { QueryUtils } from '@parker/kysely-utils'
-import { parseInstantFields } from '@parker/time'
-import { Selectable } from 'kysely'
-import { BaseRepository } from '../../db/BaseRepository'
-import { ParkingSpotBooking as ParkingSpotBookingDao } from '../../db/generated/db'
-import { BookingStatus, ParkingSpotBooking } from './ParkingSpotBooking'
-
-export type CreateParkingSpotBookingInput = Omit<
-  CreateParkingSpotBookingRequest,
-  'bookingStartsAt' | 'bookingEndsAt'
-> & {
-  parkingSpotId: string
-  bookedByUserId: string
-  bookingStartsAt: Temporal.Instant
-  bookingEndsAt?: Temporal.Instant
-  status?: BookingStatus
-}
+import { required } from '@parker/errors'
+import { eq } from 'drizzle-orm'
+import { Db } from '../../db/Db'
+import { parkingSpotBookingTable } from '../../db/schema'
+import { ParkingSpotBookingDao, ParkingSpotBookingInputDao } from '../../db/types'
+import { ParkingSpotBooking } from './ParkingSpotBooking'
 
 @Injectable()
-export class ParkingSpotBookingRepository extends BaseRepository {
-  public async create(payload: CreateParkingSpotBookingInput): Promise<ParkingSpotBooking> {
-    const bookingDao = await this.db()
-      .insertInto('ParkingSpotBooking')
-      .values({
-        ...payload,
-        ...QueryUtils.updatedAt(),
-        status: payload.status ?? BookingStatusValues.Accepted,
-        bookingStartsAt: payload.bookingStartsAt.toString(),
-        bookingEndsAt: payload.bookingEndsAt ? payload.bookingEndsAt.toString() : null,
-      })
-      .returningAll()
-      .executeTakeFirstOrThrow()
-    return this.bookingToDomain(bookingDao)
+export class ParkingSpotBookingRepository {
+  public async create(payload: ParkingSpotBookingInputDao): Promise<ParkingSpotBooking> {
+    const result = await Db.db().insert(parkingSpotBookingTable).values(payload).returning()
+    return this.bookingToDomain(required(result[0]))
   }
 
   public async getById(id: string): Promise<ParkingSpotBooking | undefined> {
-    const bookingDao = await this.db()
-      .selectFrom('ParkingSpotBooking')
-      .selectAll()
-      .where('id', '=', id)
-      .executeTakeFirst()
+    const bookingDaos = await Db.db().select().from(parkingSpotBookingTable).where(eq(parkingSpotBookingTable.id, id))
+    const bookingDao = bookingDaos[0]
     return bookingDao ? this.bookingToDomain(bookingDao) : undefined
   }
 
-  private bookingToDomain(booking: Selectable<ParkingSpotBookingDao>): ParkingSpotBooking {
+  private bookingToDomain(booking: ParkingSpotBookingDao): ParkingSpotBooking {
     return {
       ...booking,
-      ...parseInstantFields(booking, ['createdAt', 'updatedAt', 'bookingStartsAt']),
-      status: booking.status as BookingStatus,
-      bookingEndsAt: booking.bookingEndsAt
-        ? Temporal.Instant.fromEpochMilliseconds(booking.bookingEndsAt.valueOf())
-        : undefined,
+      bookingEndsAt: booking.bookingEndsAt ?? undefined,
     }
   }
 }

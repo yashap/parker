@@ -2,12 +2,18 @@
 
 What am I planning to work on next?
 
-- Tests for new LIST parkingSpots endpoint
+- Finish switch to Drizzle
+  - Maybe make DB types my "domain" types within core service?
+- Get Drizzle query types working properly
+  - This bug?: https://github.com/drizzle-team/drizzle-orm/issues/2619
+  - Maybe relevant: https://github.com/drizzle-team/drizzle-orm/issues/2504
 - Cursor stuff
-  - Extract into a lib?
-  - Check out the `TODO: is this even correct` and `TODO: base64` bits
+  - Extract into a lib
+  - Check out the `TODO-lib-cursor` bits
   - Tests, and also api client "fetch all pages"
-- Switch to Drizzle?
+- More complete tests for the LIST parkingSpots endpoint
+- Move to absolute imports
+- Can I make supertokens migrate during normal migrations, not on startup?
 - Better create parking spot FE
   - With time rules and overrides, and properly viewing and editing your parking spot(s)
 - General landlord improvements
@@ -35,7 +41,6 @@ What am I planning to work on next?
     - Will probably require a concept of "availability" on FE and BE, based on time rules and existing bookings
   - No payments for now, all free
 - Implement fares/fare rules/payments
-- TypeScript migrations
 - Validate flows around bad auth
   - Handled well on BE and FE? Ideally some BE tests!
 - Photos of the parking spot
