@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common'
 import { SupertestInstance } from '@parker/api-client-test-utils'
 import { OrderDirectionValues } from '@parker/api-client-utils'
 import { CoreClient, CreateParkingSpotRequest, ParkingSpotDto, UpdateParkingSpotRequest } from '@parker/core-client'
-import { NotFoundError, required } from '@parker/errors'
+import { ForbiddenError, required } from '@parker/errors'
 import { Point } from '@parker/geography'
 import { eq } from 'drizzle-orm'
 import { omit, orderBy, sortBy } from 'lodash'
@@ -117,7 +117,7 @@ describe(ParkingSpotController.name, () => {
 
       it('renter should not be able to update a parking spot', async () => {
         const update: UpdateParkingSpotRequest = { location: { longitude: 2, latitude: 3 } }
-        await expect(renterCoreClient.parkingSpots.update(parkingSpot.id, update)).rejects.toThrow(NotFoundError)
+        await expect(renterCoreClient.parkingSpots.update(parkingSpot.id, update)).rejects.toThrow(ForbiddenError)
 
         // And assert it wasn't modified
         expect(await renterCoreClient.parkingSpots.get(parkingSpot.id)).toStrictEqual(parkingSpot)
@@ -193,7 +193,7 @@ describe(ParkingSpotController.name, () => {
 
       it('renter should not be able to delete a parking spot', async () => {
         expect(await renterCoreClient.parkingSpots.get(parkingSpot.id)).toBeDefined()
-        await expect(renterCoreClient.parkingSpots.delete(parkingSpot.id)).rejects.toThrow(NotFoundError)
+        await expect(renterCoreClient.parkingSpots.delete(parkingSpot.id)).rejects.toThrow(ForbiddenError)
 
         // And assert it's not deleted
         expect(await renterCoreClient.parkingSpots.get(parkingSpot.id)).toBeDefined()

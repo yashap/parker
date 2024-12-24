@@ -27,10 +27,3 @@ Or more special case workflows:
 ### API spec changes
 
 TODO describe api spec changes ... or maybe describe in main README.md?
-
-- DB migrations
-  - TODO describe migration/codegen
-- API spec changes
-  - TODO describe api spec changes
-
-^ TODO: maybe describe the above in the main README?
