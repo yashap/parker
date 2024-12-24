@@ -1,11 +1,8 @@
-import { Temporal } from '@js-temporal/polyfill'
 import { TimeRuleOverrideDto } from '@parker/core-client'
 import { formatInstantFields, parseInstantFields } from '@parker/time'
+import { TimeRuleOverrideDao } from '../../db/types'
 
-export type TimeRuleOverride = Omit<TimeRuleOverrideDto, 'startsAt' | 'endsAt'> & {
-  startsAt: Temporal.Instant
-  endsAt: Temporal.Instant
-}
+export type TimeRuleOverride = Omit<TimeRuleOverrideDao, 'id' | 'createdAt' | 'updatedAt' | 'parkingSpotId'>
 
 export const timeRuleOverrideFromDto = (timeRuleOverride: TimeRuleOverrideDto): TimeRuleOverride => {
   return {

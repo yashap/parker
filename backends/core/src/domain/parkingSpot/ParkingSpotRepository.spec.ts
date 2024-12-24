@@ -2,6 +2,7 @@ import { Temporal } from '@js-temporal/polyfill'
 import { Point } from '@parker/geography'
 import { omit, orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
+import { Db } from '../../db/Db'
 import { expectSystemTimestamps } from '../../test/expectSystemTimestamp'
 import { DayOfWeek } from '../time/DayOfWeek'
 import { ParkingSpot } from './ParkingSpot'
@@ -14,7 +15,7 @@ describe(ParkingSpotRepository.name, () => {
   let userId: string
 
   beforeEach(async () => {
-    parkingSpotRepository = new ParkingSpotRepository()
+    parkingSpotRepository = new ParkingSpotRepository(new Db())
     userId = uuid()
     createParkingSpotInput = {
       ownerUserId: userId,

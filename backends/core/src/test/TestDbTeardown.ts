@@ -6,8 +6,9 @@ const tablesToDestroy = [parkingSpotTable]
 
 export class TestDbTeardown {
   public async clear(): Promise<void> {
+    const db = new Db()
     for (const table of tablesToDestroy) {
-      await Db.db().delete(table)
+      await db.db().delete(table)
     }
   }
 }
