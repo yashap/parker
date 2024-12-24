@@ -2,11 +2,6 @@
 
 What am I planning to work on next?
 
-- Finish switch to Drizzle
-  - Maybe make DB types my "domain" types within core service?
-- Get Drizzle query types working properly
-  - This bug?: https://github.com/drizzle-team/drizzle-orm/issues/2619
-  - Maybe relevant: https://github.com/drizzle-team/drizzle-orm/issues/2504
 - Cursor stuff
   - Extract into a lib
   - Check out the `TODO-lib-cursor` bits

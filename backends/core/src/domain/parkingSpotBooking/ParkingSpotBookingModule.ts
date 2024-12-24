@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
+import { DbModule } from '../../db/DbModule'
 import { ParkingSpotBookingController } from './ParkingSpotBookingController'
-import { ParkingSpotBookingRepository } from './ParkingSpotBookingRepository'
 
 @Module({
   controllers: [ParkingSpotBookingController],
-  providers: [ParkingSpotBookingRepository],
+  imports: [DbModule],
 })
 export class ParkingSpotBookingModule {}

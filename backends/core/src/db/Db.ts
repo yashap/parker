@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common'
 import { DbConnection, TransactionManager } from '@parker/drizzle-utils'
 import { required } from '@parker/errors'
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
@@ -5,6 +6,7 @@ import * as schema from './schema'
 
 export type DatabaseSchema = typeof schema
 
+@Injectable()
 export class Db {
   // Ensure just one DB connection for the app
   private static dbSingleton: NodePgDatabase<DatabaseSchema> = drizzle({
@@ -15,13 +17,13 @@ export class Db {
     },
   })
 
-  private static transactionManager = new TransactionManager<DatabaseSchema>(this.dbSingleton)
+  private static transactionManager = new TransactionManager<DatabaseSchema>(Db.dbSingleton)
 
-  public static db(): DbConnection<DatabaseSchema> {
-    return this.transactionManager.getConnection()
+  public db(): DbConnection<DatabaseSchema> {
+    return Db.transactionManager.getConnection()
   }
 
-  public static runWithTransaction<T>(callback: () => Promise<T>): Promise<T> {
-    return this.transactionManager.run(callback)
+  public runWithTransaction<T>(callback: () => Promise<T>): Promise<T> {
+    return Db.transactionManager.run(callback)
   }
 }

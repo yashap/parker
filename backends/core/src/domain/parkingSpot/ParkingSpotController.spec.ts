@@ -216,7 +216,8 @@ describe(ParkingSpotController.name, () => {
         })
         // Different createdAt for easy to test ordering
         const instant = now.add(Temporal.Duration.from({ seconds: idx }))
-        await Db.db()
+        await new Db()
+          .db()
           .update(parkingSpotTable)
           .set({ createdAt: instant, updatedAt: instant })
           .where(eq(parkingSpotTable.id, parkingSpot.id))
