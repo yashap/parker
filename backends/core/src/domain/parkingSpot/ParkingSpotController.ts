@@ -7,6 +7,7 @@ import {
   parsePagination,
 } from '@parker/api-client-utils'
 import { contract as rootContract } from '@parker/core-client'
+import { ForbiddenError } from '@parker/errors'
 import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
 import { first, last, pick } from 'lodash'
 import { SessionContainer } from 'supertokens-node/recipe/session'
@@ -130,7 +131,7 @@ export class ParkingSpotController extends BaseController {
     const maybeParkingSpot = await this.parkingSpotRepository.getById(parkingSpotId)
     const parkingSpot = this.getEntityOrNotFound(maybeParkingSpot)
     if (parkingSpot.ownerUserId !== userId) {
-      throw this.buildEntityNotFoundError()
+      throw new ForbiddenError('Forbidden as you are not the owner of this parking spot')
     }
     return parkingSpot
   }
