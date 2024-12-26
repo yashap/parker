@@ -4,6 +4,7 @@ import tseslint from 'typescript-eslint'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import { flatConfigs as importPlugin } from 'eslint-plugin-import'
 import parser from '@typescript-eslint/parser'
+import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -22,16 +23,20 @@ export default tseslint.config(
       },
     },
 
+    plugins: {
+      'no-relative-import-paths': noRelativeImportPaths,
+    },
+
     rules: {
       // Allow classes with only static members
       '@typescript-eslint/no-extraneous-class': 'off',
-      
+
       // Allow async functions without an await in their body
       '@typescript-eslint/require-await': 'off',
-      
+
       // Be less annoyingly strict about string template literals
       '@typescript-eslint/restrict-template-expressions': 'off',
-      
+
       // Just causes problems, and doesn't catch anything the TypeScript compiler doesn't
       'import/named': 'off',
 
@@ -58,6 +63,8 @@ export default tseslint.config(
           'newlines-between': 'never',
         },
       ],
+
+      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true }],
     },
 
     settings: {

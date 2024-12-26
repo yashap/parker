@@ -2,8 +2,8 @@ import { Cursor } from '@parker/api-client-utils'
 import { ParkingSpotDto } from '@parker/core-client'
 import { formatInstantFields } from '@parker/time'
 import { ParkingSpotDao } from '../../db/types'
-import { TimeRule, timeRuleToDto } from '../timeRule'
 import { TimeRuleOverride, timeRuleOverrideToDto } from '../timeRuleOverride'
+import { TimeRule, timeRuleToDto } from 'src/domain/timeRule/TimeRule'
 
 export type ParkingSpot = ParkingSpotDao & {
   timeRules: TimeRule[]
