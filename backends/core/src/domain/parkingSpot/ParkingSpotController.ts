@@ -11,11 +11,11 @@ import { ForbiddenError } from '@parker/errors'
 import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
 import { first, last, pick } from 'lodash'
 import { SessionContainer } from 'supertokens-node/recipe/session'
-import { AuthGuard, Session } from '../../auth'
-import { timeRulesFromDto } from '../timeRule'
-import { timeRuleOverridesFromDto } from '../timeRuleOverride'
-import { ListParkingSpotPagination, ParkingSpot, parkingSpotToDto } from './ParkingSpot'
-import { ParkingSpotRepository } from './ParkingSpotRepository'
+import { AuthGuard, Session } from 'src/auth'
+import { ListParkingSpotPagination, ParkingSpot, parkingSpotToDto } from 'src/domain/parkingSpot/ParkingSpot'
+import { ParkingSpotRepository } from 'src/domain/parkingSpot/ParkingSpotRepository'
+import { timeRulesFromDto } from 'src/domain/timeRule'
+import { timeRuleOverridesFromDto } from 'src/domain/timeRuleOverride'
 
 const contract = rootContract.parkingSpots
 

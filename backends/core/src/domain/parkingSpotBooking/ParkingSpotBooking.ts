@@ -1,6 +1,6 @@
 import { BookingStatusDto, ParkingSpotBookingDto } from '@parker/core-client'
 import { formatInstantFields } from '@parker/time'
-import { ParkingSpotBookingDao } from '../../db/types'
+import { ParkingSpotBookingDao } from 'src/db/types'
 
 export type BookingStatus = BookingStatusDto
 

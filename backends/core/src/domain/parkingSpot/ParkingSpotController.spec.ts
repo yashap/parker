@@ -8,12 +8,12 @@ import { Point } from '@parker/geography'
 import { eq } from 'drizzle-orm'
 import { omit, orderBy, sortBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
-import { AuthGuard } from '../../auth'
-import { Db } from '../../db/Db'
-import { parkingSpotTable } from '../../db/schema'
-import { buildTestApp } from '../../test/buildTestApp'
-import { expectSystemTimestampStrings } from '../../test/expectSystemTimestamp'
-import { ParkingSpotController } from './ParkingSpotController'
+import { AuthGuard } from 'src/auth'
+import { Db } from 'src/db/Db'
+import { parkingSpotTable } from 'src/db/schema'
+import { ParkingSpotController } from 'src/domain/parkingSpot/ParkingSpotController'
+import { buildTestApp } from 'src/test/buildTestApp'
+import { expectSystemTimestampStrings } from 'src/test/expectSystemTimestamp'
 
 describe(ParkingSpotController.name, () => {
   let app: INestApplication

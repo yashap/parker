@@ -1,10 +1,10 @@
 import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import { NestAppBuilder } from '@parker/nest-utils'
-import { AuthModule, SuperTokensExceptionFilter } from '../auth'
-import { config } from '../config'
-import { ParkingSpotModule } from '../domain/parkingSpot'
-import { ParkingSpotBookingModule } from '../domain/parkingSpotBooking'
+import { AuthModule, SuperTokensExceptionFilter } from 'src/auth'
+import { config } from 'src/config'
+import { ParkingSpotModule } from 'src/domain/parkingSpot'
+import { ParkingSpotBookingModule } from 'src/domain/parkingSpotBooking'
 
 export const buildTestApp = async (): Promise<INestApplication> => {
   const moduleRef = await Test.createTestingModule({

@@ -64,7 +64,8 @@ export default tseslint.config(
         },
       ],
 
-      'no-relative-import-paths/no-relative-import-paths': ['warn', { allowSameFolder: true }],
+      // Allow only absolute imports, no relative imports
+      'no-relative-import-paths/no-relative-import-paths': ['error', { allowSameFolder: false }],
     },
 
     settings: {

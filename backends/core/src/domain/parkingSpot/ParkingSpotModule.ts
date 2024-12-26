@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
-import { DbModule } from '../../db/DbModule'
-import { ParkingSpotController } from './ParkingSpotController'
-import { ParkingSpotRepository } from './ParkingSpotRepository'
+import { DbModule } from 'src/db/DbModule'
+import { ParkingSpotController } from 'src/domain/parkingSpot/ParkingSpotController'
+import { ParkingSpotRepository } from 'src/domain/parkingSpot/ParkingSpotRepository'
 
 @Module({
   controllers: [ParkingSpotController],

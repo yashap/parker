@@ -1,8 +1,8 @@
 import { MiddlewareConsumer, Module, NestModule, DynamicModule } from '@nestjs/common'
-import { AuthConfig } from '../config'
-import { AuthConfigInjectionToken } from './AuthConfigInjectionToken'
-import { AuthMiddleware } from './AuthMiddleware'
-import { SuperTokensService } from './SuperTokensService'
+import { AuthConfigInjectionToken } from 'src/auth/AuthConfigInjectionToken'
+import { AuthMiddleware } from 'src/auth/AuthMiddleware'
+import { SuperTokensService } from 'src/auth/SuperTokensService'
+import { AuthConfig } from 'src/config'
 
 @Module({
   providers: [SuperTokensService],

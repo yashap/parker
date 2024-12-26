@@ -1,5 +1,5 @@
 import { InputDao } from '@parker/drizzle-utils'
-import { parkingSpotBookingTable, parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from './schema'
+import { parkingSpotBookingTable, parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from 'src/db/schema'
 
 export type ParkingSpotDao = typeof parkingSpotTable.$inferSelect
 export type ParkingSpotInputDao = InputDao<ParkingSpotDao>
