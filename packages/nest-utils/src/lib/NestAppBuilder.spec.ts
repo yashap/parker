@@ -11,7 +11,8 @@ import {
 } from '@parker/errors'
 import { LogLevel, Logger } from '@parker/logging'
 import { v4 as uuid } from 'uuid'
-import { expectServerError } from '../test/expectServerError'
+import { NestAppBuilder } from 'src/lib/NestAppBuilder'
+import { expectServerError } from 'src/test/expectServerError'
 import {
   CreateFooRequest,
   Foo,
@@ -20,8 +21,7 @@ import {
   ListFoosRequest,
   buildFooApp,
   buildFooClient,
-} from '../test/FooApp'
-import { NestAppBuilder } from './NestAppBuilder'
+} from 'src/test/FooApp'
 
 describe(NestAppBuilder.name, () => {
   let client: FooClient

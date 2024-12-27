@@ -2,8 +2,8 @@ import { ServerError } from '@parker/errors'
 import { Logger, Payload } from '@parker/logging'
 import { Request, Response } from 'express'
 import { keys, pick } from 'lodash'
-import { NestFunctionalMiddleware } from './NestFunctionalMiddleware'
-import { onResponseComplete } from './onResponseComplete'
+import { NestFunctionalMiddleware } from 'src/lib/NestFunctionalMiddleware'
+import { onResponseComplete } from 'src/lib/onResponseComplete'
 
 const logger: Logger = new Logger('HttpRequest')
 

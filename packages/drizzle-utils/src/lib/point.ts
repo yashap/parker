@@ -1,6 +1,6 @@
 import { Point } from '@parker/geography'
 import { customType } from 'drizzle-orm/pg-core'
-import { geomBinaryToPoint } from './geomBinaryToPoint'
+import { geomBinaryToPoint } from 'src/lib/geomBinaryToPoint'
 
 export const point = customType<{
   data: Point

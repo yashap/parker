@@ -1,7 +1,7 @@
 import { ContractBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
-import { CreateParkingSpotBookingRequestSchema, ParkingSpotBookingSchema } from '../model/ParkingSpotBooking'
+import { CreateParkingSpotBookingRequestSchema, ParkingSpotBookingSchema } from 'src/lib/model/ParkingSpotBooking'
 
 const c = initContract()
 

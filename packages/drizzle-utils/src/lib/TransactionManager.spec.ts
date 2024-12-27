@@ -1,8 +1,8 @@
 import { PgQueryResultHKT, PgTransaction } from 'drizzle-orm/pg-core'
-import { User, TestDb, TestDbSchema } from '../test/TestDb'
-import { userTable } from '../test/testSchema'
-import { ActiveTransactionContext } from './ActiveTransactionContext'
-import { TransactionManager } from './TransactionManager'
+import { ActiveTransactionContext } from 'src/lib/ActiveTransactionContext'
+import { TransactionManager } from 'src/lib/TransactionManager'
+import { User, TestDb, TestDbSchema } from 'src/test/TestDb'
+import { userTable } from 'src/test/testSchema'
 
 describe(TransactionManager.name, () => {
   let transactionManager: TransactionManager<TestDbSchema>

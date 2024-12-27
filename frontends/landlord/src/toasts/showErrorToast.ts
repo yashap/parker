@@ -1,5 +1,5 @@
 import { ServerError } from '@parker/errors'
-import { showToast } from './showToast'
+import { showToast } from 'src/toasts/showToast'
 
 const LAST_RESORT_ERROR_MESSAGE = 'Something went wrong'
 

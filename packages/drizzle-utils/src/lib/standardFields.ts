@@ -2,7 +2,7 @@ import { Temporal } from '@js-temporal/polyfill'
 import { sql } from 'drizzle-orm'
 import { uuid } from 'drizzle-orm/pg-core'
 import { v7 } from 'uuid'
-import { instant } from './instant'
+import { instant } from 'src/lib/instant'
 
 export const standardFields = {
   id: uuid()

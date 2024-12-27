@@ -1,6 +1,6 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { InputValidationError } from '@parker/errors'
-import { parseInstantFields } from './parseInstantFields'
+import { parseInstantFields } from 'src/lib/parseInstantFields'
 
 describe(parseInstantFields.name, () => {
   it('parses instant fields with string values', () => {

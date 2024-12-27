@@ -1,4 +1,4 @@
-import { Logger } from './Logger'
+import { Logger } from 'src/lib/Logger'
 
 describe(Logger.name, () => {
   describe('Logging', () => {

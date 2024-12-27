@@ -2,10 +2,10 @@ import { router } from 'expo-router'
 import React from 'react'
 import { Linking, View } from 'react-native'
 import { Button, Caption, Card, Divider, Headline, Subheading, Text, TextInput } from 'react-native-paper'
-import { AuthClientBuilder } from '../apiClient/AuthClientBuilder'
-import { useNavigationHeader } from '../hooks/useNavigationHeader'
-import { useTheme } from '../theme'
-import { showErrorToast } from '../toasts/showErrorToast'
+import { AuthClientBuilder } from 'src/apiClient/AuthClientBuilder'
+import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
+import { useTheme } from 'src/theme'
+import { showErrorToast } from 'src/toasts/showErrorToast'
 
 export interface SignUpProps {
   email: string

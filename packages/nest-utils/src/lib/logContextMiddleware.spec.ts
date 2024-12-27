@@ -1,7 +1,7 @@
 import { CorrelationIdPropagator } from '@parker/correlation-id-propagator'
 import { Request, Response } from 'express'
 import { v4 as uuid } from 'uuid'
-import { logContextMiddleware } from './logContextMiddleware'
+import { logContextMiddleware } from 'src/lib/logContextMiddleware'
 
 describe(logContextMiddleware.name, () => {
   const sleep = (milliseconds: number): Promise<number> =>

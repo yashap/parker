@@ -1,7 +1,7 @@
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { PgQueryResultHKT, PgTransaction } from 'drizzle-orm/pg-core'
-import { ActiveTransactionContext } from './ActiveTransactionContext'
-import { DbConnection, DbTransaction } from './types'
+import { ActiveTransactionContext } from 'src/lib/ActiveTransactionContext'
+import { DbConnection, DbTransaction } from 'src/lib/types'
 
 export class TransactionManager<Schema extends Record<string, unknown>> {
   constructor(private readonly db: NodePgDatabase<Schema>) {}

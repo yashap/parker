@@ -28,4 +28,9 @@ module.exports = {
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   slowTestThreshold: 5,
+
+  // Make absolute imports work in jest tests
+  moduleNameMapper: {
+    '^src/(.*)$': '<rootDir>/src/$1',
+  },
 }

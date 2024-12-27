@@ -1,6 +1,6 @@
 import { CorrelationIdPropagator } from '@parker/correlation-id-propagator'
 import { v4 as uuid } from 'uuid'
-import { NestFunctionalMiddleware } from './NestFunctionalMiddleware'
+import { NestFunctionalMiddleware } from 'src/lib/NestFunctionalMiddleware'
 
 export const logContextMiddleware: NestFunctionalMiddleware = (_request, _response, next) => {
   CorrelationIdPropagator.runWithContext(

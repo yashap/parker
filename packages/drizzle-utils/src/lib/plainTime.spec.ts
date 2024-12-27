@@ -1,7 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill'
-import { User, TestDb, Reminder } from '../test/TestDb'
-import { reminderTable, userTable } from '../test/testSchema'
-import { instant } from './instant'
+import { instant } from 'src/lib/instant'
+import { User, TestDb, Reminder } from 'src/test/TestDb'
+import { reminderTable, userTable } from 'src/test/testSchema'
 
 describe(instant.name, () => {
   let user: User

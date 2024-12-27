@@ -1,5 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
-import { addTemporalEqualityTesters } from './addTemporalEqualityTesters'
+import { addTemporalEqualityTesters } from 'src/lib/addTemporalEqualityTesters'
 
 describe(addTemporalEqualityTesters.name, () => {
   beforeAll(() => {

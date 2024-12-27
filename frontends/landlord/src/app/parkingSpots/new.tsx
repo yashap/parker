@@ -2,9 +2,9 @@ import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { View } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
-import { CoreClientBuilder } from '../../apiClient/CoreClientBuilder'
-import { useNavigationHeader } from '../../hooks/useNavigationHeader'
-import { showErrorToast } from '../../toasts/showErrorToast'
+import { CoreClientBuilder } from 'src/apiClient/CoreClientBuilder'
+import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
+import { showErrorToast } from 'src/toasts/showErrorToast'
 
 const onSubmit = async ({ address, latitude, longitude }: { address: string; latitude: string; longitude: string }) => {
   const coreClient = CoreClientBuilder.build()

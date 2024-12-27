@@ -1,4 +1,4 @@
-import { Point } from './Point'
+import { Point } from 'src/lib/Point'
 
 type Longitude = number
 type Latitude = number

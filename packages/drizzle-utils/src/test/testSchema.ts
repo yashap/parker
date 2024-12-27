@@ -1,9 +1,9 @@
 import { relations } from 'drizzle-orm'
 import { pgTable, text, uuid } from 'drizzle-orm/pg-core'
-import { instant } from '../lib/instant'
-import { plainTime } from '../lib/plainTime'
-import { point } from '../lib/point'
-import { standardFields } from '../lib/standardFields'
+import { instant } from 'src/lib/instant'
+import { plainTime } from 'src/lib/plainTime'
+import { point } from 'src/lib/point'
+import { standardFields } from 'src/lib/standardFields'
 
 export const userTable = pgTable('User', {
   ...standardFields,

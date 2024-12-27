@@ -1,4 +1,4 @@
-import { TestOnly } from './TestOnly'
+import { TestOnly } from 'src/lib/TestOnly'
 
 describe('TestOnly', () => {
   const originalNodeEnv = process.env['NODE_ENV']

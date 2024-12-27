@@ -4,8 +4,8 @@ import { SupertestInstance } from '@parker/api-client-test-utils'
 import { ApiClient, ApiClientBuilder, SchemaBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
-import { Endpoint, HandlerResult, handler } from '../lib/Endpoint'
-import { NestAppBuilder } from '../lib/NestAppBuilder'
+import { Endpoint, HandlerResult, handler } from 'src/lib/Endpoint'
+import { NestAppBuilder } from 'src/lib/NestAppBuilder'
 
 /**
  * This is a basic Nest server, with a client/server contract defined using ts-rest, that makes it easy to test our nest-utils
@@ -44,6 +44,7 @@ const contract = c.router({
     method: 'GET',
     path: '/foos',
     responses: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       200: ListFoosResponseSchema,
     },
     query: ListFoosRequestSchema,

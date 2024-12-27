@@ -1,4 +1,4 @@
-import { FooRepository } from '../FooApp'
+import { FooRepository } from 'src/test/FooApp'
 
 afterEach(() => {
   FooRepository.clear()

@@ -1,4 +1,4 @@
-import { TestDb } from '../TestDb'
+import { TestDb } from 'src/test/TestDb'
 
 beforeAll(async () => {
   await TestDb.init()

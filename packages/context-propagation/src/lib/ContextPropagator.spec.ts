@@ -1,4 +1,4 @@
-import { ContextPropagator } from './ContextPropagator'
+import { ContextPropagator } from 'src/lib/ContextPropagator'
 
 describe(ContextPropagator.name, () => {
   interface Context {

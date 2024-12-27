@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
-import { HttpExceptionFilter } from './HttpExceptionFilter'
-import { logContextMiddleware } from './logContextMiddleware'
-import { logMiddleware } from './logMiddleware'
-import { NestLogger } from './NestLogger'
+import { HttpExceptionFilter } from 'src/lib/HttpExceptionFilter'
+import { logContextMiddleware } from 'src/lib/logContextMiddleware'
+import { logMiddleware } from 'src/lib/logMiddleware'
+import { NestLogger } from 'src/lib/NestLogger'
 
 export class NestAppBuilder {
   public static async build(appModule: unknown): Promise<INestApplication> {

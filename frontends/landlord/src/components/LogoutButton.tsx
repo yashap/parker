@@ -2,9 +2,9 @@ import { router } from 'expo-router'
 import { Button } from 'react-native-paper'
 import 'react-native-url-polyfill/auto'
 import SuperTokens from 'supertokens-react-native'
-import { AuthClientBuilder } from '../apiClient/AuthClientBuilder'
-import { useTheme } from '../theme'
-import { showErrorToast } from '../toasts/showErrorToast'
+import { AuthClientBuilder } from 'src/apiClient/AuthClientBuilder'
+import { useTheme } from 'src/theme'
+import { showErrorToast } from 'src/toasts/showErrorToast'
 
 const logout = async () => {
   await SuperTokens.signOut()
