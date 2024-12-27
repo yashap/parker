@@ -1,6 +1,6 @@
 import { initContract } from '@ts-rest/core'
-import { parkingSpotContract } from 'src/lib/contract/parkingSpot'
-import { parkingSpotBookingContract } from 'src/lib/contract/parkingSpotBooking'
+import { parkingSpotContract } from './parkingSpot'
+import { parkingSpotBookingContract } from './parkingSpotBooking'
 
 const c = initContract()
 

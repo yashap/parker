@@ -1,7 +1,7 @@
 import { PointSchema, SchemaBuilder, PaginationRequestSchema } from '@parker/api-client-utils'
 import { z } from 'zod'
-import { TimeRuleSchema } from 'src/lib/model/TimeRule'
-import { TimeRuleOverrideSchema } from 'src/lib/model/TimeRuleOverride'
+import { TimeRuleSchema } from './TimeRule'
+import { TimeRuleOverrideSchema } from './TimeRuleOverride'
 
 export const ParkingSpotSchema = z.object({
   id: z.string().uuid(),

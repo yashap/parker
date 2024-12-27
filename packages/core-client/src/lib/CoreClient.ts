@@ -10,7 +10,7 @@ import {
   extractPatchResponse,
   extractPostResponse,
 } from '@parker/api-client-utils'
-import { contract } from 'src/lib/contract'
+import { contract } from './contract'
 import {
   CreateParkingSpotBookingRequest,
   CreateParkingSpotRequest,
@@ -21,7 +21,7 @@ import {
   ParkingSpotBookingDto,
   ParkingSpotDto,
   UpdateParkingSpotRequest,
-} from 'src/lib/model/types'
+} from './model/types'
 
 export class CoreClient {
   private client: ApiClient<typeof contract>

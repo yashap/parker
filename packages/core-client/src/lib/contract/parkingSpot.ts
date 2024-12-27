@@ -9,7 +9,7 @@ import {
   ListParkingSpotsResponseSchema,
   ParkingSpotSchema,
   UpdateParkingSpotRequestSchema,
-} from 'src/lib/model/ParkingSpot'
+} from '../model/ParkingSpot'
 
 const c = initContract()
 
