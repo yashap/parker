@@ -7,7 +7,6 @@ What am I planning to work on next?
   - Check out the `TODO-lib-cursor` bits
   - Tests, and also api client "fetch all pages"
 - More complete tests for the LIST parkingSpots endpoint
-- Move to absolute imports
 - Can I make supertokens migrate during normal migrations, not on startup?
 - Better create parking spot FE
   - With time rules and overrides, and properly viewing and editing your parking spot(s)
@@ -46,3 +45,32 @@ What am I planning to work on next?
 - Maybe switch to pnpm instead of yarn v1 workspaces?
   - I believe new RN supports pnpm
 - E2E tests, possibly using [Maestro](https://www.mobile.dev/)
+- Move libs to absolute imports
+  - In theory this is just:
+
+    ```ts
+    // ================================
+    // jest.config.js
+    // ================================
+    // Make absolute imports work in jest tests
+    moduleNameMapper: {
+      '^src/(.*)$': '<rootDir>/src/$1',
+    },
+
+    // ================================
+    // tsconfig.json
+    // ================================
+    "baseUrl": "./",
+    "paths": {
+      "src/*": ["src/*"]
+    }
+
+    // ================================
+    // eslint.config.mjs
+    // ================================
+    // Move all the no-relative-import-paths stuff to the shared config
+    // Including install of eslint-plugin-no-relative-import-paths
+    ```
+
+  - But for some reason, when I do this in libs, I get weird unexpeceted any types in consumers of libs
+  - Maybe it's the baseUrl thing?  I didn't experiment with it

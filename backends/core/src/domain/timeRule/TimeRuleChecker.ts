@@ -1,6 +1,6 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { fromNumericDayOfWeek } from '@parker/api-client-utils'
-import { TimeRule } from './TimeRule'
+import { TimeRule } from 'src/domain/timeRule/TimeRule'
 
 export class TimeRuleChecker {
   public static satisfiesTimeRule(timeRule: TimeRule, timestamp: Temporal.Instant, timezone: string): boolean {

@@ -1,6 +1,6 @@
 import { CoreClient } from '@parker/core-client'
-import { config } from '../config'
-import { AxiosInstanceBuilder } from './AxiosInstanceBuilder'
+import { AxiosInstanceBuilder } from 'src/apiClient/AxiosInstanceBuilder'
+import { config } from 'src/config'
 
 export class CoreClientBuilder {
   public static build() {

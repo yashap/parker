@@ -1,6 +1,6 @@
 import { useNavigation } from 'expo-router'
 import React from 'react'
-import { LogoutButton } from '../components/LogoutButton'
+import { LogoutButton } from 'src/components/LogoutButton'
 
 export type HeaderType = NoHeader | DefaultHeader
 

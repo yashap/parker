@@ -1,4 +1,4 @@
-import { Configuration } from './Configuration'
+import { Configuration } from 'src/config/Configuration'
 
 const port = Number(process.env['PORT'] ?? 3501)
 const hostName: string = process.env['HOST_NAME'] ?? 'http://localhost'

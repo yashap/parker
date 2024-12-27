@@ -1,6 +1,6 @@
 import { TimeRuleOverrideDto } from '@parker/core-client'
 import { formatInstantFields, parseInstantFields } from '@parker/time'
-import { TimeRuleOverrideDao } from '../../db/types'
+import { TimeRuleOverrideDao } from 'src/db/types'
 
 export type TimeRuleOverride = Omit<TimeRuleOverrideDao, 'id' | 'createdAt' | 'updatedAt' | 'parkingSpotId'>
 
