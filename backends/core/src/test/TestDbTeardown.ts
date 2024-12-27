@@ -1,5 +1,5 @@
-import { Db } from '../db/Db'
-import { parkingSpotTable } from '../db/schema'
+import { Db } from 'src/db/Db'
+import { parkingSpotTable } from 'src/db/schema'
 
 // Don't need to explicitly list tables with foreign key ON DELETE CASCADE
 const tablesToDestroy = [parkingSpotTable]

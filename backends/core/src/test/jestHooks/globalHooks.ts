@@ -1,5 +1,5 @@
-import { AuthGuard } from '../../auth'
-import { TestDbTeardown } from '../TestDbTeardown'
+import { AuthGuard } from 'src/auth'
+import { TestDbTeardown } from 'src/test/TestDbTeardown'
 
 beforeAll(async () => {
   await new TestDbTeardown().clear()

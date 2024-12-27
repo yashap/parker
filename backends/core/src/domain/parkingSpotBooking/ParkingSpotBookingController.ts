@@ -4,11 +4,11 @@ import { BookingStatusValues, contract as rootContract } from '@parker/core-clie
 import { required } from '@parker/errors'
 import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
 import { SessionContainer } from 'supertokens-node/recipe/session'
-import { AuthGuard, Session } from '../../auth'
-import { Db } from '../../db/Db'
-import { parkingSpotBookingTable } from '../../db/schema'
-import { ParkingSpotBookingInputDao } from '../../db/types'
-import { parkingSpotBookingToDto } from './ParkingSpotBooking'
+import { AuthGuard, Session } from 'src/auth'
+import { Db } from 'src/db/Db'
+import { parkingSpotBookingTable } from 'src/db/schema'
+import { ParkingSpotBookingInputDao } from 'src/db/types'
+import { parkingSpotBookingToDto } from 'src/domain/parkingSpotBooking/ParkingSpotBooking'
 
 const contract = rootContract.parkingSpotBookings
 

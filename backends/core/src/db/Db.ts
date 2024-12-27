@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { DbConnection, TransactionManager } from '@parker/drizzle-utils'
 import { required } from '@parker/errors'
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
-import * as schema from './schema'
+import * as schema from 'src/db/schema'
 
 export type DatabaseSchema = typeof schema
 

@@ -1,6 +1,6 @@
-import { config } from '../config'
-import { AuthClient } from './AuthClient'
-import { AxiosInstanceBuilder } from './AxiosInstanceBuilder'
+import { AuthClient } from 'src/apiClient/AuthClient'
+import { AxiosInstanceBuilder } from 'src/apiClient/AxiosInstanceBuilder'
+import { config } from 'src/config'
 
 export class AuthClientBuilder {
   public static build(): AuthClient {

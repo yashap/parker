@@ -6,10 +6,10 @@ dotenv.config()
 import { Module } from '@nestjs/common'
 import { NestAppBuilder, NestAppRunner } from '@parker/nest-utils'
 import supertokens from 'supertokens-node'
-import { AuthModule, SuperTokensExceptionFilter } from './auth'
-import { config } from './config'
-import { ParkingSpotModule } from './domain/parkingSpot'
-import { ParkingSpotBookingModule } from './domain/parkingSpotBooking'
+import { AuthModule, SuperTokensExceptionFilter } from 'src/auth'
+import { config } from 'src/config'
+import { ParkingSpotModule } from 'src/domain/parkingSpot'
+import { ParkingSpotBookingModule } from 'src/domain/parkingSpotBooking'
 import { Logger } from '@parker/logging'
 
 @Module({

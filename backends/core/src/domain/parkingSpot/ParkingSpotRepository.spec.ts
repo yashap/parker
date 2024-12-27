@@ -2,11 +2,11 @@ import { Temporal } from '@js-temporal/polyfill'
 import { Point } from '@parker/geography'
 import { omit, orderBy } from 'lodash'
 import { v4 as uuid } from 'uuid'
-import { Db } from '../../db/Db'
-import { expectSystemTimestamps } from '../../test/expectSystemTimestamp'
-import { DayOfWeek } from '../time/DayOfWeek'
-import { ParkingSpot } from './ParkingSpot'
-import { CreateParkingSpotInput, ParkingSpotRepository } from './ParkingSpotRepository'
+import { Db } from 'src/db/Db'
+import { ParkingSpot } from 'src/domain/parkingSpot/ParkingSpot'
+import { CreateParkingSpotInput, ParkingSpotRepository } from 'src/domain/parkingSpot/ParkingSpotRepository'
+import { DayOfWeek } from 'src/domain/time/DayOfWeek'
+import { expectSystemTimestamps } from 'src/test/expectSystemTimestamp'
 
 describe(ParkingSpotRepository.name, () => {
   let parkingSpotRepository: ParkingSpotRepository

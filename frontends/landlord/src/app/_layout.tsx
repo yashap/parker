@@ -6,8 +6,8 @@ import { PaperProvider } from 'react-native-paper'
 import 'react-native-url-polyfill/auto'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SuperTokens from 'supertokens-react-native'
-import { config } from '../config'
-import { lightTheme, useTheme } from '../theme'
+import { config } from 'src/config'
+import { lightTheme, useTheme } from 'src/theme'
 
 SuperTokens.init({
   apiDomain: config.coreUrl,
