@@ -1,10 +1,9 @@
 import { InputValidationError } from '@parker/errors'
 import { z } from 'zod'
 import { DEFAULT_MAX_LIMIT } from './constants'
-import { Cursor } from './Cursor'
-import { decodeCursor, encodeCursor } from './encoding'
+import { Cursor, decodeCursor, encodeCursor } from './Cursor'
 
-describe('encoding', () => {
+describe('Cursor', () => {
   type UserCursor = Cursor<'age' | 'name', number | string>
   const OrderingSchema = z.union([
     z.object({

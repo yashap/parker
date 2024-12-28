@@ -1,11 +1,10 @@
-import { Cursor } from './Cursor'
-import { encodeCursor } from './encoding'
+import { Pagination, encodeCursor } from './Cursor'
 import { OrderDirectionValues } from './orderDirection'
 import { PaginatedResponseDto, PaginationResponseDto } from './paginationDto'
 
-export const buildPaginatedResponse = <K extends string, V, T extends Record<K, unknown> & { id: string }>(
+export const buildPaginatedResponse = <K extends string, T extends Record<K, unknown> & { id: string }>(
   data: T[],
-  pagination: Omit<Cursor<K, V>, 'lastOrderValueSeen' | 'lastIdSeen'>
+  pagination: Pagination<K>
 ): PaginatedResponseDto<T> => {
   let paginationResponse: PaginationResponseDto = {}
   const firstItem = data[0]

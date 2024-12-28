@@ -1,4 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
+import { required } from '@parker/errors'
 import { User, TestDb, Reminder } from '../test/TestDb'
 import { reminderTable, userTable } from '../test/testSchema'
 import { instant } from './instant'
@@ -9,8 +10,7 @@ describe(instant.name, () => {
   const createUser = async (name: string): Promise<User> => {
     const result = await TestDb.db().insert(userTable).values({ name }).returning()
     expect(result).toHaveLength(1)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result[0]!
+    return required(result[0])
   }
 
   const createReminder = async (
@@ -20,8 +20,7 @@ describe(instant.name, () => {
   ): Promise<Reminder> => {
     const result = await TestDb.db().insert(reminderTable).values({ userId: author.id, description, time }).returning()
     expect(result).toHaveLength(1)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result[0]!
+    return required(result[0])
   }
 
   const getAllReminders = (): Promise<Reminder[]> => {

@@ -1,3 +1,4 @@
+import { required } from '@parker/errors'
 import { PgQueryResultHKT, PgTransaction } from 'drizzle-orm/pg-core'
 import { User, TestDb, TestDbSchema } from '../test/TestDb'
 import { userTable } from '../test/testSchema'
@@ -14,8 +15,7 @@ describe(TransactionManager.name, () => {
   const createUser = async (name: string): Promise<User> => {
     const result = await transactionManager.getConnection().insert(userTable).values({ name }).returning()
     expect(result).toHaveLength(1)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result[0]!
+    return required(result[0])
   }
 
   const getAllUsers = (): Promise<User[]> => {

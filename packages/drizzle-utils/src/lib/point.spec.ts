@@ -1,3 +1,4 @@
+import { required } from '@parker/errors'
 import { Point } from '@parker/geography'
 import { User, TestDb, FavouriteLocation } from '../test/TestDb'
 import { favouriteLocationTable, userTable } from '../test/testSchema'
@@ -9,8 +10,7 @@ describe(instant.name, () => {
   const createUser = async (name: string): Promise<User> => {
     const result = await TestDb.db().insert(userTable).values({ name }).returning()
     expect(result).toHaveLength(1)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result[0]!
+    return required(result[0])
   }
 
   const createFavouriteLocation = async (
@@ -23,8 +23,7 @@ describe(instant.name, () => {
       .values({ userId: author.id, name, location })
       .returning()
     expect(result).toHaveLength(1)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result[0]!
+    return required(result[0])
   }
 
   const getAllFavouriteLocations = (): Promise<FavouriteLocation[]> => {

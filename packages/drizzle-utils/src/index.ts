@@ -1,3 +1,4 @@
+export * from './lib/buildPaginationQuery'
 export * from './lib/InputDao'
 export * from './lib/instant'
 export * from './lib/plainTime'

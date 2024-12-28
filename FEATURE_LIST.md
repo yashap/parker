@@ -3,11 +3,9 @@
 What am I planning to work on next?
 
 - Cursor stuff remaining:
-  - Tests for `buildPaginatedResponse`
-    - Including, can we tell when we should stop fetching pages?
-  - Extract Drizzle stuff into a lib
   - Api client "fetch all pages"
   - Tests for the controller list endpoint, ensuring pagination is working
+- Is it possible to do conversion to Temport.Instant within ts-rest?
 - More complete tests for the LIST parkingSpots endpoint
 - Can I make supertokens migrate during normal migrations, not on startup?
 - Better create parking spot FE

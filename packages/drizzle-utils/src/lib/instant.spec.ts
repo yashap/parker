@@ -1,4 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
+import { required } from '@parker/errors'
 import { User, TestDb, Post } from '../test/TestDb'
 import { postTable, userTable } from '../test/testSchema'
 import { instant } from './instant'
@@ -9,15 +10,13 @@ describe(instant.name, () => {
   const createUser = async (name: string): Promise<User> => {
     const result = await TestDb.db().insert(userTable).values({ name }).returning()
     expect(result).toHaveLength(1)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result[0]!
+    return required(result[0])
   }
 
   const createPost = async (sentAt: Temporal.Instant, message = 'Test Message', author: User = user): Promise<Post> => {
     const result = await TestDb.db().insert(postTable).values({ authorId: author.id, message, sentAt }).returning()
     expect(result).toHaveLength(1)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return result[0]!
+    return required(result[0])
   }
 
   const getAllPosts = (): Promise<Post[]> => {
