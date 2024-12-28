@@ -314,7 +314,8 @@ describe(buildPaginationQuery.name, () => {
       // Continue forwards
       const twoForwardsFromFourthPagePagination = parsePagination(
         {
-          cursor: buildPaginatedResponse(oneForwardsFromFourthPage, oneForwardsFromFourthPagePagination).pagination.next,
+          cursor: buildPaginatedResponse(oneForwardsFromFourthPage, oneForwardsFromFourthPagePagination).pagination
+            .next,
         },
         parsePostOrdering
       )
@@ -326,7 +327,8 @@ describe(buildPaginationQuery.name, () => {
       // Continue forwards
       const threeForwardsFromFourthPagePagination = parsePagination(
         {
-          cursor: buildPaginatedResponse(twoForwardsFromFourthPage, twoForwardsFromFourthPagePagination).pagination.next,
+          cursor: buildPaginatedResponse(twoForwardsFromFourthPage, twoForwardsFromFourthPagePagination).pagination
+            .next,
         },
         parsePostOrdering
       )
@@ -338,7 +340,8 @@ describe(buildPaginationQuery.name, () => {
       // Continue forwards
       const fourForwardsFromFourthPagePagination = parsePagination(
         {
-          cursor: buildPaginatedResponse(threeForwardsFromFourthPage, threeForwardsFromFourthPagePagination).pagination.next,
+          cursor: buildPaginatedResponse(threeForwardsFromFourthPage, threeForwardsFromFourthPagePagination).pagination
+            .next,
         },
         parsePostOrdering
       )
@@ -348,4 +351,3 @@ describe(buildPaginationQuery.name, () => {
     })
   })
 })
-
