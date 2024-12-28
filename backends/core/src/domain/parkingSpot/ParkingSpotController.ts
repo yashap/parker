@@ -2,14 +2,7 @@ import { Controller, UseGuards } from '@nestjs/common'
 import { contract as rootContract } from '@parker/core-client'
 import { ForbiddenError } from '@parker/errors'
 import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
-import {
-  DEFAULT_LIMIT,
-  encodeCursor,
-  OrderDirectionValues,
-  PaginationResponseDto,
-  parsePagination,
-} from '@parker/pagination'
-import { first, last, pick } from 'lodash'
+import { DEFAULT_LIMIT, buildPaginatedResponse, parsePagination } from '@parker/pagination'
 import { SessionContainer } from 'supertokens-node/recipe/session'
 import { AuthGuard, Session } from 'src/auth'
 import {
@@ -37,37 +30,9 @@ export class ParkingSpotController extends BaseController {
       const { ownerUserId } = query
       const pagination: ListParkingSpotPagination = parsePagination(query, parseParkingSpotOrdering)
       const parkingSpots = await this.parkingSpotRepository.list({ ownerUserId }, pagination)
-
-      // TODO-lib-cursor: extract this generation of cursor response into a lib
-      let paginationResponse: PaginationResponseDto = {}
-      const firstParkingSpot = first(parkingSpots)
-      const lastParkingSpot = last(parkingSpots)
-      if (firstParkingSpot && lastParkingSpot) {
-        const baseCursor = pick(pagination, ['limit', 'orderBy'])
-        const next = {
-          ...baseCursor,
-          orderDirection: pagination.orderDirection,
-          lastOrderValueSeen: lastParkingSpot[pagination.orderBy],
-          lastIdSeen: lastParkingSpot.id,
-        }
-        const previous = {
-          ...baseCursor,
-          orderDirection:
-            pagination.orderDirection === OrderDirectionValues.asc
-              ? OrderDirectionValues.desc
-              : OrderDirectionValues.asc,
-          lastOrderValueSeen: firstParkingSpot[pagination.orderBy],
-          lastIdSeen: firstParkingSpot.id,
-        }
-        paginationResponse = {
-          next: encodeCursor(next),
-          previous: encodeCursor(previous),
-        }
-      }
-
       return {
         status: HttpStatus.OK,
-        body: { data: parkingSpots.map(parkingSpotToDto), pagination: paginationResponse },
+        body: buildPaginatedResponse(parkingSpots.map(parkingSpotToDto), pagination),
       }
     })
   }

@@ -2,7 +2,7 @@ import { InputValidationError } from '@parker/errors'
 import { z } from 'zod'
 import { DEFAULT_MAX_LIMIT } from './constants'
 import { Cursor } from './Cursor'
-import { decodeCursor, encodeCursor, parsePagination } from './encoding'
+import { decodeCursor, encodeCursor } from './encoding'
 
 describe('encoding', () => {
   type UserCursor = Cursor<'age' | 'name', number | string>
@@ -193,9 +193,5 @@ describe('encoding', () => {
       } as unknown as UserCursor)
       expect(() => decodeCursor(cursor, parseUserOrdering)).toThrow(InputValidationError)
     })
-  })
-
-  describe(parsePagination.name, () => {
-    // TODO
   })
 })
