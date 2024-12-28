@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common'
-import { OrderDirectionValues } from '@parker/api-client-utils'
 import { ListParkingSpotsRequest } from '@parker/core-client'
+import { buildPaginationQuery } from '@parker/drizzle-utils'
 import { required } from '@parker/errors'
 import { Point } from '@parker/geography'
-import { and, asc, desc, eq, gt, lt, or, SQL, sql } from 'drizzle-orm'
-import { PgColumn } from 'drizzle-orm/pg-core'
-import { isEmpty, isString, omit } from 'lodash'
+import { and, asc, eq, sql } from 'drizzle-orm'
+import { isEmpty, omit } from 'lodash'
 import { Db } from 'src/db/Db'
 import { parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from 'src/db/schema'
 import { ParkingSpotDao, ParkingSpotInputDao, TimeRuleDao, TimeRuleOverrideDao } from 'src/db/types'
-import { ListParkingSpotCursor, ListParkingSpotPagination, ParkingSpot } from 'src/domain/parkingSpot/ParkingSpot'
+import { ListParkingSpotPagination, ParkingSpot } from 'src/domain/parkingSpot/ParkingSpot'
 import { TimeZoneLookup } from 'src/domain/time/TimeZoneLookup'
 import { TimeRule } from 'src/domain/timeRule'
 import { TimeRuleOverride } from 'src/domain/timeRuleOverride'
@@ -78,7 +77,7 @@ export class ParkingSpotRepository {
     if (pagination?.limit === 0) {
       return []
     }
-    const { where, orderBy, limit } = this.buildPaginationQuery(pagination)
+    const { where, orderBy, limit } = buildPaginationQuery(parkingSpotTable, pagination)
     const parkingSpots = await this.db.db().query.parkingSpotTable.findMany({
       where: and(ownerUserId ? eq(parkingSpotTable.ownerUserId, ownerUserId) : undefined, where),
       orderBy,
@@ -163,52 +162,6 @@ export class ParkingSpotRepository {
       timeRuleOverrides: parkingSpot.timeRuleOverrides.map((timeRuleOverride) =>
         omit(timeRuleOverride, ['id', 'createdAt', 'updatedAt', 'parkingSpotId'])
       ),
-    }
-  }
-
-  private buildPaginationQuery(pagination?: ListParkingSpotPagination): {
-    where?: SQL
-    orderBy?: SQL
-    limit?: number
-  } {
-    if (!pagination) {
-      return {
-        where: undefined,
-        limit: undefined,
-        orderBy: undefined,
-      }
-    }
-
-    const limit = pagination.limit
-    const direction = pagination.orderDirection === OrderDirectionValues.asc ? asc : desc
-    const cursor = pagination as Partial<ListParkingSpotCursor>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const field = required(
-      (parkingSpotTable as unknown as Record<string, PgColumn>)[
-        cursor.orderBy ?? (pagination.orderBy as string | undefined) ?? 'createdAt'
-      ]
-    )
-    const orderBy = direction(field)
-
-    let where: SQL | undefined = undefined
-    if (cursor.lastOrderValueSeen && cursor.lastIdSeen) {
-      const inequality = cursor.orderDirection === OrderDirectionValues.desc ? lt : gt
-      const lastSeenIsString = isString(cursor.lastOrderValueSeen)
-      // TODO-lib-cursor: maybe it'd be better to pass a function that, depending on the field, converts the value to the correct type?
-      // e.g. "parseCursor" could take a function like this?
-      const lastSeenSql = lastSeenIsString
-        ? sql.raw(`'${cursor.lastOrderValueSeen}'`)
-        : sql.raw(cursor.lastOrderValueSeen)
-      where = or(
-        and(eq(field, lastSeenSql), inequality(parkingSpotTable.id, cursor.lastIdSeen)),
-        inequality(field, lastSeenSql)
-      )
-    }
-
-    return {
-      where,
-      orderBy,
-      limit,
     }
   }
 }

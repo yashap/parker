@@ -1,4 +1,4 @@
-import { OrderDirectionValues } from '@parker/api-client-utils'
+import { OrderDirectionValues } from '@parker/pagination'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { FlatList, View } from 'react-native'

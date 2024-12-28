@@ -2,10 +2,10 @@
 
 What am I planning to work on next?
 
-- Cursor stuff
-  - Extract into a lib
-  - Check out the `TODO-lib-cursor` bits
-  - Tests, and also api client "fetch all pages"
+- Cursor stuff remaining:
+  - Api client "fetch all pages"
+  - Tests for the controller list endpoint, ensuring pagination is working
+- Is it possible to do conversion to Temport.Instant within ts-rest?
 - More complete tests for the LIST parkingSpots endpoint
 - Can I make supertokens migrate during normal migrations, not on startup?
 - Better create parking spot FE
@@ -46,6 +46,7 @@ What am I planning to work on next?
   - I believe new RN supports pnpm
 - E2E tests, possibly using [Maestro](https://www.mobile.dev/)
 - Move libs to absolute imports
+
   - In theory this is just:
 
     ```ts
@@ -73,4 +74,4 @@ What am I planning to work on next?
     ```
 
   - But for some reason, when I do this in libs, I get weird unexpeceted any types in consumers of libs
-  - Maybe it's the baseUrl thing?  I didn't experiment with it
+  - Maybe it's the baseUrl thing? I didn't experiment with it

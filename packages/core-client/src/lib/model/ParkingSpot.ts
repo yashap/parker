@@ -1,4 +1,5 @@
-import { PointSchema, SchemaBuilder, PaginationRequestSchema } from '@parker/api-client-utils'
+import { PointSchema, SchemaBuilder } from '@parker/api-client-utils'
+import { PaginationRequestSchema } from '@parker/pagination'
 import { z } from 'zod'
 import { TimeRuleSchema } from './TimeRule'
 import { TimeRuleOverrideSchema } from './TimeRuleOverride'

@@ -1,5 +1,5 @@
+import { PaginatedResponseSchema } from '@parker/pagination'
 import { z, ZodTypeAny } from 'zod'
-import { PaginatedResponseSchema } from './Pagination'
 import { ServerErrorSchema } from './ServerError'
 
 const AllErrors = {
