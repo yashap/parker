@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { OrderDirectionValues } from '@parker/api-client-utils'
 import { ListParkingSpotsRequest } from '@parker/core-client'
 import { required } from '@parker/errors'
 import { Point } from '@parker/geography'
+import { OrderDirectionValues } from '@parker/pagination'
 import { and, asc, desc, eq, gt, lt, or, SQL, sql } from 'drizzle-orm'
 import { PgColumn } from 'drizzle-orm/pg-core'
-import { isEmpty, isString, omit } from 'lodash'
+import { isEmpty, omit } from 'lodash'
 import { Db } from 'src/db/Db'
 import { parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from 'src/db/schema'
 import { ParkingSpotDao, ParkingSpotInputDao, TimeRuleDao, TimeRuleOverrideDao } from 'src/db/types'
@@ -193,15 +193,9 @@ export class ParkingSpotRepository {
     let where: SQL | undefined = undefined
     if (cursor.lastOrderValueSeen && cursor.lastIdSeen) {
       const inequality = cursor.orderDirection === OrderDirectionValues.desc ? lt : gt
-      const lastSeenIsString = isString(cursor.lastOrderValueSeen)
-      // TODO-lib-cursor: maybe it'd be better to pass a function that, depending on the field, converts the value to the correct type?
-      // e.g. "parseCursor" could take a function like this?
-      const lastSeenSql = lastSeenIsString
-        ? sql.raw(`'${cursor.lastOrderValueSeen}'`)
-        : sql.raw(cursor.lastOrderValueSeen)
       where = or(
-        and(eq(field, lastSeenSql), inequality(parkingSpotTable.id, cursor.lastIdSeen)),
-        inequality(field, lastSeenSql)
+        and(eq(field, cursor.lastOrderValueSeen), inequality(parkingSpotTable.id, cursor.lastIdSeen)),
+        inequality(field, cursor.lastOrderValueSeen)
       )
     }
 

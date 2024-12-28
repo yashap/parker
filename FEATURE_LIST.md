@@ -46,6 +46,7 @@ What am I planning to work on next?
   - I believe new RN supports pnpm
 - E2E tests, possibly using [Maestro](https://www.mobile.dev/)
 - Move libs to absolute imports
+
   - In theory this is just:
 
     ```ts
@@ -73,4 +74,4 @@ What am I planning to work on next?
     ```
 
   - But for some reason, when I do this in libs, I get weird unexpeceted any types in consumers of libs
-  - Maybe it's the baseUrl thing?  I didn't experiment with it
+  - Maybe it's the baseUrl thing? I didn't experiment with it

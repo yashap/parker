@@ -1,18 +1,23 @@
 import { Controller, UseGuards } from '@nestjs/common'
+import { contract as rootContract } from '@parker/core-client'
+import { ForbiddenError } from '@parker/errors'
+import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
 import {
   DEFAULT_LIMIT,
   encodeCursor,
   OrderDirectionValues,
   PaginationResponseDto,
   parsePagination,
-} from '@parker/api-client-utils'
-import { contract as rootContract } from '@parker/core-client'
-import { ForbiddenError } from '@parker/errors'
-import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
+} from '@parker/pagination'
 import { first, last, pick } from 'lodash'
 import { SessionContainer } from 'supertokens-node/recipe/session'
 import { AuthGuard, Session } from 'src/auth'
-import { ListParkingSpotPagination, ParkingSpot, parkingSpotToDto } from 'src/domain/parkingSpot/ParkingSpot'
+import {
+  ListParkingSpotPagination,
+  ParkingSpot,
+  parkingSpotToDto,
+  parseParkingSpotOrdering,
+} from 'src/domain/parkingSpot/ParkingSpot'
 import { ParkingSpotRepository } from 'src/domain/parkingSpot/ParkingSpotRepository'
 import { timeRulesFromDto } from 'src/domain/timeRule'
 import { timeRuleOverridesFromDto } from 'src/domain/timeRuleOverride'
@@ -30,7 +35,7 @@ export class ParkingSpotController extends BaseController {
   public list(@Session() _session: SessionContainer): HandlerResult<typeof contract.list> {
     return handler(contract.list, async ({ query }) => {
       const { ownerUserId } = query
-      const pagination: ListParkingSpotPagination = parsePagination<'createdAt', number>(query)
+      const pagination: ListParkingSpotPagination = parsePagination(query, parseParkingSpotOrdering)
       const parkingSpots = await this.parkingSpotRepository.list({ ownerUserId }, pagination)
 
       // TODO-lib-cursor: extract this generation of cursor response into a lib

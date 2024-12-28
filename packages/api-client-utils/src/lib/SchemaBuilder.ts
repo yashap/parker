@@ -1,5 +1,5 @@
+import { PaginationResponseSchema, PaginatedResponseSchema } from '@parker/pagination'
 import { z, ZodTypeAny } from 'zod'
-import { PaginatedResponseSchema, PaginationResponseSchema } from './Pagination'
 
 export class SchemaBuilder {
   public static buildListResponse<T extends ZodTypeAny>(itemSchema: T): PaginatedResponseSchema<T> {
