@@ -9,7 +9,7 @@ export const fetchAllPages = async <T, R extends Omit<PaginationRequestDto, 'lim
   const firstPageResponse = await fetchPage(request)
   const allData = [...firstPageResponse.data]
   let prevPageResponse = firstPageResponse
-  while (prevPageResponse.pagination.next && prevPageResponse.data.length < limit) {
+  while (prevPageResponse.pagination.next && prevPageResponse.data.length >= limit) {
     const nextPageResponse = await fetchPage({
       ...omit(request, ['limit', 'orderBy', 'orderDirection']),
       cursor: prevPageResponse.pagination.next,
