@@ -11,6 +11,7 @@ import {
   extractPostResponse,
   fetchAllPages,
 } from '@parker/api-client-utils'
+import { DEFAULT_LIMIT } from '@parker/pagination'
 import { contract } from './contract'
 import {
   CreateParkingSpotBookingRequest,
@@ -40,7 +41,7 @@ export class CoreClient {
       return extractListResponse(this.client.parkingSpots.list({ query: request }))
     },
     listAllPages: async (request: ListParkingSpotsRequest): Promise<ParkingSpotDto[]> => {
-      return fetchAllPages(request, (req) => this.parkingSpots.listPage(req))
+      return fetchAllPages({ limit: DEFAULT_LIMIT, ...request }, (req) => this.parkingSpots.listPage(req))
     },
     listClosestToPoint: (
       request: ListParkingSpotsClosestToPointRequest

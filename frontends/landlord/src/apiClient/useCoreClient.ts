@@ -1,6 +1,6 @@
 import { CoreClient } from '@parker/core-client'
 import { useFocusEffect } from 'expo-router'
-import { DependencyList, useCallback, useState } from 'react'
+import { DependencyList, useCallback } from 'react'
 import useAsync from 'react-use/lib/useAsync'
 import { AsyncState } from 'react-use/lib/useAsyncFn'
 import { CoreClientBuilder } from 'src/apiClient/CoreClientBuilder'
@@ -21,22 +21,13 @@ export const useCoreClient = <T>(
 ): AsyncState<T> => {
   /**
    * The implementation of this hook is more complex than you'd expect, because it uses `useFocusEffect`, so that when
-   * a page is focused, the data is refetched. Otherwise when you press "back" from a page, the data is not refetched,
-   * and you can see stale data.
+   * a screen is refocused, the data is refetched. Otherwise when you refocus a screen (e.g. by presing "back" in the
+   * main nav), the data is not refetched, and you get stuck with potentially stale data.
    */
   const client = CoreClientBuilder.build()
-  const [isFirstLoad, setIsFirstLoad] = useState(true)
   const [focusCount, incrementFocusCount] = useCounter(0)
-  useFocusEffect(
-    useCallback(() => {
-      incrementFocusCount()
-      // This gets called when the route becomes unfocused
-      return () => {
-        setIsFirstLoad(false)
-      }
-    }, [])
-  )
-  // So that the very first focus of the page doesn't trigger a refresh, only re-focusing
-  const refreshCount = isFirstLoad ? 0 : focusCount
+  useFocusEffect(useCallback(incrementFocusCount, []))
+  // So that the very first focus of the page doesn't trigger a refresh, only refocusing
+  const refreshCount = focusCount > 1 ? focusCount : 0
   return useAsync(() => func(client), [refreshCount, ...(deps ?? [])])
 }
