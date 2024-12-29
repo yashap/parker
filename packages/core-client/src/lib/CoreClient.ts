@@ -40,7 +40,7 @@ export class CoreClient {
     listPage: (request: ListParkingSpotsRequest): Promise<ListParkingSpotsResponse> => {
       return extractListResponse(this.client.parkingSpots.list({ query: request }))
     },
-    listAllPages: async (request: ListParkingSpotsRequest): Promise<ParkingSpotDto[]> => {
+    listAllPages: async (request: Omit<ListParkingSpotsRequest, 'cursor'>): Promise<ParkingSpotDto[]> => {
       return fetchAllPages({ limit: DEFAULT_LIMIT, ...request }, (req) => this.parkingSpots.listPage(req))
     },
     listClosestToPoint: (
