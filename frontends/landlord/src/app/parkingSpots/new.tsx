@@ -29,7 +29,7 @@ const NewParkingSpot: React.FC = () => {
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
   return (
-    <View className='items-stretch space-y-3 p-3'>
+    <View className='flex-1 items-stretch space-y-3 p-3'>
       <TextInput label='Address' value={address} onChangeText={setAddress} />
       <TextInput label='Latitude' value={latitude} onChangeText={setLatitude} />
       <TextInput label='Longitude' value={longitude} onChangeText={setLongitude} />
