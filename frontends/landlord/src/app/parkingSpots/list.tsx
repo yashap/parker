@@ -68,22 +68,20 @@ const cardClassName = 'mb-2'
 const ParkingSpotList: React.FC = () => {
   useNavigationHeader({ type: 'defaultHeader', title: 'Your Parking Spots' })
   const theme = useTheme()
-  const [deleteCounter, incrementDeleteCount] = useCounter()
+  const [refreshCount, incrementRefreshCount] = useCounter()
   const authContext = useAuthContext()
   const {
     value: parkingSpots,
     loading,
     error,
   } = useCoreClient(
-    (coreClient) => {
-      return coreClient.parkingSpots.listAllPages({
+    (coreClient) =>
+      coreClient.parkingSpots.listAllPages({
         ownerUserId: authContext.getLoggedInUser().id,
         orderBy: 'createdAt',
         orderDirection: OrderDirectionValues.desc,
-        limit: 2,
-      })
-    },
-    [deleteCounter]
+      }),
+    [refreshCount]
   )
   if (loading) {
     // TODO: better size, colors, etc?
@@ -118,7 +116,7 @@ const ParkingSpotList: React.FC = () => {
             </Card.Content>
             <Card.Actions>
               <EditParkingSpotButton />
-              <DeleteParkingSpotButton parkingSpotId={parkingSpot.id} onDeleted={incrementDeleteCount} />
+              <DeleteParkingSpotButton parkingSpotId={parkingSpot.id} onDeleted={incrementRefreshCount} />
             </Card.Actions>
           </Card>
         )}

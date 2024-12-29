@@ -1,9 +1,9 @@
 import { PaginatedResponseDto, PaginationRequestDto } from '@parker/pagination'
 import { omit } from 'lodash'
 
-export const fetchAllPages = async <T>(
-  request: PaginationRequestDto,
-  fetchPage: (request: PaginationRequestDto) => Promise<PaginatedResponseDto<T>>
+export const fetchAllPages = async <T, R extends PaginationRequestDto>(
+  request: R,
+  fetchPage: (request: R) => Promise<PaginatedResponseDto<T>>
 ): Promise<T[]> => {
   const firstPageResponse = await fetchPage(request)
   const allData = [...firstPageResponse.data]
@@ -12,7 +12,7 @@ export const fetchAllPages = async <T>(
     const nextPageResponse = await fetchPage({
       ...omit(request, ['limit', 'orderBy', 'orderDirection']),
       cursor: prevPageResponse.pagination.next,
-    })
+    } as R)
     allData.push(...nextPageResponse.data)
     prevPageResponse = nextPageResponse
   }
