@@ -28,6 +28,6 @@ export const useCoreClient = <T>(
   const [focusCount, incrementFocusCount] = useCounter(0)
   useFocusEffect(useCallback(incrementFocusCount, []))
   // So that the very first focus of the page doesn't trigger a refresh, only refocusing
-  const refreshCount = focusCount > 1 ? focusCount : 0
+  const refreshCount = focusCount > 1 ? focusCount - 1 : 0
   return useAsync(() => func(client), [refreshCount, ...(deps ?? [])])
 }
