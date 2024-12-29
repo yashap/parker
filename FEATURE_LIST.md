@@ -2,11 +2,7 @@
 
 What am I planning to work on next?
 
-- Cursor stuff remaining:
-  - Api client "fetch all pages"
-  - Tests for the controller list endpoint, ensuring pagination is working
 - Is it possible to do conversion to Temport.Instant within ts-rest?
-- More complete tests for the LIST parkingSpots endpoint
 - Can I make supertokens migrate during normal migrations, not on startup?
 - Better create parking spot FE
   - With time rules and overrides, and properly viewing and editing your parking spot(s)

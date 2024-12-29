@@ -211,8 +211,30 @@ describe(ParkingSpotController.name, () => {
         const parkingSpot = await landlordCoreClient.parkingSpots.create({
           address: '90210 Fancy Street',
           location: { longitude: idx, latitude: idx },
-          timeRules: [],
-          timeRuleOverrides: [],
+          timeRules: [
+            {
+              day: 'Monday',
+              startTime: '01:00:00',
+              endTime: '23:00:00',
+            },
+            {
+              day: 'Tuesday',
+              startTime: '13:30:00',
+              endTime: '15:20:00',
+            },
+          ],
+          timeRuleOverrides: [
+            {
+              startsAt: '2024-09-20T01:10:15Z',
+              endsAt: '2024-09-20T23:30:45Z',
+              isAvailable: false,
+            },
+            {
+              startsAt: '2024-09-27T01:10:15Z',
+              endsAt: '2024-09-27T23:30:45Z',
+              isAvailable: true,
+            },
+          ],
         })
         // Different createdAt for easy to test ordering
         const instant = now.add(Temporal.Duration.from({ seconds: idx }))
@@ -259,7 +281,7 @@ describe(ParkingSpotController.name, () => {
 
     describe('list', () => {
       it('paginates properly, in ascending order', async () => {
-        const page1 = await landlordCoreClient.parkingSpots.list({
+        const page1 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           orderBy: 'createdAt',
           orderDirection: OrderDirectionValues.asc,
@@ -270,7 +292,7 @@ describe(ParkingSpotController.name, () => {
         expect(page1.pagination.previous).toBeDefined()
         expect(page1.pagination.next).toBeDefined()
 
-        const page2 = await landlordCoreClient.parkingSpots.list({
+        const page2 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           cursor: page1.pagination.next,
         })
@@ -279,7 +301,7 @@ describe(ParkingSpotController.name, () => {
         expect(page2.pagination.previous).toBeDefined()
         expect(page2.pagination.next).toBeDefined()
 
-        const page3 = await landlordCoreClient.parkingSpots.list({
+        const page3 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           cursor: page2.pagination.next,
         })
@@ -288,7 +310,7 @@ describe(ParkingSpotController.name, () => {
         expect(page3.pagination.previous).toBeDefined()
         expect(page3.pagination.next).toBeDefined()
 
-        const page4 = await landlordCoreClient.parkingSpots.list({
+        const page4 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           cursor: page3.pagination.next,
         })
@@ -298,7 +320,7 @@ describe(ParkingSpotController.name, () => {
       })
 
       it('paginates properly, in descending order', async () => {
-        const page1 = await landlordCoreClient.parkingSpots.list({
+        const page1 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           orderBy: 'createdAt',
           orderDirection: OrderDirectionValues.desc,
@@ -309,7 +331,7 @@ describe(ParkingSpotController.name, () => {
         expect(page1.pagination.previous).toBeDefined()
         expect(page1.pagination.next).toBeDefined()
 
-        const page2 = await landlordCoreClient.parkingSpots.list({
+        const page2 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           cursor: page1.pagination.next,
         })
@@ -318,7 +340,7 @@ describe(ParkingSpotController.name, () => {
         expect(page2.pagination.previous).toBeDefined()
         expect(page2.pagination.next).toBeDefined()
 
-        const page3 = await landlordCoreClient.parkingSpots.list({
+        const page3 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           cursor: page2.pagination.next,
         })
@@ -327,7 +349,7 @@ describe(ParkingSpotController.name, () => {
         expect(page3.pagination.previous).toBeDefined()
         expect(page3.pagination.next).toBeDefined()
 
-        const page4 = await landlordCoreClient.parkingSpots.list({
+        const page4 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           cursor: page3.pagination.next,
         })
@@ -337,24 +359,35 @@ describe(ParkingSpotController.name, () => {
       })
 
       it('allows going "backwards" using the previous cursor', async () => {
-        const page1 = await landlordCoreClient.parkingSpots.list({
+        const page1 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           orderBy: 'createdAt',
           orderDirection: OrderDirectionValues.asc,
           limit: 7,
         })
 
-        const page2 = await landlordCoreClient.parkingSpots.list({
+        const page2 = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           cursor: page1.pagination.next,
         })
 
-        const page1Again = await landlordCoreClient.parkingSpots.list({
+        const page1Again = await landlordCoreClient.parkingSpots.listPage({
           ownerUserId: landlordUserId,
           cursor: page2.pagination.previous,
         })
 
         expect(sortBy(page1Again.data, 'id')).toStrictEqual(sortBy(page1.data, 'id'))
+      })
+
+      it('lists all parking spots', async () => {
+        const spots = await landlordCoreClient.parkingSpots.listAllPages({
+          ownerUserId: landlordUserId,
+          orderBy: 'createdAt',
+          orderDirection: OrderDirectionValues.asc,
+          limit: 7,
+        })
+        expect(spots).toHaveLength(20)
+        expect(spots).toStrictEqual(allSpots)
       })
     })
   })

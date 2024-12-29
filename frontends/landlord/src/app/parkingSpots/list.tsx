@@ -4,8 +4,9 @@ import React, { useState } from 'react'
 import { FlatList, View } from 'react-native'
 import { ActivityIndicator, Avatar, Button, ButtonProps, Card, Text, useTheme } from 'react-native-paper'
 import { CoreClientBuilder } from 'src/apiClient/CoreClientBuilder'
-import { useCoreClient } from 'src/apiClient/useCoreClient'
 import { Screen } from 'src/components/Screen'
+import { useAuthContext } from 'src/contexts/AuthContext'
+import { useCoreClient } from 'src/hooks/useCoreClient'
 import { useCounter } from 'src/hooks/useCounter'
 import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
 import { showErrorToast } from 'src/toasts/showErrorToast'
@@ -67,16 +68,20 @@ const cardClassName = 'mb-2'
 const ParkingSpotList: React.FC = () => {
   useNavigationHeader({ type: 'defaultHeader', title: 'Your Parking Spots' })
   const theme = useTheme()
-  const [deleteCounter, incrementDeleteCount] = useCounter()
+  const [refreshCount, incrementRefreshCount] = useCounter()
+  const authContext = useAuthContext()
   const {
-    value: parkingSpotsResponse,
+    value: parkingSpots,
     loading,
     error,
   } = useCoreClient(
-    (coreClient) => {
-      return coreClient.parkingSpots.list({ orderBy: 'createdAt', orderDirection: OrderDirectionValues.desc })
-    },
-    [deleteCounter]
+    (coreClient) =>
+      coreClient.parkingSpots.listAllPages({
+        ownerUserId: authContext.getLoggedInUser().id,
+        orderBy: 'createdAt',
+        orderDirection: OrderDirectionValues.desc,
+      }),
+    [refreshCount]
   )
   if (loading) {
     // TODO: better size, colors, etc?
@@ -91,7 +96,7 @@ const ParkingSpotList: React.FC = () => {
   }
 
   return (
-    <View className='px-1 pt-2'>
+    <View className='flex-1 px-1 pt-2'>
       {/* TODO: make "add spot" prominent if no spots, subtle otherwise? */}
       <Card
         className={cardClassName}
@@ -102,7 +107,7 @@ const ParkingSpotList: React.FC = () => {
         <Card.Title title={'Add a New Spot'} left={AddNewParkingSpot} />
       </Card>
       <FlatList
-        data={parkingSpotsResponse?.data ?? []}
+        data={parkingSpots}
         renderItem={({ item: parkingSpot }) => (
           <Card key={parkingSpot.id} className={cardClassName}>
             <Card.Title title={parkingSpot.address} left={ParkingSpotImage} />
@@ -111,7 +116,7 @@ const ParkingSpotList: React.FC = () => {
             </Card.Content>
             <Card.Actions>
               <EditParkingSpotButton />
-              <DeleteParkingSpotButton parkingSpotId={parkingSpot.id} onDeleted={incrementDeleteCount} />
+              <DeleteParkingSpotButton parkingSpotId={parkingSpot.id} onDeleted={incrementRefreshCount} />
             </Card.Actions>
           </Card>
         )}

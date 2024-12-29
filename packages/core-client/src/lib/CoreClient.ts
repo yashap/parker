@@ -9,7 +9,9 @@ import {
   extractListResponse,
   extractPatchResponse,
   extractPostResponse,
+  fetchAllPages,
 } from '@parker/api-client-utils'
+import { DEFAULT_LIMIT } from '@parker/pagination'
 import { contract } from './contract'
 import {
   CreateParkingSpotBookingRequest,
@@ -35,8 +37,11 @@ export class CoreClient {
   }
 
   public readonly parkingSpots = {
-    list: (request: ListParkingSpotsRequest): Promise<ListParkingSpotsResponse> => {
+    listPage: (request: ListParkingSpotsRequest): Promise<ListParkingSpotsResponse> => {
       return extractListResponse(this.client.parkingSpots.list({ query: request }))
+    },
+    listAllPages: async (request: Omit<ListParkingSpotsRequest, 'cursor'>): Promise<ParkingSpotDto[]> => {
+      return fetchAllPages({ limit: DEFAULT_LIMIT, ...request }, (req) => this.parkingSpots.listPage(req))
     },
     listClosestToPoint: (
       request: ListParkingSpotsClosestToPointRequest

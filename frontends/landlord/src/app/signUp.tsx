@@ -3,6 +3,7 @@ import React from 'react'
 import { Linking, View } from 'react-native'
 import { Button, Caption, Card, Divider, Headline, Subheading, Text, TextInput } from 'react-native-paper'
 import { AuthClientBuilder } from 'src/apiClient/AuthClientBuilder'
+import { IAuthContext, useAuthContext } from 'src/contexts/AuthContext'
 import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
 import { useTheme } from 'src/theme'
 import { showErrorToast } from 'src/toasts/showErrorToast'
@@ -14,9 +15,10 @@ export interface SignUpProps {
   setPassword: (password: string) => void
 }
 
-const signUp = async ({ email, password }: Pick<SignUpProps, 'email' | 'password'>) => {
+const signUp = async ({ email, password }: Pick<SignUpProps, 'email' | 'password'>, authContext: IAuthContext) => {
   try {
-    await AuthClientBuilder.build().signUp({ email, password })
+    const user = await AuthClientBuilder.build().signUp({ email, password })
+    authContext.setLoggedInUser(user)
     router.replace('/parkingSpots/list')
   } catch (error) {
     showErrorToast(error)
@@ -28,6 +30,7 @@ const SignUp: React.FC = () => {
   const theme = useTheme()
   const [email, setEmail] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
+  const authContext = useAuthContext()
   return (
     <View>
       <Card className='space-y-3 p-3'>
@@ -57,7 +60,7 @@ const SignUp: React.FC = () => {
         <Button
           mode='contained'
           onPress={() => {
-            void signUp({ email, password })
+            void signUp({ email, password }, authContext)
           }}
         >
           Sign up
