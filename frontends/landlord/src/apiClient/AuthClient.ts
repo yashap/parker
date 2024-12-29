@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import { isArray, isString } from 'lodash'
 import Supertokens from 'supertokens-react-native'
+import { User } from 'src/types/User'
 
 enum FormFieldId {
   email = 'email',
@@ -35,29 +36,21 @@ export interface EmailLogInDetails {
   password: string
 }
 
-export interface User {
-  id: string
-  isPrimaryUser: boolean
-  emails: string[]
-  phoneNumbers: string[]
-  timeJoined: number
-}
-
-type LogInResponse = LogInSuccessResponse | LogInFieldErrorResponse | LogInErrorResponse
-
-export interface LogInSuccessResponse {
+interface LogInSuccessResponse {
   status: EmailPasswordStatusCode.Ok
   user: User
 }
 
-export interface LogInFieldErrorResponse {
+interface LogInFieldErrorResponse {
   status: EmailPasswordStatusCode.FieldError
   formFields: { error: string; id: string }[]
 }
 
-export interface LogInErrorResponse {
+interface LogInErrorResponse {
   status: Exclude<EmailPasswordStatusCode, EmailPasswordStatusCode.Ok | EmailPasswordStatusCode.FieldError>
 }
+
+type LogInResponse = LogInSuccessResponse | LogInFieldErrorResponse | LogInErrorResponse
 
 const getErrorMessage = (error: LogInFieldErrorResponse | LogInErrorResponse): string => {
   if (!emailPasswordStatusCodeValues.has(error.status)) {

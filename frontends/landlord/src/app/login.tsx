@@ -3,6 +3,7 @@ import React from 'react'
 import { View } from 'react-native'
 import { Button, Card, Divider, Headline, Subheading, Text, TextInput } from 'react-native-paper'
 import { AuthClientBuilder } from 'src/apiClient/AuthClientBuilder'
+import { IAuthContext, useAuthContext } from 'src/contexts/AuthContext'
 import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
 import { useTheme } from 'src/theme'
 import { showErrorToast } from 'src/toasts/showErrorToast'
@@ -14,9 +15,10 @@ export interface LogInProps {
   setPassword: (password: string) => void
 }
 
-const logIn = async ({ email, password }: Pick<LogInProps, 'email' | 'password'>) => {
+const logIn = async ({ email, password }: Pick<LogInProps, 'email' | 'password'>, authContext: IAuthContext) => {
   try {
-    await AuthClientBuilder.build().logIn({ email, password })
+    const user = await AuthClientBuilder.build().logIn({ email, password })
+    authContext.setLoggedInUser(user)
     router.replace('/parkingSpots/list')
   } catch (error) {
     showErrorToast(error)
@@ -28,6 +30,7 @@ const LogIn: React.FC = () => {
   const theme = useTheme()
   const [email, setEmail] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
+  const authContext = useAuthContext()
   return (
     <View>
       <Card className='space-y-3 p-3'>
@@ -57,7 +60,7 @@ const LogIn: React.FC = () => {
         <Button
           mode='contained'
           onPress={() => {
-            void logIn({ email, password })
+            void logIn({ email, password }, authContext)
           }}
         >
           Log in

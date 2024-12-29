@@ -18,6 +18,7 @@
     "@parker/pagination": "*",
     "@ts-rest/core": "^3.51.0",
     "axios": "^1.7.5",
+    "lodash": "^4.17.21",
     "tslib": "^2.7.0",
     "zod": "3.24.1"
   },
@@ -25,6 +26,7 @@
     "@parker/eslint-config": "*",
     "@parker/test-utils": "*",
     "@parker/tsconfig": "*",
+    "@types/lodash": "^4.17.13",
     "@types/node": "^22.5.0",
     "@types/supertest": "^6.0.2",
     "eslint": "^8.57.0",
