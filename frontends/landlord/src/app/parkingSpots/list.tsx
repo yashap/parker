@@ -1,9 +1,11 @@
 import { OrderDirectionValues } from '@parker/pagination'
+import { SearchPlaceSuggestionsRequest } from '@parker/places-client'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { FlatList, View } from 'react-native'
 import { ActivityIndicator, Avatar, Button, ButtonProps, Card, Text, useTheme } from 'react-native-paper'
 import { CoreClientBuilder } from 'src/apiClient/CoreClientBuilder'
+import { PlacesClientBuilder } from 'src/apiClient/PlacesClientBuilder'
 import { Screen } from 'src/components/Screen'
 import { useAuthContext } from 'src/contexts/AuthContext'
 import { useCoreClient } from 'src/hooks/useCoreClient'
@@ -105,6 +107,26 @@ const ParkingSpotList: React.FC = () => {
         }}
       >
         <Card.Title title={'Add a New Spot'} left={AddNewParkingSpot} />
+      </Card>
+      <Card
+        className={cardClassName}
+        onPress={() => {
+          const doSearch = async () => {
+            const placesClient = PlacesClientBuilder.build()
+            try {
+              const request: SearchPlaceSuggestionsRequest = {
+                search: '1182 East King Edward Ave.',
+              }
+              const suggestions = await placesClient.placeSuggestions.search(request)
+              showToast({ type: 'default', message: JSON.stringify(suggestions) })
+            } catch (error) {
+              showErrorToast(error)
+            }
+          }
+          void doSearch()
+        }}
+      >
+        <Card.Title title={'Test out API'} left={AddNewParkingSpot} />
       </Card>
       <FlatList
         data={parkingSpots}

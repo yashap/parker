@@ -8,4 +8,5 @@ const getRequiredString = (key: string): string =>
 
 export const config = {
   coreUrl: getRequiredString('coreUrl'),
+  placesUrl: getRequiredString('placesUrl'),
 }
