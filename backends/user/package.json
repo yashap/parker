@@ -1,5 +1,5 @@
 {
-  "name": "@parker/places",
+  "name": "@parker/user",
   "version": "0.0.1",
   "private": true,
   "main": "./src/main.ts",
@@ -10,7 +10,7 @@
     "serve": "nest start --watch",
     "format": "eslint \"src/**\" --fix",
     "lint": "tsc --noEmit && eslint \"src/**\"",
-    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand src/",
+    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests src/",
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },
   "dependencies": {
@@ -20,7 +20,6 @@
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/platform-express": "^10.4.1",
     "@parker/api-client-utils": "*",
-    "@parker/places-client": "*",
     "@parker/errors": "*",
     "@parker/logging": "*",
     "@parker/nest-utils": "*",

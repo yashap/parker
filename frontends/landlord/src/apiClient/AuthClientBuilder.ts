@@ -6,7 +6,7 @@ export class AuthClientBuilder {
   public static build(): AuthClient {
     return new AuthClient(
       AxiosInstanceBuilder.build({
-        baseURL: `${config.parkingUrl}/auth`,
+        baseURL: `${config.authUrl}/auth`,
       })
     )
   }

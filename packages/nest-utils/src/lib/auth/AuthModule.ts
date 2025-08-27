@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule, DynamicModule } from '@nestjs/common'
+import Session from 'supertokens-node/recipe/session'
 import { AuthConfig } from './AuthConfig'
 import { AuthConfigInjectionToken } from './AuthConfigInjectionToken'
 import { AuthMiddleware } from './AuthMiddleware'
@@ -15,11 +16,15 @@ export class AuthModule implements NestModule {
   }
 
   static forRoot(authConfig: AuthConfig): DynamicModule {
+    const authConfigWithDefault = {
+      ...authConfig,
+      recipeList: authConfig.recipeList ?? [Session.init()],
+    }
     return {
       providers: [
         {
           provide: AuthConfigInjectionToken,
-          useValue: authConfig,
+          useValue: authConfigWithDefault,
         },
         SuperTokensService,
       ],

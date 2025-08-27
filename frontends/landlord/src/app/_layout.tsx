@@ -11,7 +11,7 @@ import { AuthContextProvider } from 'src/contexts/AuthContext'
 import { lightTheme, useTheme } from 'src/theme'
 
 SuperTokens.init({
-  apiDomain: config.parkingUrl,
+  apiDomain: config.authUrl,
   apiBasePath: '/auth',
 })
 
