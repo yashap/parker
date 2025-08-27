@@ -4,13 +4,13 @@ import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { FlatList, View } from 'react-native'
 import { ActivityIndicator, Avatar, Button, ButtonProps, Card, Text, useTheme } from 'react-native-paper'
-import { CoreClientBuilder } from 'src/apiClient/CoreClientBuilder'
+import { ParkingClientBuilder } from 'src/apiClient/ParkingClientBuilder'
 import { PlacesClientBuilder } from 'src/apiClient/PlacesClientBuilder'
 import { Screen } from 'src/components/Screen'
 import { useAuthContext } from 'src/contexts/AuthContext'
-import { useCoreClient } from 'src/hooks/useCoreClient'
 import { useCounter } from 'src/hooks/useCounter'
 import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
+import { useParkingClient } from 'src/hooks/useParkingClient'
 import { showErrorToast } from 'src/toasts/showErrorToast'
 import { showToast } from 'src/toasts/showToast'
 
@@ -45,7 +45,7 @@ const DeleteParkingSpotButton = ({ parkingSpotId, onDeleted, ...rest }: DeletePa
         const doDelete = async () => {
           setDeleteInProgress(true)
           try {
-            await CoreClientBuilder.build().parkingSpots.delete(parkingSpotId)
+            await ParkingClientBuilder.build().parkingSpots.delete(parkingSpotId)
             showToast({ type: 'default', message: 'Parking spot deleted' })
           } catch (error) {
             showErrorToast(error)
@@ -76,9 +76,9 @@ const ParkingSpotList: React.FC = () => {
     value: parkingSpots,
     loading,
     error,
-  } = useCoreClient(
-    (coreClient) =>
-      coreClient.parkingSpots.listAllPages({
+  } = useParkingClient(
+    (parkingClient) =>
+      parkingClient.parkingSpots.listAllPages({
         ownerUserId: authContext.getLoggedInUser().id,
         orderBy: 'createdAt',
         orderDirection: OrderDirectionValues.desc,

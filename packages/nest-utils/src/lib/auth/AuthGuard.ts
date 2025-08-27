@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { HttpArgumentsHost } from '@nestjs/common/interfaces'
-import { TestOnly } from '@parker/corelib'
+import { TestOnly } from '@parker/core'
 import { Response } from 'express'
 import { Error as SuperTokensError } from 'supertokens-node'
 import { SessionRequest } from 'supertokens-node/framework/express'

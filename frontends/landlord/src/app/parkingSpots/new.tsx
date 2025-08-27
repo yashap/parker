@@ -2,14 +2,14 @@ import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { View } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
-import { CoreClientBuilder } from 'src/apiClient/CoreClientBuilder'
+import { ParkingClientBuilder } from 'src/apiClient/ParkingClientBuilder'
 import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
 import { showErrorToast } from 'src/toasts/showErrorToast'
 
 const onSubmit = async ({ address, latitude, longitude }: { address: string; latitude: string; longitude: string }) => {
-  const coreClient = CoreClientBuilder.build()
+  const parkingClient = ParkingClientBuilder.build()
   try {
-    await coreClient.parkingSpots.create({
+    await parkingClient.parkingSpots.create({
       address,
       location: { latitude: Number(latitude), longitude: Number(longitude) },
       // TODO!

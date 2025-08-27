@@ -1,6 +1,15 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalEnv": ["NODE_ENV", "LOG_LEVEL", "JSON_LOGS", "DATABASE_URL", "PORT", "HOST_NAME", "SUPERTOKENS_CORE_URL"],
+  "globalEnv": [
+    "NODE_ENV",
+    "LOG_LEVEL",
+    "JSON_LOGS",
+    "DATABASE_URL",
+    "PORT",
+    "HOST_NAME",
+    "SUPERTOKENS_CORE_URL",
+    "PARKING_URL"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
