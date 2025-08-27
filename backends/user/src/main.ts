@@ -4,14 +4,13 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { Module } from '@nestjs/common'
-import { NestAppBuilder, NestAppRunner, SuperTokensExceptionFilter } from '@parker/nest-utils'
+import { LoginServiceAuthModule, NestAppBuilder, NestAppRunner, SuperTokensExceptionFilter } from '@parker/nest-utils'
 import supertokens from 'supertokens-node'
-import { AuthModule } from 'src/auth'
 import { config } from 'src/config'
 import { Logger } from '@parker/logging'
 
 @Module({
-  imports: [AuthModule.forRoot(config.auth)],
+  imports: [LoginServiceAuthModule.forRoot(config.auth)],
 })
 class AppModule {}
 

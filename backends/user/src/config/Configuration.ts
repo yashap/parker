@@ -1,15 +1,7 @@
-import { AppInfo } from 'supertokens-node/types'
-
-export const ConfigInjectionToken = 'ConfigInjectionToken'
-
-export interface AuthConfig {
-  appInfo: AppInfo
-  connectionURI: string
-  apiKey?: string
-}
+import { AuthModuleConfig } from '@parker/nest-utils'
 
 export interface Configuration {
   environment: 'dev' | 'prod'
   port: number
-  auth: AuthConfig
+  auth: AuthModuleConfig
 }

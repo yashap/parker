@@ -4,16 +4,15 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { Module } from '@nestjs/common'
-import { NestAppBuilder, NestAppRunner, SuperTokensExceptionFilter } from '@parker/nest-utils'
+import { MicroserviceAuthModule, NestAppBuilder, NestAppRunner, SuperTokensExceptionFilter } from '@parker/nest-utils'
 import supertokens from 'supertokens-node'
-import { AuthModule } from 'src/auth'
 import { config } from 'src/config'
 import { ParkingSpotModule } from 'src/domain/parkingSpot'
 import { ParkingSpotBookingModule } from 'src/domain/parkingSpotBooking'
 import { Logger } from '@parker/logging'
 
 @Module({
-  imports: [ParkingSpotModule, ParkingSpotBookingModule, AuthModule.forRoot(config.auth)],
+  imports: [ParkingSpotModule, ParkingSpotBookingModule, MicroserviceAuthModule.forRoot(config.auth)],
 })
 class AppModule {}
 

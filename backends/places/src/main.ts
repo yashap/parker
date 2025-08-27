@@ -4,15 +4,14 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { Module } from '@nestjs/common'
-import { NestAppBuilder, NestAppRunner, SuperTokensExceptionFilter } from '@parker/nest-utils'
+import { MicroserviceAuthModule, NestAppBuilder, NestAppRunner, SuperTokensExceptionFilter } from '@parker/nest-utils'
 import supertokens from 'supertokens-node'
-import { AuthModule } from 'src/auth'
 import { config } from 'src/config'
 import { PlaceSuggestionsModule } from 'src/domain/placeSuggestions'
 import { Logger } from '@parker/logging'
 
 @Module({
-  imports: [PlaceSuggestionsModule, AuthModule.forRoot(config.auth)],
+  imports: [PlaceSuggestionsModule, MicroserviceAuthModule.forRoot(config.auth)],
 })
 class AppModule {}
 

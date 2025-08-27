@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
+import { required } from '@parker/errors'
 import supertokens from 'supertokens-node'
-import Session from 'supertokens-node/recipe/session'
 import { AuthConfig } from './AuthConfig'
 import { AuthConfigInjectionToken } from './AuthConfigInjectionToken'
 
@@ -13,7 +13,7 @@ export class SuperTokensService {
         connectionURI: authConfig.connectionURI,
         apiKey: authConfig.apiKey,
       },
-      recipeList: authConfig.recipeList ?? [Session.init()],
+      recipeList: required(authConfig.recipeList, 'No recipe list provided'),
     })
   }
 }
