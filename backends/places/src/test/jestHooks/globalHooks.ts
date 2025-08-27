@@ -1,4 +1,4 @@
-import { AuthGuard } from 'src/auth'
+import { AuthGuard } from '@parker/nest-utils'
 
 beforeAll(async () => {
   // TODO: clear Redis?

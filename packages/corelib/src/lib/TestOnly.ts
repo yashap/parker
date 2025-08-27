@@ -11,6 +11,9 @@
  * ```
  *
  * For the above example, calling Foo.mock() in test code is fine, but calling it in main code will throw.
+ *
+ * Note: this is intentionally in `@parker/core`, not `@parker/test-utils`, because `@parker/test-utils` is meat to be
+ * a `devDependency`, while you may want to use this decorator in main code, normal libs, etc.
  */
 export const TestOnly = (_target: unknown, methodName: string, descriptor: PropertyDescriptor) => ({
   value(...args: unknown[]) {

@@ -1,10 +1,9 @@
 import { Controller, UseGuards } from '@nestjs/common'
 import { contract as rootContract } from '@parker/core-client'
 import { ForbiddenError } from '@parker/errors'
-import { BaseController, Endpoint, HandlerResult, HttpStatus, handler } from '@parker/nest-utils'
+import { AuthGuard, BaseController, Endpoint, HandlerResult, HttpStatus, Session, handler } from '@parker/nest-utils'
 import { DEFAULT_LIMIT, buildPaginatedResponse, parsePagination } from '@parker/pagination'
 import { SessionContainer } from 'supertokens-node/recipe/session'
-import { AuthGuard, Session } from 'src/auth'
 import {
   ListParkingSpotPagination,
   ParkingSpot,

@@ -1,5 +1,5 @@
 {
-  "name": "@parker/nest-utils",
+  "name": "@parker/corelib",
   "version": "0.0.1",
   "private": true,
   "main": "./dist/index.js",
@@ -13,37 +13,17 @@
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },
   "dependencies": {
-    "@nestjs/common": "^10.4.1",
-    "@nestjs/core": "^10.4.1",
-    "@parker/api-client-utils": "*",
-    "@parker/corelib": "*",
-    "@parker/correlation-id-propagator": "*",
-    "@parker/errors": "*",
-    "@parker/logging": "*",
-    "@ts-rest/core": "^3.51.0",
-    "@ts-rest/nest": "^3.51.0",
-    "express": "^4.19.2",
-    "lodash": "^4.17.21",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "supertokens-node": "^20.1.2",
-    "tslib": "^2.7.0",
-    "uuid": "^10.0.0"
+    "tslib": "^2.7.0"
   },
   "devDependencies": {
-    "@parker/api-client-test-utils": "*",
     "@parker/eslint-config": "*",
     "@parker/test-utils": "*",
     "@parker/tsconfig": "*",
-    "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.17.7",
     "@types/node": "^22.5.0",
-    "@types/uuid": "^10.0.0",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
-    "typescript": "~5.5.4",
-    "zod": "3.24.1"
+    "typescript": "~5.5.4"
   }
 }

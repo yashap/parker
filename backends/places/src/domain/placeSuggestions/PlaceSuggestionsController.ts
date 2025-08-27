@@ -1,9 +1,8 @@
 import { Controller, UseGuards } from '@nestjs/common'
 import { InternalServerError } from '@parker/errors'
-import { BaseController, Endpoint, HandlerResult, handler } from '@parker/nest-utils'
+import { AuthGuard, BaseController, Endpoint, HandlerResult, Session, handler } from '@parker/nest-utils'
 import { contract as rootContract } from '@parker/places-client'
 import { SessionContainer } from 'supertokens-node/recipe/session'
-import { AuthGuard, Session } from 'src/auth'
 
 const contract = rootContract.placeSuggestions
 
@@ -20,7 +19,7 @@ export class PlaceSuggestionsController extends BaseController {
     return handler(contract.search, async ({ query }) => {
       const { search, location, language, useStrictBounds, radius, limit } = query
       console.log({ search, location, language, useStrictBounds, radius, limit })
-      throw new InternalServerError('Not implemented')
+      throw new InternalServerError('Not implemented, TODO!')
       // return {
       //   status: HttpStatus.OK,
       //   body: buildPaginatedResponse(parkingSpots.map(parkingSpotToDto), pagination),

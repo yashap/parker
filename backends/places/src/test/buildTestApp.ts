@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
-import { NestAppBuilder } from '@parker/nest-utils'
-import { AuthModule, SuperTokensExceptionFilter } from 'src/auth'
+import { NestAppBuilder, SuperTokensExceptionFilter } from '@parker/nest-utils'
+import { AuthModule } from 'src/auth'
 import { config } from 'src/config'
 import { PlaceSuggestionsModule } from 'src/domain/placeSuggestions'
 

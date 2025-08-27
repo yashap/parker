@@ -1,4 +1,4 @@
-import { AuthGuard } from 'src/auth'
+import { AuthGuard } from '@parker/nest-utils'
 import { TestDbTeardown } from 'src/test/TestDbTeardown'
 
 beforeAll(async () => {

@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common'
 import supertokens from 'supertokens-node'
-import EmailPassword from 'supertokens-node/recipe/emailpassword'
 import Session from 'supertokens-node/recipe/session'
-import { AuthConfigInjectionToken } from 'src/auth/AuthConfigInjectionToken'
-import { AuthConfig } from 'src/config'
+import { AuthConfig } from './AuthConfig'
+import { AuthConfigInjectionToken } from './AuthConfigInjectionToken'
 
 @Injectable()
 export class SuperTokensService {
@@ -14,7 +13,7 @@ export class SuperTokensService {
         connectionURI: authConfig.connectionURI,
         apiKey: authConfig.apiKey,
       },
-      recipeList: [EmailPassword.init(), Session.init()],
+      recipeList: authConfig.recipeList ?? [Session.init()],
     })
   }
 }

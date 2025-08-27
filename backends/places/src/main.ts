@@ -4,9 +4,9 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { Module } from '@nestjs/common'
-import { NestAppBuilder, NestAppRunner } from '@parker/nest-utils'
+import { NestAppBuilder, NestAppRunner, SuperTokensExceptionFilter } from '@parker/nest-utils'
 import supertokens from 'supertokens-node'
-import { AuthModule, SuperTokensExceptionFilter } from 'src/auth'
+import { AuthModule } from 'src/auth'
 import { config } from 'src/config'
 import { PlaceSuggestionsModule } from 'src/domain/placeSuggestions'
 import { Logger } from '@parker/logging'
