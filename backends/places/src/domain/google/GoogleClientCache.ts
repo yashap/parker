@@ -2,6 +2,8 @@ import {
   Client,
   PlaceAutocompleteRequest,
   PlaceAutocompleteResponse,
+  PlaceDetailsRequest,
+  PlaceDetailsResponse,
   Status,
 } from '@googlemaps/google-maps-services-js'
 import { Injectable } from '@nestjs/common'
@@ -67,6 +69,106 @@ export class GoogleClientCache {
       }))
     } catch (error) {
       this.logger.error('Error calling Google Places API', { error })
+      throw error
+    }
+  }
+
+  public async getPlaceDetails(placeId: string): Promise<{
+    id: string
+    name?: string
+    location?: { latitude: number; longitude: number }
+    address?: string
+    addressComponents?: {
+      number?: string
+      street?: string
+      sublocality?: string
+      city?: string
+      state?: string
+      country?: string
+      postal?: string
+    }[]
+  }> {
+    try {
+      const request: PlaceDetailsRequest = {
+        params: {
+          place_id: placeId,
+          key: this.apiKey,
+          fields: ['place_id', 'name', 'formatted_address', 'geometry', 'address_components'],
+        },
+      }
+
+      this.logger.debug('Calling Google Places Details API with request', { request })
+
+      const response: PlaceDetailsResponse = await this.client.placeDetails(request)
+
+      if (response.data.status !== Status.OK) {
+        throw new InternalServerError(`Google Places Details API error: ${response.data.status}`)
+      }
+
+      const place = response.data.result
+
+      // Parse address components
+      const addressComponents: {
+        number?: string
+        street?: string
+        sublocality?: string
+        city?: string
+        state?: string
+        country?: string
+        postal?: string
+      }[] = []
+
+      if (place.address_components) {
+        const component: {
+          number?: string
+          street?: string
+          sublocality?: string
+          city?: string
+          state?: string
+          country?: string
+          postal?: string
+        } = {}
+
+        for (const comp of place.address_components) {
+          const types = comp.types || []
+
+          // Cast to any to avoid TypeScript type mismatch with Google Maps types
+          const typesArray = types as any[]
+
+          if (typesArray.includes('street_number')) {
+            component.number = comp.short_name
+          } else if (typesArray.includes('route')) {
+            component.street = comp.long_name
+          } else if (typesArray.includes('sublocality') || typesArray.includes('sublocality_level_1')) {
+            component.sublocality = comp.long_name
+          } else if (typesArray.includes('locality')) {
+            component.city = comp.long_name
+          } else if (typesArray.includes('administrative_area_level_1')) {
+            component.state = comp.short_name
+          } else if (typesArray.includes('country')) {
+            component.country = comp.long_name
+          } else if (typesArray.includes('postal_code')) {
+            component.postal = comp.short_name
+          }
+        }
+
+        addressComponents.push(component)
+      }
+
+      return {
+        id: place.place_id || placeId,
+        name: place.name,
+        location: place.geometry?.location
+          ? {
+              latitude: place.geometry.location.lat,
+              longitude: place.geometry.location.lng,
+            }
+          : undefined,
+        address: place.formatted_address,
+        addressComponents: addressComponents.length > 0 ? addressComponents : undefined,
+      }
+    } catch (error) {
+      this.logger.error('Error calling Google Places Details API', { error })
       throw error
     }
   }

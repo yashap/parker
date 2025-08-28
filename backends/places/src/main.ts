@@ -7,10 +7,11 @@ import { Module } from '@nestjs/common'
 import { MicroserviceAuthModule, NestAppBuilder, NestAppRunner } from '@parker/nest-utils'
 import { config } from 'src/config'
 import { PlaceSuggestionsModule } from 'src/domain/placeSuggestions'
+import { PlaceDetailsModule } from 'src/domain/placeDetails'
 import { Logger } from '@parker/logging'
 
 @Module({
-  imports: [PlaceSuggestionsModule, MicroserviceAuthModule.forRoot(config.auth)],
+  imports: [PlaceSuggestionsModule, PlaceDetailsModule, MicroserviceAuthModule.forRoot(config.auth)],
 })
 class AppModule {}
 
