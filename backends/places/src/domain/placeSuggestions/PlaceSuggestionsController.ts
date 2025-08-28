@@ -8,7 +8,8 @@ const contract = rootContract.placeSuggestions
 
 @Controller()
 export class PlaceSuggestionsController extends BaseController {
-  // constructor(private readonly googleClientCache: GoogleClientCache) {
+  // TODO: constructor should take something like:
+  // private readonly googleClientCache: GoogleClientCache
   constructor() {
     super('PlaceSuggestion')
   }
@@ -20,10 +21,7 @@ export class PlaceSuggestionsController extends BaseController {
       const { search, location, language, useStrictBounds, radius, limit } = query
       console.log({ search, location, language, useStrictBounds, radius, limit })
       throw new InternalServerError('Not implemented, TODO!')
-      // return {
-      //   status: HttpStatus.OK,
-      //   body: buildPaginatedResponse(parkingSpots.map(parkingSpotToDto), pagination),
-      // }
+      // TODO: instead, return status OK with the appropriate body
     })
   }
 }
