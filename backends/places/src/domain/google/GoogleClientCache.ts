@@ -36,37 +36,22 @@ export class GoogleClientCache {
     limit?: number
   }): Promise<PlaceSuggestion[]> {
     try {
-      // Build params object dynamically to avoid passing undefined values
-      const requestParams: PlaceAutocompleteRequest['params'] = {
-        input: params.search,
-        key: this.apiKey,
-      }
-
-      // Only add optional parameters if they are defined
-      if (params.language) {
-        requestParams.language = params.language
-      }
-
-      if (params.location) {
-        requestParams.location = `${params.location.latitude},${params.location.longitude}`
-      }
-
-      if (params.useStrictBounds !== undefined) {
-        requestParams.strictbounds = params.useStrictBounds
-      }
-
-      if (params.radius !== undefined) {
-        requestParams.radius = params.radius
-      }
-
       const request: PlaceAutocompleteRequest = {
-        params: requestParams,
+        params: {
+          input: params.search,
+          key: this.apiKey,
+          ...(params.language && { language: params.language }),
+          ...(params.location && { location: `${params.location.latitude},${params.location.longitude}` }),
+          ...(params.useStrictBounds !== undefined && { strictbounds: params.useStrictBounds }),
+          ...(params.radius !== undefined && { radius: params.radius }),
+        },
       }
 
       this.logger.debug('Calling Google Places API with request', { request })
 
       const response: PlaceAutocompleteResponse = await this.client.placeAutocomplete(request)
 
+      // TODO: maybe better error handling here?
       if (response.data.status !== Status.OK && response.data.status !== Status.ZERO_RESULTS) {
         throw new InternalServerError(`Google Places API error: ${response.data.status}`)
       }

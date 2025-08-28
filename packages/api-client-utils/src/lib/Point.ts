@@ -5,4 +5,10 @@ export const PointSchema = z.object({
   longitude: z.number().min(-180).max(180),
 })
 
+// Coerced version of PointSchema for query parameters
+export const CoercedPointSchema = z.object({
+  latitude: z.coerce.number().min(-90).max(90),
+  longitude: z.coerce.number().min(-180).max(180),
+})
+
 export type PointDto = z.infer<typeof PointSchema>
