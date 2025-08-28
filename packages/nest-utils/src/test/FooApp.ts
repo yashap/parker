@@ -99,7 +99,7 @@ class FooModule {}
 export const buildFooApp = async (): Promise<INestApplication> => {
   const moduleRef = await Test.createTestingModule({ imports: [FooModule] }).compile()
   const app = moduleRef.createNestApplication()
-  NestAppBuilder.configureApp(app)
+  NestAppBuilder.configureApp(app, undefined)
   await app.init()
   return app
 }

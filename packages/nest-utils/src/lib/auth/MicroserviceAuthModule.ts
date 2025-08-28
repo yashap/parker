@@ -24,9 +24,9 @@ export class MicroserviceAuthModule implements NestModule {
       appInfo: {
         appName: 'Parker',
         apiDomain: apiUrl,
-        websiteDomain: websiteDomain ?? 'http://localhost:3000',
+        websiteDomain,
       },
-      connectionURI: supertokensUrl ?? 'http://localhost:3567',
+      connectionURI: supertokensUrl,
       apiKey,
       recipeList: [Session.init()],
     }

@@ -1,5 +1,4 @@
-import { config as defaultConfig } from 'src/config/config'
-import { Configuration } from 'src/config/Configuration'
+import { config as defaultConfig, Configuration } from 'src/config/config'
 
 export const config: Configuration = {
   ...defaultConfig,
