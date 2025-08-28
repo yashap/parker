@@ -14,16 +14,17 @@
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.2",
     "@js-temporal/polyfill": "^0.4.4",
     "@nestjs/common": "^10.4.1",
     "@nestjs/core": "^10.4.1",
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/platform-express": "^10.4.1",
     "@parker/api-client-utils": "*",
-    "@parker/places-client": "*",
     "@parker/errors": "*",
     "@parker/logging": "*",
     "@parker/nest-utils": "*",
+    "@parker/places-client": "*",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.5",

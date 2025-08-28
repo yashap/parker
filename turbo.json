@@ -8,7 +8,10 @@
     "PORT",
     "HOST_NAME",
     "SUPERTOKENS_CORE_URL",
-    "PARKING_URL"
+    "PARKER_WEB_URL",
+    "PARKING_URL",
+    "PLACES_URL",
+    "USER_URL"
   ],
   "tasks": {
     "build": {

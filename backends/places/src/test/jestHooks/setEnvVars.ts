@@ -1,3 +1,3 @@
 export {}
 
-process.env['DATABASE_URL'] = 'postgresql://parking:parking_password@localhost:5441/parking?schema=public'
+process.env['GOOGLE_MAPS_API_KEY'] = 'fake-google-maps-api-key'
