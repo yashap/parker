@@ -12,7 +12,7 @@ export const AddressComponentsSchema = z.object({
 })
 
 export const PlaceDetailsSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
   name: z.string().optional(),
   location: PointSchema.optional(),
   address: z.string().optional(),

@@ -7,7 +7,6 @@ import {
 import { Injectable } from '@nestjs/common'
 import { InternalServerError } from '@parker/errors'
 import { Logger } from '@parker/logging'
-import { v4 as uuidv4 } from 'uuid'
 import { config } from 'src/config'
 
 export interface PlaceSuggestion {
@@ -62,9 +61,7 @@ export class GoogleClientCache {
       const limitedPredictions = params.limit ? predictions.slice(0, params.limit) : predictions
 
       return limitedPredictions.map((prediction) => ({
-        // For now, we generate a UUID for placeId. In a real implementation,
-        // you might want to store Google place IDs and map them to UUIDs
-        placeId: uuidv4(),
+        placeId: prediction.place_id,
         label: prediction.structured_formatting.main_text || prediction.description,
         subLabel: prediction.structured_formatting.secondary_text || '',
       }))

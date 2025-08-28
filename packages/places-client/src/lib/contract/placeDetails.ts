@@ -10,7 +10,7 @@ export const placeDetailsContract = c.router({
     method: 'GET',
     path: '/placeDetails/:id',
     pathParams: z.object({
-      id: z.string().uuid(),
+      id: z.string(),
     }),
     responses: ContractBuilder.buildGetResponses(PlaceDetailsSchema),
     summary: 'Get details about a place',

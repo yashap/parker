@@ -2,7 +2,7 @@ import { CoercedPointSchema } from '@parker/api-client-utils'
 import { z } from 'zod'
 
 export const PlaceSuggestionSchema = z.object({
-  placeId: z.string().uuid(),
+  placeId: z.string(),
   label: z.string(),
   subLabel: z.string(),
 })
