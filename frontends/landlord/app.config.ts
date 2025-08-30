@@ -19,6 +19,14 @@ export default (parentConfig: ExpoConfig): ExpoConfig => {
       placesUrl,
     },
     scheme: 'parkerlandlord',
-    plugins: ['expo-localization'],
+    plugins: [
+      'expo-localization',
+      [
+        'expo-location',
+        {
+          locationAlwaysAndWhenInUsePermission: 'Allow $(PRODUCT_NAME) to use your location.',
+        },
+      ],
+    ],
   }
 }
