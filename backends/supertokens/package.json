@@ -8,6 +8,6 @@
     "db:migrate-up": "yarn db:up",
     "db:up": "../../tools/scripts/ensure_postgres_db.sh -d supertokens && ../../tools/scripts/ensure_postgres_user.sh -u supertokens -w supertokens_password -d supertokens",
     "db:restore-fixtures": "yarn db:clean && yarn db:up && ../../tools/scripts/restore_fixtures.sh supertokens postgres://supertokens:supertokens_password@localhost:5432/supertokens?sslmode=disable && yarn db:migrate-up",
-    "serve": "docker rm -f supertokens && docker run --name supertokens -e POSTGRESQL_USER=\"supertokens\" -e POSTGRESQL_PASSWORD=\"supertokens_password\" -e POSTGRESQL_HOST=\"host.docker.internal\" -e POSTGRESQL_PORT=\"5440\" -e LOG_LEVEL=\"${LOG_LEVEL:-WARN}\" -p 3567:3567 --rm registry.supertokens.io/supertokens/supertokens-postgresql:9.2"
+    "serve": "docker rm -f supertokens && docker run --name supertokens -e POSTGRESQL_USER=\"supertokens\" -e POSTGRESQL_PASSWORD=\"supertokens_password\" -e POSTGRESQL_HOST=\"host.docker.internal\" -e POSTGRESQL_PORT=\"5440\" -e LOG_LEVEL=\"${LOG_LEVEL:-WARN}\" -p 3567:3567 --rm registry.supertokens.io/supertokens/supertokens-postgresql:11.0.4"
   }
 }

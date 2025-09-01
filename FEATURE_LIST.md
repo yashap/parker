@@ -2,6 +2,8 @@
 
 What am I planning to work on next?
 
+- Clean up all the vibe-coded code from adding places search (frontend and backend)
+- Switch to [encrypted .env](https://dotenvx.com/), and stop ignoring .env files
 - Is it possible to do conversion to Temport.Instant within ts-rest?
 - Can I make supertokens migrate during normal migrations, not on startup?
 - Better create parking spot FE
@@ -11,8 +13,6 @@ What am I planning to work on next?
   - Styling
   - [Default font styles](https://tailwindcss.com/docs/font-family) and whatnot for tailwind?
   - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
-- Real implementation of place/location picking (landlord and BE)
-  - Probably a new service, that wraps Google Places API?
 - Real implementation of parking spot bookings and time rules (BE)
   - BE remaining, for time rules/overrides:
     - Time rule evaluation should be able to:
@@ -42,7 +42,6 @@ What am I planning to work on next?
   - I believe new RN supports pnpm
 - E2E tests, possibly using [Maestro](https://www.mobile.dev/)
 - Move libs to absolute imports
-
   - In theory this is just:
 
     ```ts

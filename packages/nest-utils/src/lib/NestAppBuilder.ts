@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common'
+import { INestApplication, DynamicModule, ForwardReference, Type } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import supertokens from 'supertokens-node'
 import { SuperTokensExceptionFilter } from './auth/SuperTokensExceptionFilter'
@@ -7,8 +7,10 @@ import { logContextMiddleware } from './logContextMiddleware'
 import { logMiddleware } from './logMiddleware'
 import { NestLogger } from './NestLogger'
 
+type IEntryNestModule = Type | DynamicModule | ForwardReference | Promise<IEntryNestModule>
+
 export class NestAppBuilder {
-  public static async build(appModule: unknown, parkerWebUrl: string | undefined): Promise<INestApplication> {
+  public static async build(appModule: IEntryNestModule, parkerWebUrl: string | undefined): Promise<INestApplication> {
     const app = await NestFactory.create(appModule, {
       logger: new NestLogger(),
     })

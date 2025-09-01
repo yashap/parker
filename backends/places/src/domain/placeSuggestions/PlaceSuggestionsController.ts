@@ -16,11 +16,11 @@ export class PlaceSuggestionsController extends BaseController {
   @UseGuards(new AuthGuard())
   public search(@Session() _session: SessionContainer): HandlerResult<typeof contract.search> {
     return handler(contract.search, async ({ query }) => {
-      const { search, location, language, useStrictBounds, radius, limit } = query
+      const { search, latitude, longitude, language, useStrictBounds, radius, limit } = query
 
       const suggestions = await this.googleClientCache.getPlaceSuggestions({
         search,
-        location,
+        location: latitude !== undefined && longitude !== undefined ? { latitude, longitude } : undefined,
         language,
         useStrictBounds,
         radius,

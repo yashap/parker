@@ -15,20 +15,20 @@
   "dependencies": {
     "@parker/correlation-id-propagator": "*",
     "lodash": "^4.17.21",
-    "tslib": "^2.7.0",
-    "winston": "^3.14.2"
+    "tslib": "^2.8.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
-    "@parker/eslint-config": "*",
     "@parker/context-propagation": "*",
+    "@parker/eslint-config": "*",
     "@parker/test-utils": "*",
     "@parker/tsconfig": "*",
-    "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.17.7",
-    "@types/node": "^22.5.0",
-    "eslint": "^8.57.0",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.2.5",
-    "typescript": "~5.5.4"
+    "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "^24.3.0",
+    "eslint": "^9.34.0",
+    "jest": "~29.7.0",
+    "ts-jest": "^29.4.1",
+    "typescript": "~5.9.2"
   }
 }

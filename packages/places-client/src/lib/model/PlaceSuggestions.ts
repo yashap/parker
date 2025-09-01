@@ -1,4 +1,3 @@
-import { CoercedPointSchema } from '@parker/api-client-utils'
 import { z } from 'zod'
 
 export const PlaceSuggestionSchema = z.object({
@@ -9,7 +8,8 @@ export const PlaceSuggestionSchema = z.object({
 
 export const SearchPlaceSuggestionsRequestSchema = z.object({
   search: z.string(),
-  location: CoercedPointSchema.optional(),
+  latitude: z.coerce.number().min(-90).max(90).optional(),
+  longitude: z.coerce.number().min(-180).max(180).optional(),
   language: z.string().optional(),
   useStrictBounds: z.coerce.boolean().optional(),
   radius: z.coerce.number().optional(),

@@ -130,10 +130,10 @@ export class GoogleClientCache {
         } = {}
 
         for (const comp of place.address_components) {
-          const types = comp.types || []
+          const types = comp.types
 
-          // Cast to any to avoid TypeScript type mismatch with Google Maps types
-          const typesArray = types as any[]
+          // Cast to string[] to match Google Maps types
+          const typesArray = types as string[]
 
           if (typesArray.includes('street_number')) {
             component.number = comp.short_name
@@ -156,7 +156,7 @@ export class GoogleClientCache {
       }
 
       return {
-        id: place.place_id || placeId,
+        id: place.place_id ?? placeId,
         name: place.name,
         location: place.geometry?.location
           ? {

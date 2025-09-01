@@ -87,7 +87,8 @@ describe(PlaceSuggestionsController.name, () => {
 
     const suggestionsResponse = await placesClient.placeSuggestions.search({
       search: '123 Main St',
-      location: { latitude: 40.7128, longitude: -74.006 }, // New York coordinates
+      latitude: 40.7128,
+      longitude: -74.006, // New York coordinates
     })
     const suggestions = suggestionsResponse.data
 
@@ -117,7 +118,8 @@ describe(PlaceSuggestionsController.name, () => {
 
     const suggestionsResponse = await placesClient.placeSuggestions.search({
       search: '123 Main St',
-      location: { latitude: 40.7128, longitude: -74.006 },
+      latitude: 40.7128,
+      longitude: -74.006,
       language: 'en',
       useStrictBounds: true,
       radius: 5000,

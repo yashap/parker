@@ -5,7 +5,7 @@ import { TimeRuleChecker } from 'src/domain/timeRule/TimeRuleChecker'
 
 describe(TimeRuleChecker.name, () => {
   // Wed Aug 28 2024 13:00:00 EDT
-  const timestamp = Temporal.Instant.fromEpochSeconds(1724864400)
+  const timestamp = Temporal.Instant.fromEpochMilliseconds(1724864400000)
   const timezone = 'America/Toronto'
 
   describe(TimeRuleChecker.satisfiesTimeRule.name, () => {

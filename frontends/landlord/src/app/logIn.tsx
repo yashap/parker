@@ -1,7 +1,7 @@
 import { router } from 'expo-router'
 import React from 'react'
 import { View } from 'react-native'
-import { Button, Card, Divider, Headline, Subheading, Text, TextInput } from 'react-native-paper'
+import { Button, Card, Divider, Text, TextInput } from 'react-native-paper'
 import { AuthClientBuilder } from 'src/apiClient/AuthClientBuilder'
 import { IAuthContext, useAuthContext } from 'src/contexts/AuthContext'
 import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
@@ -36,8 +36,8 @@ const LogIn: React.FC = () => {
       <Card className='space-y-3 p-3'>
         {/* Header */}
         <View className='items-center'>
-          <Headline>Log in</Headline>
-          <Subheading>
+          <Text variant='headlineSmall'>Log in</Text>
+          <Text variant='titleMedium'>
             {"Don't have an account? "}
             <Text
               style={{ color: theme.colors.link }}
@@ -47,7 +47,7 @@ const LogIn: React.FC = () => {
             >
               Sign up
             </Text>
-          </Subheading>
+          </Text>
         </View>
 
         <Divider />

@@ -8,7 +8,6 @@ export class SuperTokensExceptionFilter implements ExceptionFilter {
   private handler: ErrorRequestHandler
 
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.handler = errorHandler()
   }
 

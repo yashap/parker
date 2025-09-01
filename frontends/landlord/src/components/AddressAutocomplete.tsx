@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
 import { PlaceSuggestionDto } from '@parker/places-client'
 import * as Localization from 'expo-localization'
 import * as Location from 'expo-location'

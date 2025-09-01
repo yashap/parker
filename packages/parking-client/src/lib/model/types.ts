@@ -33,5 +33,5 @@ export type TimeRuleDto = z.infer<typeof TimeRuleSchema>
 export type TimeRuleOverrideDto = z.infer<typeof TimeRuleOverrideSchema>
 export type ParkingSpotBookingDto = z.infer<typeof ParkingSpotBookingSchema>
 export type BookingStatusDto = z.infer<typeof BookingStatusSchema>
-export const BookingStatusValues = BookingStatusSchema.Enum
+export const BookingStatusValues = BookingStatusSchema.enum
 export const BookingStatusAllValues = BookingStatusSchema.options
