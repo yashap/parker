@@ -6,6 +6,8 @@ import { ActivityIndicator, Card, List, Portal, TextInput } from 'react-native-p
 import { PlacesClientBuilder } from 'src/apiClient/PlacesClientBuilder'
 import { useDeviceLocation } from 'src/hooks/useDeviceLocation'
 
+const SEARCH_RADIUS_METERS = 100_000
+
 interface AddressAutocompleteProps {
   onAddressSelected: (address: string, location: { latitude: number; longitude: number }) => void
 }
@@ -35,10 +37,10 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
         const response = await placesClient.placeSuggestions.search({
           search: searchQuery,
           ...(deviceLocation && {
-            location: {
-              latitude: deviceLocation.coords.latitude,
-              longitude: deviceLocation.coords.longitude,
-            },
+            latitude: deviceLocation.coords.latitude,
+            longitude: deviceLocation.coords.longitude,
+            radius: SEARCH_RADIUS_METERS,
+            useStrictBounds: true,
           }),
           language: locales[0]?.languageCode ?? 'en',
           limit: 5,
