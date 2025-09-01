@@ -1,10 +1,10 @@
 import { PlaceSuggestionDto } from '@parker/places-client'
 import * as Localization from 'expo-localization'
-import * as Location from 'expo-location'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, Keyboard, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { ActivityIndicator, Card, List, Portal, TextInput } from 'react-native-paper'
 import { PlacesClientBuilder } from 'src/apiClient/PlacesClientBuilder'
+import { useDeviceLocation } from 'src/hooks/useDeviceLocation'
 
 interface AddressAutocompleteProps {
   onAddressSelected: (address: string, location: { latitude: number; longitude: number }) => void
@@ -15,52 +15,11 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
   const [suggestions, setSuggestions] = useState<PlaceSuggestionDto[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const [deviceLocation, setDeviceLocation] = useState<{ latitude: number; longitude: number } | null>(null)
   const [inputLayout, setInputLayout] = useState({ x: 0, y: 0, width: 0, height: 0 })
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const inputRef = useRef<View>(null)
   const placesClient = PlacesClientBuilder.build()
-
-  // Note: In iOS Simulator, you may see location errors. This is normal.
-  // To set a simulated location: Simulator menu > Features > Location > Custom Location
-
-  // Get device location on mount
-  useEffect(() => {
-    void (async () => {
-      try {
-        const result = await Location.requestForegroundPermissionsAsync()
-        if (result.status === Location.PermissionStatus.GRANTED) {
-          try {
-            // Try to get current position with a timeout
-            const location = await Location.getCurrentPositionAsync({
-              accuracy: Location.Accuracy.Balanced,
-            })
-            setDeviceLocation({
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            })
-          } catch {
-            // For simulator or when GPS fails, try to get last known location
-            try {
-              const lastKnown = await Location.getLastKnownPositionAsync()
-              if (lastKnown) {
-                setDeviceLocation({
-                  latitude: lastKnown.coords.latitude,
-                  longitude: lastKnown.coords.longitude,
-                })
-              }
-            } catch {
-              // Location services not available - this is fine, search will work without location
-              console.log('Location services not available. Search will proceed without location context.')
-            }
-          }
-        }
-      } catch {
-        // Permission request failed - this is fine, search will work without location
-        console.log('Location permission not granted. Search will proceed without location context.')
-      }
-    })()
-  }, [])
+  const { location: deviceLocation } = useDeviceLocation()
 
   const searchPlaces = useCallback(
     async (searchQuery: string) => {
@@ -75,14 +34,18 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
         const locales = Localization.getLocales()
         const response = await placesClient.placeSuggestions.search({
           search: searchQuery,
-          ...(deviceLocation && { location: deviceLocation }),
+          ...(deviceLocation && {
+            location: {
+              latitude: deviceLocation.coords.latitude,
+              longitude: deviceLocation.coords.longitude,
+            },
+          }),
           language: locales[0]?.languageCode ?? 'en',
           limit: 5,
         })
         setSuggestions(response.data)
         setShowSuggestions(true)
-      } catch (error) {
-        console.error('Error searching places:', error)
+      } catch {
         setSuggestions([])
       } finally {
         setIsLoading(false)
@@ -120,8 +83,8 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
           longitude: placeDetails.location.longitude,
         })
       }
-    } catch (error) {
-      console.error('Error fetching place details:', error)
+    } catch {
+      // Silently fail - user can try selecting again
     }
   }
 
