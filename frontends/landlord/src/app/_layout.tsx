@@ -9,7 +9,6 @@ import SuperTokens from 'supertokens-react-native'
 import { config } from 'src/config'
 import { AuthContextProvider } from 'src/contexts/AuthContext'
 import { lightTheme, useTheme } from 'src/theme'
-import 'src/global.css'
 
 SuperTokens.init({
   apiDomain: config.authUrl,
