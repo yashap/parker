@@ -22,7 +22,6 @@ const Router = () => {
       <Stack
         screenOptions={{
           headerBackTitle: '',
-          headerBackTitleVisible: false,
           headerStyle: {
             backgroundColor: theme.colors.background,
           },
