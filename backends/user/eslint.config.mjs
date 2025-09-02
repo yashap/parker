@@ -1,0 +1,15 @@
+import baseConfig from '@parker/eslint-config/default.config.mjs'
+import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
+
+export default [
+  ...baseConfig,
+  {
+    plugins: {
+      'no-relative-import-paths': noRelativeImportPaths,
+    },
+    rules: {
+      // Allow only absolute imports, no relative imports
+      'no-relative-import-paths/no-relative-import-paths': ['error', { allowSameFolder: false }],
+    },
+  },
+]

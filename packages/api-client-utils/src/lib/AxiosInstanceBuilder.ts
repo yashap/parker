@@ -16,7 +16,7 @@ export class AxiosInstanceBuilder {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        ...headers,
+        ...(headers && Object.fromEntries(Object.entries(headers))),
         ...(token && { Authorization: `Bearer ${token}` }),
         ...(locale && { 'Accept-Language': locale }),
       },

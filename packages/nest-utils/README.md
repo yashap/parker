@@ -16,7 +16,8 @@ class AppModule {}
 
 const serviceName: string = ...
 const port: number = ...
+const webUrl: string = ... // For CORS, to allow requests from the website
 
-const app = await NestAppBuilder.build(AppModule)
+const app = await NestAppBuilder.build(AppModule, webUrl)
 await NestAppRunner.run(app, port)
 ```

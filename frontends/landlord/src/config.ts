@@ -7,5 +7,7 @@ const getRequiredString = (key: string): string =>
   required(Constants.expoConfig?.extra?.[key], `No config value with key ${key}`)
 
 export const config = {
-  coreUrl: getRequiredString('coreUrl'),
+  authUrl: getRequiredString('authUrl'),
+  parkingUrl: getRequiredString('parkingUrl'),
+  placesUrl: getRequiredString('placesUrl'),
 }

@@ -14,7 +14,7 @@ import { postTable, userTable } from '../test/testSchema'
 import { buildPaginationQuery } from './buildPaginationQuery'
 
 describe(buildPaginationQuery.name, () => {
-  const baseTimestamp = Temporal.Instant.fromEpochSeconds(1_000_000)
+  const baseTimestamp = Temporal.Instant.fromEpochMilliseconds(1_000_000_000)
   let user: User
   let posts: Post[]
 

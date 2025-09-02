@@ -2,17 +2,16 @@
 
 What am I planning to work on next?
 
-- Is it possible to do conversion to Temport.Instant within ts-rest?
-- Can I make supertokens migrate during normal migrations, not on startup?
-- Better create parking spot FE
-  - With time rules and overrides, and properly viewing and editing your parking spot(s)
-- General landlord improvements
-  - Form lib?
-  - Styling
-  - [Default font styles](https://tailwindcss.com/docs/font-family) and whatnot for tailwind?
-  - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
-- Real implementation of place/location picking (landlord and BE)
-  - Probably a new service, that wraps Google Places API?
+## Features
+
+- Improve `landlord` frontend for creating parking spots
+  - Add a map to show where the parking spot is
+    - I should consider getting on latest Expo/RN/React for this
+  - Add editing
+  - Ability to add time rules (and overrides)
+    - Including maybe some sort of "make available for next X hours" type UI? Should this be an override or something else?
+  - Ability to add a photo of the parking spot
+    - Probably backed by a generic file upload service?
 - Real implementation of parking spot bookings and time rules (BE)
   - BE remaining, for time rules/overrides:
     - Time rule evaluation should be able to:
@@ -31,18 +30,47 @@ What am I planning to work on next?
     - Will probably require a concept of "availability" on FE and BE, based on time rules and existing bookings
   - No payments for now, all free
 - Implement fares/fare rules/payments
+  - Including ability to add credit card/apple pay
+  - Both renters and landlords should be able to see past payments
+- Navigate to parking spot once booked in renter
+- AI-backed voice interface for booking parking spots
+- Implement SSO for both landlord and renter apps
+  - Google, FB, Apple, etc. signup/login
+- Add splash screens, logos, etc.
+- Ensure landlord works on Android
+- **Maybe**: RN-web version of landlord and/or renter?
+
+## Bugs
+
+None known at the moment.
+
+## Tech Debt
+
+- Clean up all the vibe-coded code from adding places search (frontend and backend)
+  - Cleanup of code from [this PR](https://github.com/yashap/parker/pull/20)
+  - `places` service:
+    - `GoogleClient.getPlaceDetails` should return `undefined` if the place id doesn't exist. Need to test against real Google what happens here
+    - Once that's done, `PlaceDetailsController` should not catch errors
+    - There's no caching yet, I should add caching!
+    - Check that all of the logic seems reasonable
+    - Place details are returning an `AddressComponents[]`, but should it just be `AddressComponents`?
+  - `landlord` app:
+    - Just generally review the code for messiness
+- Switch to [encrypted .env](https://dotenvx.com/), and stop ignoring .env files
+- Is it possible to do conversion to `Temport.Instant` within `ts-rest`?
+- Can I make supertokens migrate during normal migrations, not on startup?
+- General landlord improvements
+  - Form lib?
+  - Styling
+  - [Default font styles](https://tailwindcss.com/docs/font-family) and whatnot for tailwind?
+    - And upgrade to latest tailwind/nativewind
+  - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
 - Validate flows around bad auth
   - Handled well on BE and FE? Ideally some BE tests!
-- Photos of the parking spot
-  - BE
-  - Landlord
-  - Renter
-  - Possibly a generic service for uploading files?
 - Maybe switch to pnpm instead of yarn v1 workspaces?
   - I believe new RN supports pnpm
 - E2E tests, possibly using [Maestro](https://www.mobile.dev/)
 - Move libs to absolute imports
-
   - In theory this is just:
 
     ```ts

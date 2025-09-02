@@ -1,7 +1,7 @@
 import { router } from 'expo-router'
 import React from 'react'
 import { Linking, View } from 'react-native'
-import { Button, Caption, Card, Divider, Headline, Subheading, Text, TextInput } from 'react-native-paper'
+import { Button, Card, Divider, Text, TextInput } from 'react-native-paper'
 import { AuthClientBuilder } from 'src/apiClient/AuthClientBuilder'
 import { IAuthContext, useAuthContext } from 'src/contexts/AuthContext'
 import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
@@ -36,8 +36,8 @@ const SignUp: React.FC = () => {
       <Card className='space-y-3 p-3'>
         {/* Header */}
         <View className='items-center'>
-          <Headline>Sign up</Headline>
-          <Subheading>
+          <Text variant='headlineSmall'>Sign up</Text>
+          <Text variant='titleMedium'>
             {'Already have an account? '}
             <Text
               style={{ color: theme.colors.link }}
@@ -47,7 +47,7 @@ const SignUp: React.FC = () => {
             >
               Log in
             </Text>
-          </Subheading>
+          </Text>
         </View>
 
         <Divider />
@@ -67,7 +67,7 @@ const SignUp: React.FC = () => {
         </Button>
 
         {/* Terms and conditions */}
-        <Caption className='items-center'>
+        <Text variant='bodySmall' className='items-center'>
           By signing up, you agree to our{' '}
           <Text
             style={{ color: theme.colors.link }}
@@ -84,7 +84,7 @@ const SignUp: React.FC = () => {
           >
             Privacy Policy
           </Text>
-        </Caption>
+        </Text>
       </Card>
     </View>
   )

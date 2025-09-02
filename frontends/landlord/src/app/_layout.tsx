@@ -11,7 +11,7 @@ import { AuthContextProvider } from 'src/contexts/AuthContext'
 import { lightTheme, useTheme } from 'src/theme'
 
 SuperTokens.init({
-  apiDomain: config.coreUrl,
+  apiDomain: config.authUrl,
   apiBasePath: '/auth',
 })
 
@@ -22,7 +22,6 @@ const Router = () => {
       <Stack
         screenOptions={{
           headerBackTitle: '',
-          headerBackTitleVisible: false,
           headerStyle: {
             backgroundColor: theme.colors.background,
           },

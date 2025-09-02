@@ -65,7 +65,6 @@ const getFormat = (): winston.Logform.Format => {
     winston.format.timestamp({ format: 'hh:mm:ss' }),
     winston.format.align(),
     winston.format.printf((log) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { timestamp, level, name, message, error, ...metadata } = log
       const metadataString =
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

@@ -38,7 +38,7 @@ yarn workspace @parker/context-propagation test
 
 The name of the workspace is the value of the `name` field in its `package.json`.
 
-### Core Dev Workflow
+### Development Workflow
 
 All commands below should be run from the root of this repo.
 
@@ -76,7 +76,7 @@ We don't send emails locally - instead, they get sent to [MailSlurper](https://w
 ```bash
 # Add a package to a workspace
 yarn workspace <workspace> add <package>
-# e.g. yarn workspace @parker/core add lodash
+# e.g. yarn workspace @parker/parking add lodash
 
 # Add a dev package to a workspace
 yarn workspace <workspace> add -D <package>
@@ -91,9 +91,9 @@ yarn workspace <workspace> remove <package>
 # Add a dependency like this to your package.json
 "<package>": "*"
 
-# e.g. to make the @parker/core app depend on @parker/context-propagation
+# e.g. to make the @parker/parking app depend on @parker/context-propagation
 {
-  "name": "@parker/core",
+  "name": "@parker/parking",
   ...
   "dependencies": {
     "@parker/context-propagation": "*",
@@ -117,7 +117,7 @@ yarn clean && rm yarn.lock
 ### Adding a new app/package
 
 - For adding a new package (a.k.a. library), copy `packages/context-propagation` as an example
-- For adding a new backend service, copy `backends/core` as an example
+- For adding a new backend service, copy `backends/parking` as an example
 - For adding a new React Native app, copy `frontends/landlord` as an example
 
 If adding new packages becomes a pain point, we could consider writing [Turborepo custom code generators](https://turbo.build/repo/docs/core-concepts/monorepos/code-generation).

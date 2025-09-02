@@ -12,17 +12,17 @@
   },
   "dependencies": {
     "@parker/context-propagation": "*",
-    "tslib": "^2.7.0"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@parker/eslint-config": "*",
     "@parker/test-utils": "*",
     "@parker/tsconfig": "*",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^22.5.0",
-    "eslint": "^8.57.0",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.2.5",
-    "typescript": "~5.5.4"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.0",
+    "eslint": "^9.34.0",
+    "jest": "~29.7.0",
+    "ts-jest": "^29.4.1",
+    "typescript": "~5.9.2"
   }
 }
