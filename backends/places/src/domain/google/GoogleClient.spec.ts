@@ -1,5 +1,4 @@
 import {
-  Client,
   Status,
   PlaceAutocompleteResponse,
   PlaceDetailsResponse,
@@ -10,8 +9,6 @@ import { InternalServerError } from '@parker/errors'
 import { AxiosRequestHeaders, AxiosResponse } from 'axios'
 import { config } from 'src/config'
 import { GoogleClient } from 'src/domain/google/GoogleClient'
-
-jest.mock('@googlemaps/google-maps-services-js')
 
 const buildAxiosResponse = <T>(data: unknown): AxiosResponse<T> => ({
   data: data as T,
@@ -28,7 +25,10 @@ const buildDetailsResponse = (data: unknown): PlaceDetailsResponse => buildAxios
 
 describe('GoogleClient', () => {
   let googleClient: GoogleClient
-  let mockClient: jest.Mocked<Pick<Client, 'placeAutocomplete' | 'placeDetails'>>
+  let mockClient: {
+    placeAutocomplete: jest.Mock
+    placeDetails: jest.Mock
+  }
   const googleMapsApiKey = config.googleMapsApiKey
 
   beforeEach(() => {
@@ -37,9 +37,10 @@ describe('GoogleClient', () => {
       placeAutocomplete: jest.fn(),
       placeDetails: jest.fn(),
     }
-    const MockedClient = Client as jest.MockedClass<typeof Client>
-    MockedClient.mockImplementation(() => mockClient as unknown as Client)
     googleClient = new GoogleClient()
+
+    // Replace the private 'client' property with our mockClient
+    Object.assign(googleClient, { client: mockClient })
   })
 
   describe('getPlaceSuggestions', () => {
