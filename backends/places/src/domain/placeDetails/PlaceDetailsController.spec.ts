@@ -6,7 +6,7 @@ import { PlacesClient } from '@parker/places-client'
 import { addTemporalEqualityTesters } from '@parker/test-utils'
 import { v4 as uuid } from 'uuid'
 import { config } from 'src/config'
-import { GoogleClientCache } from 'src/domain/google/GoogleClientCache'
+import { GoogleClient } from 'src/domain/google/GoogleClient'
 import { PlaceDetailsController } from 'src/domain/placeDetails/PlaceDetailsController'
 import { PlaceDetailsModule } from 'src/domain/placeDetails/PlaceDetailsModule'
 import { PlaceSuggestionsModule } from 'src/domain/placeSuggestions'
@@ -34,7 +34,7 @@ describe(PlaceDetailsController.name, () => {
     const moduleRef = await Test.createTestingModule({
       imports: [PlaceSuggestionsModule, PlaceDetailsModule, MicroserviceAuthModule.forRoot(config.auth)],
     })
-      .overrideProvider(GoogleClientCache)
+      .overrideProvider(GoogleClient)
       .useValue(mockGoogleClientCache)
       .compile()
 

@@ -3,13 +3,13 @@ import { NotFoundError } from '@parker/errors'
 import { AuthGuard, BaseController, Endpoint, HandlerResult, Session, handler } from '@parker/nest-utils'
 import { contract as rootContract } from '@parker/places-client'
 import { SessionContainer } from 'supertokens-node/recipe/session'
-import { GoogleClientCache } from 'src/domain/google/GoogleClientCache'
+import { GoogleClient } from 'src/domain/google/GoogleClient'
 
 const contract = rootContract.placeDetails
 
 @Controller()
 export class PlaceDetailsController extends BaseController {
-  constructor(private readonly googleClientCache: GoogleClientCache) {
+  constructor(private readonly googleClientCache: GoogleClient) {
     super('PlaceDetails')
   }
 

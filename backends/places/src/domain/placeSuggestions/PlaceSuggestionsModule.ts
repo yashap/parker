@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { GoogleClientCache } from 'src/domain/google/GoogleClientCache'
+import { GoogleClient } from 'src/domain/google/GoogleClient'
 import { PlaceSuggestionsController } from 'src/domain/placeSuggestions/PlaceSuggestionsController'
 
 @Module({
   controllers: [PlaceSuggestionsController],
-  providers: [GoogleClientCache],
+  providers: [GoogleClient],
 })
 export class PlaceSuggestionsModule {}

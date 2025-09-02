@@ -5,7 +5,7 @@ import { MicroserviceAuthModule, NestAppBuilder, AuthGuard } from '@parker/nest-
 import { PlacesClient } from '@parker/places-client'
 import { v4 as uuid } from 'uuid'
 import { config } from 'src/config'
-import { GoogleClientCache } from 'src/domain/google/GoogleClientCache'
+import { GoogleClient } from 'src/domain/google/GoogleClient'
 import { PlaceSuggestionsController } from 'src/domain/placeSuggestions/PlaceSuggestionsController'
 import { PlaceSuggestionsModule } from 'src/domain/placeSuggestions/PlaceSuggestionsModule'
 
@@ -13,7 +13,7 @@ describe(PlaceSuggestionsController.name, () => {
   let app: INestApplication
   let landlordUserId: string
   let placesClient: PlacesClient
-  let mockGoogleClientCache: jest.Mocked<GoogleClientCache>
+  let mockGoogleClientCache: jest.Mocked<GoogleClient>
 
   beforeEach(async () => {
     landlordUserId = uuid()
@@ -21,13 +21,13 @@ describe(PlaceSuggestionsController.name, () => {
     // Create a mock GoogleClientCache
     mockGoogleClientCache = {
       getPlaceSuggestions: jest.fn(),
-    } as unknown as jest.Mocked<GoogleClientCache>
+    } as unknown as jest.Mocked<GoogleClient>
 
     // Build the test app with the mocked GoogleClientCache
     const moduleRef = await Test.createTestingModule({
       imports: [PlaceSuggestionsModule, MicroserviceAuthModule.forRoot(config.auth)],
     })
-      .overrideProvider(GoogleClientCache)
+      .overrideProvider(GoogleClient)
       .useValue(mockGoogleClientCache)
       .compile()
 
