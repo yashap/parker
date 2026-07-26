@@ -1,14 +1,9 @@
-import { AuthGuard } from '@parker/nest-utils'
+import { mockAuth, unmockAuth } from '@parker/fastify-utils'
 
-beforeAll(async () => {
-  // TODO: clear Redis?
-  AuthGuard.mock()
+beforeAll(() => {
+  mockAuth()
 })
 
-afterEach(async () => {
-  // TODO: clear Redis?
-})
-
-afterAll(async () => {
-  AuthGuard.unMock()
+afterAll(() => {
+  unmockAuth()
 })

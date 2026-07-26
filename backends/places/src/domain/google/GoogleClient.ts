@@ -7,7 +7,6 @@ import {
   PlaceDetailsResponse,
   Status,
 } from '@googlemaps/google-maps-services-js'
-import { Injectable } from '@nestjs/common'
 import { InternalServerError } from '@parker/errors'
 import { Logger } from '@parker/logging'
 import {
@@ -46,7 +45,6 @@ const extractGoogleApiErrorDetails = (error: unknown): GoogleApiErrorDetails | u
   }
 }
 
-@Injectable()
 export class GoogleClient {
   private readonly logger = new Logger('GoogleClient')
   private readonly client: Client

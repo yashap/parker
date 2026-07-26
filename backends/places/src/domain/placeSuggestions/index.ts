@@ -1,2 +1,1 @@
-export * from './PlaceSuggestionsController'
-export * from './PlaceSuggestionsModule'
+export * from './registerPlaceSuggestionsRoutes'

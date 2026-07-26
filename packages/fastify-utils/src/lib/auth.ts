@@ -1,8 +1,9 @@
 import { assertTestOnly } from '@parker/core'
 import { UnauthorizedError } from '@parker/errors'
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import type { SessionContainer } from 'supertokens-node/recipe/session'
-import { verifySession } from 'supertokens-node/recipe/session/framework/fastify'
+import { Error as SuperTokensError } from 'supertokens-node'
+import { wrapRequest, wrapResponse } from 'supertokens-node/framework/fastify'
+import Session, { type SessionContainer } from 'supertokens-node/recipe/session'
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -64,7 +65,22 @@ export const requireSession = async (request: FastifyRequest, reply: FastifyRepl
     addTestSession(request)
     return
   }
-  await verifySession()(request, reply)
+  try {
+    // Note: we intentionally use Session.getSession rather than the SuperTokens fastify verifySession helper - the
+    // latter sends SuperTokens' own error response before rethrowing, while getSession just throws, letting us return
+    // our standard error DTO below
+    request.session = await Session.getSession(wrapRequest(request), wrapResponse(reply))
+  } catch (error) {
+    // Map SuperTokens session failures (no token, expired token, etc.) to our standard 401 error DTO. Note that the
+    // SuperTokens frontend SDKs trigger their session refresh flow based on the 401 status code, so this is safe.
+    if (error instanceof SuperTokensError) {
+      throw new UnauthorizedError('Unauthorized', {
+        cause: error,
+        metadata: { reason: (error as { type?: string }).type },
+      })
+    }
+    throw error
+  }
 }
 
 export const getSessionUserId = (request: FastifyRequest): string => {

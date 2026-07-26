@@ -1,9 +1,9 @@
-import { AuthGuard } from '@parker/nest-utils'
+import { mockAuth, unmockAuth } from '@parker/fastify-utils'
 import { TestDbTeardown } from 'src/test/TestDbTeardown'
 
 beforeAll(async () => {
   await new TestDbTeardown().clear()
-  AuthGuard.mock()
+  mockAuth()
 })
 
 afterEach(async () => {
@@ -11,5 +11,5 @@ afterEach(async () => {
 })
 
 afterAll(async () => {
-  AuthGuard.unMock()
+  unmockAuth()
 })

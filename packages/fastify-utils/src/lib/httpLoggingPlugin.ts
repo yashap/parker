@@ -91,13 +91,8 @@ export const httpLoggingPlugin = fp<HttpLoggingPluginOptions>(
       })
     })
 
-    fastify.addHook('onError', async (request: FastifyRequest, _reply: FastifyReply, error: Error) => {
-      logger.error('Request errored', {
-        method: request.method,
-        url: request.url,
-        error,
-      })
-    })
+    // Note: no `onError` hook here - errors are logged (once, with full details) by the parkerErrorHandler, and the
+    // `onResponse` hook above still logs the completion of failed requests (including their response bodies)
   },
   { name: 'parker-http-logging-plugin' }
 )

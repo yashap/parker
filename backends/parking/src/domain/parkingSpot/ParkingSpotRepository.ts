@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common'
 import { buildPaginationQuery } from '@parker/drizzle-utils'
 import { required } from '@parker/errors'
 import { Point } from '@parker/geography'
@@ -22,7 +21,6 @@ export type UpdateParkingSpotInput = Partial<Omit<CreateParkingSpotInput, 'owner
 
 export type ListParkingSpotFilters = Pick<ListParkingSpotsRequest, 'ownerUserId'>
 
-@Injectable()
 export class ParkingSpotRepository {
   constructor(private readonly db: Db) {}
 

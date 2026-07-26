@@ -31,8 +31,8 @@ export class FastifyInjectInstance implements ApiAxiosInstance {
     return { status: response.statusCode, data: responseBody, headers: response.headers }
   }
 
-  // Parse response bodies the same way supertest does (see SupertestInstance) - JSON bodies become objects, empty
-  // bodies become empty objects
+  // Parse response bodies the way our API clients expect - JSON bodies become objects, empty bodies become empty
+  // objects
   private parseResponseBody(body: string): unknown {
     if (body.length === 0) {
       return {}
