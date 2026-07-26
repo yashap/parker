@@ -17,6 +17,7 @@ export type Reminder = typeof schema.reminderTable.$inferSelect
 export type ReminderInput = typeof schema.reminderTable.$inferInsert
 
 export class TestDb {
+  private static pool: Pool | undefined = undefined
   private static dbSingleton: NodePgDatabase<TestDbSchema> | undefined = undefined
 
   public static async init() {
@@ -24,14 +25,12 @@ export class TestDb {
     if (!dbUrl) {
       throw new Error('DATABASE_URL is not set')
     }
-    this.dbSingleton = drizzle(
-      new Pool({
-        connectionString: dbUrl,
-      }),
-      {
-        schema,
-      }
-    )
+    this.pool = new Pool({
+      connectionString: dbUrl,
+    })
+    this.dbSingleton = drizzle(this.pool, {
+      schema,
+    })
   }
 
   public static db(): NodePgDatabase<TestDbSchema> {
@@ -44,5 +43,15 @@ export class TestDb {
 
   public static async clear(): Promise<void> {
     await this.db().delete(schema.userTable)
+  }
+
+  /**
+   * Ends the underlying connection pool - the TestDb cannot be used after this is called (without calling init
+   * again). Tests must close the pool for the test process to exit cleanly.
+   */
+  public static async close(): Promise<void> {
+    await this.pool?.end()
+    this.pool = undefined
+    this.dbSingleton = undefined
   }
 }

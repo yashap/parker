@@ -1,5 +1,6 @@
 import { required } from '@parker/errors'
 import { v4 as uuid } from 'uuid'
+import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import { buildPaginatedResponse } from './buildPaginatedResponse'
 import { Cursor, decodeCursor } from './Cursor'

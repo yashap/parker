@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { ContextPropagator } from './ContextPropagator'
 
 describe(ContextPropagator.name, () => {

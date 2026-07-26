@@ -12,9 +12,7 @@
     "serve:web": "expo start --web --port 9081",
     "eject": "expo eject",
     "format": "eslint \"src/**\" --fix",
-    "lint": "tsc --noEmit && eslint \"src/**\"",
-    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests src/",
-    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests --watch src/"
+    "lint": "tsc --noEmit && eslint \"src/**\""
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -56,18 +54,14 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
-    "@babel/preset-env": "^7.26.0",
     "@parker/eslint-config": "workspace:*",
-    "@parker/test-utils": "workspace:*",
     "@parker/tsconfig": "workspace:*",
     "@types/lodash": "^4.17.20",
     "@types/react": "~18.3.12",
     "eslint": "^9.39.5",
     "eslint-plugin-no-relative-import-paths": "^1.6.1",
     "eslint-plugin-react": "^7.37.5",
-    "jest": "~29.7.0",
     "tailwindcss": "3.3.2",
-    "ts-jest": "^29.4.1",
     "typescript": "~5.3.3"
   }
 }

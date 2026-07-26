@@ -7,6 +7,7 @@ import {
 } from '@googlemaps/google-maps-services-js'
 import { InternalServerError } from '@parker/errors'
 import { AxiosRequestHeaders, AxiosResponse } from 'axios'
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
 import { config } from 'src/config'
 import { GoogleClient } from 'src/domain/google/GoogleClient'
 
@@ -26,16 +27,16 @@ const buildDetailsResponse = (data: unknown): PlaceDetailsResponse => buildAxios
 describe('GoogleClient', () => {
   let googleClient: GoogleClient
   let mockClient: {
-    placeAutocomplete: jest.Mock
-    placeDetails: jest.Mock
+    placeAutocomplete: Mock
+    placeDetails: Mock
   }
   const googleMapsApiKey = config.googleMapsApiKey
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockClient = {
-      placeAutocomplete: jest.fn(),
-      placeDetails: jest.fn(),
+      placeAutocomplete: vi.fn(),
+      placeDetails: vi.fn(),
     }
     googleClient = new GoogleClient()
 

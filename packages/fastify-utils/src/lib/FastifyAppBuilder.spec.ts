@@ -11,6 +11,7 @@ import {
 import { Logger, LogLevel } from '@parker/logging'
 import type { FastifyInstance } from 'fastify'
 import { v4 as uuid } from 'uuid'
+import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest'
 import { expectServerError } from '../test/expectServerError'
 import {
   buildFooApp,
@@ -104,7 +105,7 @@ describe(FastifyAppBuilder.name, () => {
     })
 
     it('returns a ResponseValidationError for an invalid response', async () => {
-      const mockFooRepository = jest
+      const mockFooRepository = vi
         .spyOn(FooRepository, 'createFoo')
         .mockReturnValue({ oops: 'Not a foo' } as unknown as Foo)
       const error = await expectServerError(client.postFoo({ body: { name: 'Foo' } }), ResponseValidationError)
@@ -122,7 +123,7 @@ describe(FastifyAppBuilder.name, () => {
     })
 
     it('returns the thrown error, if a ServerError is thrown', async () => {
-      const mockFooRepository = jest.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
+      const mockFooRepository = vi.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
         throw new NotFoundError('Oops', { metadata: { foo: 'bar' } })
       })
       const error = await expectServerError(client.postFoo({ body: { name: 'Foo' } }), NotFoundError)
@@ -144,7 +145,7 @@ describe(FastifyAppBuilder.name, () => {
       responseBody?: object
     }
 
-    let mockLog: jest.SpyInstance<void, [level: LogLevel, message: string, metadata: object]>
+    let mockLog: MockInstance<(level: LogLevel, message: string, metadata: object) => void>
 
     const getLogPayload = (level: LogLevel, message: string): LogPayload => {
       const logCall = mockLog.mock.calls.find((args) => args[0] === level && args[1] === message)
@@ -159,7 +160,7 @@ describe(FastifyAppBuilder.name, () => {
     }
 
     beforeEach(() => {
-      mockLog = jest.spyOn(
+      mockLog = vi.spyOn(
         Logger.prototype as unknown as { doLog: (level: LogLevel, message: string, metadata: object) => void },
         'doLog'
       )
@@ -190,7 +191,7 @@ describe(FastifyAppBuilder.name, () => {
     })
 
     it('logs 400s, twice (http response and caught exception), with the same correlation id', async () => {
-      const mockFooRepository = jest.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
+      const mockFooRepository = vi.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
         throw new InputValidationError('Oops', { metadata: { foo: 'bar' } })
       })
       await expectServerError(client.postFoo({ body: { name: 'Foo' } }), InputValidationError)
@@ -219,7 +220,7 @@ describe(FastifyAppBuilder.name, () => {
     })
 
     it('logs 404s, twice (http response and caught exception), with the same correlation id', async () => {
-      const mockFooRepository = jest.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
+      const mockFooRepository = vi.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
         throw new NotFoundError('Oops', { metadata: { foo: 'bar' } })
       })
       await expectServerError(client.postFoo({ body: { name: 'Foo' } }), NotFoundError)
@@ -247,7 +248,7 @@ describe(FastifyAppBuilder.name, () => {
     })
 
     it('logs 500s, twice (http response and caught exception), with the same correlation id', async () => {
-      const mockFooRepository = jest.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
+      const mockFooRepository = vi.spyOn(FooRepository, 'createFoo').mockImplementation(() => {
         throw new InternalServerError('Oops', { metadata: { foo: 'bar' } })
       })
       await expectServerError(client.postFoo({ body: { name: 'Foo' } }), InternalServerError)
@@ -276,10 +277,10 @@ describe(FastifyAppBuilder.name, () => {
   })
 
   describe('correlation ids', () => {
-    let mockLog: jest.SpyInstance<void, [level: LogLevel, message: string, metadata: object]>
+    let mockLog: MockInstance<(level: LogLevel, message: string, metadata: object) => void>
 
     beforeEach(() => {
-      mockLog = jest.spyOn(
+      mockLog = vi.spyOn(
         Logger.prototype as unknown as { doLog: (level: LogLevel, message: string, metadata: object) => void },
         'doLog'
       )

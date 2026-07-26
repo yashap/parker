@@ -1,18 +1,20 @@
 import { DbConnection, TransactionManager } from '@parker/drizzle-utils'
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { Pool } from 'pg'
 import { config } from 'src/config'
 import * as schema from 'src/db/schema'
 
 export type DatabaseSchema = typeof schema
 
 export class Db {
-  // Ensure just one DB connection for the app
-  private static dbSingleton: NodePgDatabase<DatabaseSchema> = drizzle({
+  // Ensure just one DB connection pool for the app
+  private static pool: Pool = new Pool({
+    connectionString: config.databaseUrl,
+  })
+
+  private static dbSingleton: NodePgDatabase<DatabaseSchema> = drizzle(Db.pool, {
     schema,
     casing: 'camelCase',
-    connection: {
-      connectionString: config.databaseUrl,
-    },
   })
 
   private static transactionManager = new TransactionManager<DatabaseSchema>(Db.dbSingleton)
@@ -23,5 +25,13 @@ export class Db {
 
   public runWithTransaction<T>(callback: () => Promise<T>): Promise<T> {
     return Db.transactionManager.run(callback)
+  }
+
+  /**
+   * Ends the underlying connection pool - nothing can use the DB after this is called. Intended for tests, which must
+   * close the pool for the test process to exit cleanly.
+   */
+  public static async close(): Promise<void> {
+    await Db.pool.end()
   }
 }

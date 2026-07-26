@@ -3,6 +3,7 @@ import { buildTestAuthHeaders } from '@parker/fastify-utils'
 import { PlacesClient } from '@parker/places-client'
 import type { FastifyInstance } from 'fastify'
 import { v4 as uuid } from 'uuid'
+import { afterEach, beforeEach, describe, expect, it, vi, type Mocked } from 'vitest'
 import { GoogleClient } from 'src/domain/google/GoogleClient'
 import { registerPlaceSuggestionsRoutes } from 'src/domain/placeSuggestions/registerPlaceSuggestionsRoutes'
 import { buildTestApp } from 'src/test/buildTestApp'
@@ -11,15 +12,15 @@ describe(registerPlaceSuggestionsRoutes.name, () => {
   let app: FastifyInstance
   let landlordUserId: string
   let placesClient: PlacesClient
-  let mockGoogleClientCache: jest.Mocked<GoogleClient>
+  let mockGoogleClientCache: Mocked<GoogleClient>
 
   beforeEach(async () => {
     landlordUserId = uuid()
 
     // Create a mock GoogleClientCache
     mockGoogleClientCache = {
-      getPlaceSuggestions: jest.fn(),
-    } as unknown as jest.Mocked<GoogleClient>
+      getPlaceSuggestions: vi.fn(),
+    } as unknown as Mocked<GoogleClient>
 
     // Build the test app with the mocked GoogleClientCache
     app = await buildTestApp({ googleClient: mockGoogleClientCache })

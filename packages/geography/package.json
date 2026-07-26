@@ -9,8 +9,8 @@
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
     "format": "eslint \"src/**\" --fix",
     "lint": "tsc --noEmit && eslint \"src/**\"",
-    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests src/",
-    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --passWithNoTests --watch src/"
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "tslib": "^2.8.1"
@@ -19,11 +19,9 @@
     "@parker/eslint-config": "workspace:*",
     "@parker/test-utils": "workspace:*",
     "@parker/tsconfig": "workspace:*",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.3.0",
     "eslint": "^9.39.5",
-    "jest": "~29.7.0",
-    "ts-jest": "^29.4.1",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "vitest": "^4.1.10"
   }
 }

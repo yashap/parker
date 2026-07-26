@@ -1,5 +1,6 @@
 import { required } from '@parker/errors'
 import { Point } from '@parker/geography'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { User, TestDb, FavouriteLocation } from '../test/TestDb'
 import { favouriteLocationTable, userTable } from '../test/testSchema'
 import { instant } from './instant'

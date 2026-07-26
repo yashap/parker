@@ -1,3 +1,4 @@
+import { afterEach, describe, expect, it } from 'vitest'
 import { assertTestOnly } from './assertTestOnly'
 
 describe('assertTestOnly', () => {

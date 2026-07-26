@@ -73,11 +73,13 @@ None known at the moment.
 
     ```ts
     // ================================
-    // jest.config.js
+    // vitest.config.ts
     // ================================
-    // Make absolute imports work in jest tests
-    moduleNameMapper: {
-      '^src/(.*)$': '<rootDir>/src/$1',
+    // Make absolute imports work in vitest tests
+    resolve: {
+      alias: {
+        src: path.resolve(__dirname, 'src'),
+      },
     },
 
     // ================================

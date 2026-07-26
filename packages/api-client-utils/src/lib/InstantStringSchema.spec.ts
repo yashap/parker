@@ -1,4 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
+import { describe, expect, it } from 'vitest'
 import { InstantStringSchema } from './InstantStringSchema'
 
 describe('InstantStringSchema', () => {

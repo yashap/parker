@@ -1,4 +1,5 @@
 import { InputValidationError } from '@parker/errors'
+import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import { Cursor, encodeCursor } from './Cursor'
 import { PaginationRequestDto } from './paginationDto'

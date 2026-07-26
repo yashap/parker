@@ -1,4 +1,5 @@
 import { ServerError } from '@parker/errors'
+import { expect } from 'vitest'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ServerErrorConstructor<E extends ServerError> = new (...args: any[]) => E

@@ -1,4 +1,5 @@
 import { InputValidationError } from '@parker/errors'
+import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
 import { DEFAULT_MAX_LIMIT } from './constants'
 import { Cursor, decodeCursor, encodeCursor } from './Cursor'

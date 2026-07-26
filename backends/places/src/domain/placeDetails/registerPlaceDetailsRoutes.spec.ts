@@ -4,6 +4,7 @@ import { PlacesClient } from '@parker/places-client'
 import { addTemporalEqualityTesters } from '@parker/test-utils'
 import type { FastifyInstance } from 'fastify'
 import { v4 as uuid } from 'uuid'
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
 import { GoogleClient } from 'src/domain/google/GoogleClient'
 import { registerPlaceDetailsRoutes } from 'src/domain/placeDetails/registerPlaceDetailsRoutes'
 import { buildTestApp } from 'src/test/buildTestApp'
@@ -13,8 +14,8 @@ describe(registerPlaceDetailsRoutes.name, () => {
   let landlordUserId: string
   let placesClient: PlacesClient
   let mockGoogleClientCache: {
-    getPlaceSuggestions: jest.Mock
-    getPlaceDetails: jest.Mock
+    getPlaceSuggestions: Mock
+    getPlaceDetails: Mock
   }
 
   beforeEach(async () => {
@@ -23,8 +24,8 @@ describe(registerPlaceDetailsRoutes.name, () => {
 
     // Create a mock GoogleClientCache
     mockGoogleClientCache = {
-      getPlaceSuggestions: jest.fn(),
-      getPlaceDetails: jest.fn(),
+      getPlaceSuggestions: vi.fn(),
+      getPlaceDetails: vi.fn(),
     }
 
     // Build the test app with the mocked GoogleClientCache
