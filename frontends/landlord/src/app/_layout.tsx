@@ -9,6 +9,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import SuperTokens from 'supertokens-react-native'
 import { config } from 'src/config'
 import { AuthContextProvider } from 'src/contexts/AuthContext'
+import 'src/global.css'
+import 'src/styles/cssInterop'
 import { lightTheme, useTheme } from 'src/theme'
 
 SuperTokens.init({

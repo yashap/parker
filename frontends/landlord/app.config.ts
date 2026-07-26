@@ -18,9 +18,9 @@ export default (parentConfig: ExpoConfig): ExpoConfig => {
       parkingUrl,
       placesUrl,
     },
-    newArchEnabled: true,
     scheme: 'parkerlandlord',
     plugins: [
+      'expo-router',
       'expo-localization',
       [
         'expo-location',

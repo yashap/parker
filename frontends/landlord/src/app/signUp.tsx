@@ -33,7 +33,7 @@ const SignUp: React.FC = () => {
   const authContext = useAuthContext()
   return (
     <View>
-      <Card className='space-y-3 p-3'>
+      <Card className='gap-3 p-3'>
         {/* Header */}
         <View className='items-center'>
           <Text variant='headlineSmall'>Sign up</Text>

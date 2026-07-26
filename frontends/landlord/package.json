@@ -15,6 +15,8 @@
     "lint": "tsc --noEmit && eslint \"src/**\""
   },
   "dependencies": {
+    "@babel/runtime": "^7.27.0",
+    "@expo/metro-runtime": "~57.0.7",
     "@hookform/resolvers": "^5.2.1",
     "@js-temporal/polyfill": "^0.5.1",
     "@parker/api-client-utils": "workspace:*",
@@ -22,32 +24,33 @@
     "@parker/pagination": "workspace:*",
     "@parker/parking-client": "workspace:*",
     "@parker/places-client": "workspace:*",
-    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "axios": "^1.11.0",
-    "expo": "~52.0.11",
-    "expo-constants": "~17.0.3",
-    "expo-linking": "~7.0.3",
-    "expo-localization": "~16.0.1",
-    "expo-location": "~18.0.4",
-    "expo-router": "~4.0.11",
-    "expo-secure-store": "~14.0.1",
-    "expo-status-bar": "~2.0.1",
+    "expo": "~57.0.8",
+    "expo-constants": "~57.0.7",
+    "expo-linking": "~57.0.4",
+    "expo-localization": "~57.0.1",
+    "expo-location": "~57.0.6",
+    "expo-router": "~57.0.8",
+    "expo-status-bar": "~57.0.1",
     "lodash": "^4.17.21",
-    "nativewind": "^2.0.11",
-    "prop-types": "^15.8.1",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "nativewind": "~4.2.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-hook-form": "^7.62.0",
-    "react-native": "0.76.9",
+    "react-native": "0.86.0",
+    "react-native-css-interop": "0.2.6",
     "react-native-flash-message": "^0.4.2",
-    "react-native-gesture-handler": "~2.20.2",
+    "react-native-gesture-handler": "~2.32.0",
     "react-native-paper": "^5.14.5",
     "react-native-paper-dates": "^0.23.14",
-    "react-native-reanimated": "~3.16.5",
-    "react-native-safe-area-context": "4.12.0",
-    "react-native-screens": "~4.4.0",
+    "react-native-reanimated": "~4.5.0",
+    "react-native-safe-area-context": "5.7.0",
+    "react-native-screens": "~4.26.2",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-vector-icons": "^10.1.0",
+    "react-native-web": "~0.21.2",
+    "react-native-worklets": "0.10.0",
     "react-use": "^17.6.0",
     "supertokens-react-native": "^5.1.5",
     "tslib": "^2.8.1"
@@ -57,11 +60,18 @@
     "@parker/eslint-config": "workspace:*",
     "@parker/tsconfig": "workspace:*",
     "@types/lodash": "^4.17.20",
-    "@types/react": "~18.3.12",
+    "@types/react": "~19.2.17",
     "eslint": "^9.39.5",
     "eslint-plugin-no-relative-import-paths": "^1.6.1",
     "eslint-plugin-react": "^7.37.5",
-    "tailwindcss": "3.3.2",
-    "typescript": "~5.3.3"
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.9.2"
+  },
+  "expo": {
+    "install": {
+      "exclude": [
+        "typescript"
+      ]
+    }
   }
 }

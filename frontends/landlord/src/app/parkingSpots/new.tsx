@@ -38,7 +38,7 @@ const NewParkingSpot: React.FC = () => {
   }
 
   return (
-    <View className='flex-1 items-stretch space-y-3 p-3'>
+    <View className='flex-1 items-stretch gap-3 p-3'>
       <AddressAutocomplete onAddressSelected={handleAddressSelected} />
       {parkingSpotData && (
         <View style={{ marginTop: 8, padding: 12, backgroundColor: '#f5f5f5', borderRadius: 8 }}>

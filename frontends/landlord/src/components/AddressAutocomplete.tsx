@@ -42,7 +42,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
             radius: SEARCH_RADIUS_METERS,
             useStrictBounds: true,
           }),
-          language: locales[0]?.languageCode ?? 'en',
+          language: locales[0].languageCode ?? 'en',
           limit: 5,
         })
         setSuggestions(response.data)
