@@ -25,6 +25,17 @@ export class ContextPropagator<T> {
   }
 
   /**
+   * Set context for the remainder of the current asynchronous execution (and anything it spawns), without wrapping a
+   * callback. Useful in hook-based frameworks (e.g. Fastify hooks), where there's no single callback that wraps the
+   * rest of the request lifecycle.
+   *
+   * @param context The context to set
+   */
+  public enterWith(context: T): void {
+    this.storage?.enterWith(context)
+  }
+
+  /**
    * Get context set earlier (by a call to runWithContext). If no context was set, returns undefined.
    *
    * @returns Context set by runWithContext, or undefined

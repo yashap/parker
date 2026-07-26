@@ -16,6 +16,17 @@ export class InputValidationError<T = unknown> extends ServerError<T> {
   }
 }
 
+export class UnauthorizedError<T = unknown> extends ServerError<T> {
+  constructor(message: string, options: ErrorOptions<T> = {}) {
+    super(401, message, options)
+  }
+
+  public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): UnauthorizedError<A> {
+    const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
+    return new UnauthorizedError(message, options)
+  }
+}
+
 export class ForbiddenError<T = unknown> extends ServerError<T> {
   constructor(message: string, options: ErrorOptions<T> = {}) {
     super(403, message, options)
@@ -102,6 +113,8 @@ export const buildServerErrorFromDto = (dto: unknown, statusCode: number): Serve
     const options = { cause: dto, metadata: dto.metadata }
     if (statusCode === 400 && dto.code === InputValidationError.name) {
       return new InputValidationError(dto.message, options)
+    } else if (statusCode === 401 && dto.code === UnauthorizedError.name) {
+      return new UnauthorizedError(dto.message, options)
     } else if (statusCode === 403 && dto.code === ForbiddenError.name) {
       return new ForbiddenError(dto.message, options)
     } else if (statusCode === 404 && dto.code === NotFoundError.name) {

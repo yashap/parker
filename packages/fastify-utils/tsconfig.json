@@ -1,0 +1,12 @@
+{
+  "extends": "@parker/tsconfig/base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["jest", "node"]
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["src"]
+}
