@@ -14,6 +14,12 @@ generate_output=$(pnpm exec drizzle-kit generate --name="$migration_name")
 # This saving of the output and removing bad quoting is a hack around a Drizzle bug when generating migrations, that over-quotes
 # Can remove this hack once the Drizzle bug is fixed
 echo "$generate_output"
+
+# Nothing to do when the schema matches the last snapshot - drizzle-kit wrote no file
+if ! echo "$generate_output" | grep -q 'Your SQL migration file'; then
+    exit 0
+fi
+
 # shellcheck disable=SC2001
 file_name="$(echo "$generate_output" | grep 'Your SQL migration file' | sed -e 's/.*Your SQL migration file ➜ \(.*\) 🚀.*/\1/')"
 

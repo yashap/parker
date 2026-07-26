@@ -81,9 +81,6 @@ What am I planning to work on next?
 - **`FE:`** Cover the `react-native-paper-dates` picker paths in the web e2e tests
   - Changing a time rule's start/end times, and picking custom dates/times in the override editor, both go through
     paper-dates modals that are brittle to drive from Playwright, so they're currently untested
-- **`BE:`** MailSlurper is referenced but not actually wired up
-  - `pnpm email` opens `http://127.0.0.1:4436`, but nothing in the repo starts MailSlurper, and SuperTokens has no
-    local SMTP `emailDelivery` override - so either wire it up properly or drop the script
 - **`BE:`** `backends/user` has no tests of its own
   - Only covered indirectly, via the auth web e2e specs
 - **`Full Stack:`** - Move libs to absolute imports

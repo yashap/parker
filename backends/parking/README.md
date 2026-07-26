@@ -79,6 +79,16 @@ Two consequences worth knowing:
   (`Your SQL migration file ➜ <path> 🚀`), so it's brittle against drizzle-kit CLI output changes. If migration
   generation starts failing with an empty filename after a drizzle-kit bump, that's why.
 
+### Why the generate scripts build `drizzle-utils` first
+
+Both `db:generate-migration` and `db:generate-custom-migration` run `pnpm --filter @parker/drizzle-utils build`
+before anything else. `src/db/schema.ts` imports the custom column types (`instant`, `plainTime`, `point`,
+`standardFields`) from `@parker/drizzle-utils`, and drizzle-kit resolves that import with its own bundled
+resolver, which does **not** honour the `development` export condition the rest of the repo relies on (see the
+no-compile section in the root README). Without a built `dist/`, generation fails with
+`MODULE_NOT_FOUND: @parker/drizzle-utils`. Everything else — `tsx`, `vitest`, `tsc`, Metro — reads the TypeScript
+sources directly and needs no build.
+
 ### Hand-written migrations
 
 For things drizzle-kit can't infer — backfills, complex constraints, data migrations — generate an empty

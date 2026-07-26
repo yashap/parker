@@ -191,19 +191,18 @@ A few things the ESM + `"type": "module"` setup forces, which are easy to get wr
 
 ## Ports
 
-| Service                           | Port |
-| --------------------------------- | ---- |
-| Expo (web, Metro bundler)         | 9081 |
-| Expo (iOS, Metro bundler)         | 9082 |
-| Expo (Android, Metro bundler)     | 9083 |
-| parking                           | 4501 |
-| places                            | 4502 |
-| user                              | 4503 |
-| SuperTokens core                  | 4567 |
-| Postgres (dev)                    | 6440 |
-| Postgres (test)                   | 6441 |
-| MailSlurper UI (see known issues) | 4436 |
-| Google Maps fixture server (e2e)  | 4599 |
+| Service                          | Port |
+| -------------------------------- | ---- |
+| Expo (web, Metro bundler)        | 9081 |
+| Expo (iOS, Metro bundler)        | 9082 |
+| Expo (Android, Metro bundler)    | 9083 |
+| parking                          | 4501 |
+| places                           | 4502 |
+| user                             | 4503 |
+| SuperTokens core                 | 4567 |
+| Postgres (dev)                   | 6440 |
+| Postgres (test)                  | 6441 |
+| Google Maps fixture server (e2e) | 4599 |
 
 ## Stack
 
@@ -298,10 +297,6 @@ when other people run `pnpm db:restore-fixtures`, they'll get the state you snap
 
 Honest list of things that are broken, missing, or untested:
 
-- **MailSlurper is not actually wired up.** `pnpm email` opens `http://127.0.0.1:4436`, but nothing in this
-  repo starts MailSlurper, and SuperTokens is not configured with a local SMTP `emailDelivery` override. So
-  unless you run MailSlurper yourself, that command opens a dead URL. Emails go through SuperTokens' own
-  default delivery.
 - **The landlord "quick override" buttons don't work on web.** They're built on `react-native-paper`'s `Menu`,
   which never opens under `react-native-web` in this stack — the button's `onPress` fires and the Menu mounts
   its Portal, but its internal measure loop never resolves and it unmounts again. It's an app/library defect,

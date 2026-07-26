@@ -13,7 +13,6 @@
     "db:restore-fixtures": "turbo run db:restore-fixtures",
     "db:up": "./tools/scripts/ensure_postgres_up.sh",
     "db:up:test": "./tools/scripts/ensure_postgres_up.sh -p 6441 -c parker_postgres_test -v parker_postgres_data_test",
-    "email": "open http://127.0.0.1:4436",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run format",
     "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint",
     "serve:backend": "turbo run serve --filter='./backends/*' --parallel",
