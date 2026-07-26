@@ -11,7 +11,7 @@ PG_PORT_CONTAINER=5432 # Within the container, PG runs on the standard port
 # Get command line options
 PG_USER=dev_admin
 PG_PASSWORD=dev_admin_password
-PG_PORT=5440 # On the host, we default to a non-standard port to not clash with local PG
+PG_PORT=6440 # On the host, we default to a non-standard port to not clash with local PG
 PG_DB=dev_admin
 PG_CONTAINER_NAME=parker_postgres_dev
 PG_DATA_VOLUME=parker_postgres_data_dev

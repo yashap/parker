@@ -247,6 +247,32 @@ describe('GoogleClient', () => {
       ).rejects.toThrow(networkError)
     })
 
+    it("should extract Google's error details from failed HTTP responses", async () => {
+      const axiosError = Object.assign(new Error('Request failed with status code 403'), {
+        response: {
+          status: 403,
+          data: {
+            status: Status.REQUEST_DENIED,
+            error_message: 'This API key is not authorized to use this service or API.',
+          },
+        },
+      })
+      mockClient.placeAutocomplete.mockRejectedValue(axiosError)
+
+      const error: unknown = await googleClient.getPlaceSuggestions({ search: 'test' }).catch((e: unknown) => e)
+
+      expect(error).toBeInstanceOf(InternalServerError)
+      expect((error as InternalServerError).message).toBe('Error calling Google Places API: REQUEST_DENIED')
+      expect((error as InternalServerError).metadata).toEqual({
+        googleApiError: {
+          httpStatus: 403,
+          googleStatus: Status.REQUEST_DENIED,
+          googleErrorMessage: 'This API key is not authorized to use this service or API.',
+        },
+      })
+      expect((error as InternalServerError).cause).toBe(axiosError)
+    })
+
     it('should not include strictbounds param when location or radius is missing', async () => {
       const mockResponse = {
         data: {
@@ -537,6 +563,31 @@ describe('GoogleClient', () => {
       mockClient.placeDetails.mockRejectedValue(networkError)
 
       await expect(googleClient.getPlaceDetails('test-place-id')).rejects.toThrow(networkError)
+    })
+
+    it("should extract Google's error details from failed HTTP responses", async () => {
+      const axiosError = Object.assign(new Error('Request failed with status code 403'), {
+        response: {
+          status: 403,
+          data: {
+            status: Status.REQUEST_DENIED,
+            error_message: 'This API key is not authorized to use this service or API.',
+          },
+        },
+      })
+      mockClient.placeDetails.mockRejectedValue(axiosError)
+
+      const error: unknown = await googleClient.getPlaceDetails('test-place-id').catch((e: unknown) => e)
+
+      expect(error).toBeInstanceOf(InternalServerError)
+      expect((error as InternalServerError).metadata).toEqual({
+        googleApiError: {
+          httpStatus: 403,
+          googleStatus: Status.REQUEST_DENIED,
+          googleErrorMessage: 'This API key is not authorized to use this service or API.',
+        },
+      })
+      expect((error as InternalServerError).cause).toBe(axiosError)
     })
   })
 })

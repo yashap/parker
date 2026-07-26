@@ -1,6 +1,6 @@
 import { AuthModuleConfig, buildAuthModuleConfig } from '@parker/nest-utils'
 
-const port = Number(process.env['PORT'] ?? 3503)
+const port = Number(process.env['PORT'] ?? 4503)
 const hostName: string = process.env['HOST_NAME'] ?? 'http://localhost'
 
 export interface Configuration {
