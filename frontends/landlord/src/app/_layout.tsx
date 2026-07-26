@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import FlashMessage from 'react-native-flash-message'
 import { PaperProvider } from 'react-native-paper'
+import { en, registerTranslation } from 'react-native-paper-dates'
 import 'react-native-url-polyfill/auto'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SuperTokens from 'supertokens-react-native'
@@ -14,6 +15,9 @@ SuperTokens.init({
   apiDomain: config.authUrl,
   apiBasePath: '/auth',
 })
+
+// Required by react-native-paper-dates for its date/time picker modals
+registerTranslation('en', en)
 
 const Router = () => {
   const theme = useTheme()

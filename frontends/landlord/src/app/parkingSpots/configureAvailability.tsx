@@ -1,130 +1,41 @@
 import { DayOfWeekAllValues, DayOfWeekDto } from '@parker/api-client-utils'
+import { TimeRuleDto, TimeRuleOverrideDto } from '@parker/parking-client'
 import { router, useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import {
-  ActivityIndicator,
-  Button,
-  Card,
-  Divider,
-  IconButton,
-  List,
-  Switch,
-  Text,
-  TextInput,
-  useTheme,
-} from 'react-native-paper'
+import { ActivityIndicator, Button, Card, Divider, List, Text, useTheme } from 'react-native-paper'
 import { ParkingClientBuilder } from 'src/apiClient/ParkingClientBuilder'
+import { isInstantAfter, isTimeOfDayEndAfterStart } from 'src/components/availability/availabilityTime'
+import { OverrideEditorModal } from 'src/components/availability/OverrideEditorModal'
+import { OverrideItem } from 'src/components/availability/OverrideItem'
+import { QuickOverrideActions } from 'src/components/availability/QuickOverrideActions'
+import { TimeRuleItem } from 'src/components/availability/TimeRuleItem'
 import { Screen } from 'src/components/Screen'
 import { useNavigationHeader } from 'src/hooks/useNavigationHeader'
 import { useParkingClient } from 'src/hooks/useParkingClient'
 import { showErrorToast } from 'src/toasts/showErrorToast'
 import { showToast } from 'src/toasts/showToast'
 
-interface TimeRuleFormData {
-  day: DayOfWeekDto
-  startTime: string
-  endTime: string
-  enabled: boolean
-}
+const RULE_ERROR = 'End time must be after start time'
+const OVERRIDE_ERROR = 'End must be after start'
 
-const formatTime = (time: string): string => {
-  // Convert HH:MM:SS to HH:MM for display
-  return time.substring(0, 5)
-}
-
-const parseTime = (time: string): string => {
-  // Ensure time is in HH:MM:SS format
-  if (time.length === 5) {
-    return `${time}:00`
-  }
-  return time
-}
-
-const TimeRuleItem: React.FC<{
-  rule: TimeRuleFormData
-  onUpdate: (rule: TimeRuleFormData) => void
-  onDelete: () => void
-}> = ({ rule, onUpdate, onDelete }) => {
-  const [startTime, setStartTime] = useState(formatTime(rule.startTime))
-  const [endTime, setEndTime] = useState(formatTime(rule.endTime))
-
-  const handleTimeUpdate = (field: 'startTime' | 'endTime', value: string) => {
-    // Only allow numbers and colon
-    const cleaned = value.replace(/[^\d:]/g, '')
-
-    // Auto-format as HH:MM
-    let formatted = cleaned
-    if (cleaned.length === 2 && !cleaned.includes(':')) {
-      formatted = `${cleaned}:`
-    }
-
-    if (field === 'startTime') {
-      setStartTime(formatted)
-      if (formatted.length === 5) {
-        onUpdate({ ...rule, startTime: parseTime(formatted) })
-      }
-    } else {
-      setEndTime(formatted)
-      if (formatted.length === 5) {
-        onUpdate({ ...rule, endTime: parseTime(formatted) })
-      }
-    }
-  }
-
-  return (
-    <Card style={{ marginBottom: 8 }}>
-      <Card.Content>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Text variant='titleMedium' style={{ flex: 1 }}>
-            {rule.day}
-          </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <TextInput
-              mode='outlined'
-              value={startTime}
-              onChangeText={(text) => {
-                handleTimeUpdate('startTime', text)
-              }}
-              placeholder='09:00'
-              style={{ width: 70 }}
-              maxLength={5}
-              keyboardType='numeric'
-              dense
-            />
-            <Text>to</Text>
-            <TextInput
-              mode='outlined'
-              value={endTime}
-              onChangeText={(text) => {
-                handleTimeUpdate('endTime', text)
-              }}
-              placeholder='17:00'
-              style={{ width: 70 }}
-              maxLength={5}
-              keyboardType='numeric'
-              dense
-            />
-            <Switch
-              value={rule.enabled}
-              onValueChange={(enabled) => {
-                onUpdate({ ...rule, enabled })
-              }}
-            />
-            <IconButton icon='delete' size={20} onPress={onDelete} />
-          </View>
-        </View>
-      </Card.Content>
-    </Card>
-  )
+interface EditorState {
+  visible: boolean
+  /** Index of the override being edited, or `null` when adding a new one. */
+  index: number | null
 }
 
 const ConfigureAvailability: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>()
   const theme = useTheme()
   const [saving, setSaving] = useState(false)
-  const [timeRules, setTimeRules] = useState<TimeRuleFormData[]>([])
-  const [initialTimeRules, setInitialTimeRules] = useState<TimeRuleFormData[]>([])
+  const [timeRules, setTimeRules] = useState<TimeRuleDto[]>([])
+  const [overrides, setOverrides] = useState<TimeRuleOverrideDto[]>([])
+  const [initial, setInitial] = useState<{ timeRules: TimeRuleDto[]; overrides: TimeRuleOverrideDto[] }>({
+    timeRules: [],
+    overrides: [],
+  })
+  const [editor, setEditor] = useState<EditorState>({ visible: false, index: null })
 
   useNavigationHeader({ type: 'defaultHeader', title: 'Configure Availability' })
 
@@ -136,12 +47,9 @@ const ConfigureAvailability: React.FC = () => {
 
   useEffect(() => {
     if (parkingSpot) {
-      const rules = parkingSpot.timeRules.map((rule) => ({
-        ...rule,
-        enabled: true,
-      }))
-      setTimeRules(rules)
-      setInitialTimeRules(rules)
+      setTimeRules(parkingSpot.timeRules)
+      setOverrides(parkingSpot.timeRuleOverrides)
+      setInitial({ timeRules: parkingSpot.timeRules, overrides: parkingSpot.timeRuleOverrides })
     }
   }, [parkingSpot])
 
@@ -171,60 +79,60 @@ const ConfigureAvailability: React.FC = () => {
   }
 
   const addTimeRule = (day: DayOfWeekDto) => {
-    const existingRule = timeRules.find((r) => r.day === day)
-    if (existingRule) {
+    if (timeRules.some((rule) => rule.day === day)) {
       showToast({ type: 'default', message: `Rule for ${day} already exists` })
       return
     }
-
-    const newRule: TimeRuleFormData = {
-      day,
-      startTime: '09:00:00',
-      endTime: '17:00:00',
-      enabled: true,
-    }
-    setTimeRules([...timeRules, newRule])
+    setTimeRules([...timeRules, { day, startTime: '09:00:00', endTime: '17:00:00' }])
   }
 
-  const updateTimeRule = (index: number, rule: TimeRuleFormData) => {
-    const newRules = [...timeRules]
-    newRules[index] = rule
-    setTimeRules(newRules)
+  const updateTimeRule = (index: number, rule: TimeRuleDto) => {
+    setTimeRules(timeRules.map((existing, i) => (i === index ? rule : existing)))
   }
 
   const deleteTimeRule = (index: number) => {
     setTimeRules(timeRules.filter((_, i) => i !== index))
   }
 
+  const addOverride = (override: TimeRuleOverrideDto) => {
+    setOverrides([...overrides, override])
+  }
+
+  const saveOverride = (override: TimeRuleOverrideDto) => {
+    setOverrides(
+      editor.index === null
+        ? [...overrides, override]
+        : overrides.map((existing, i) => (i === editor.index ? override : existing))
+    )
+    setEditor({ visible: false, index: null })
+  }
+
+  const deleteOverride = (index: number) => {
+    setOverrides(overrides.filter((_, i) => i !== index))
+  }
+
+  const ruleError = (rule: TimeRuleDto): string | undefined =>
+    isTimeOfDayEndAfterStart(rule.startTime, rule.endTime) ? undefined : RULE_ERROR
+  const overrideError = (override: TimeRuleOverrideDto): string | undefined =>
+    isInstantAfter(override.endsAt, override.startsAt) ? undefined : OVERRIDE_ERROR
+
+  const hasInvalid = timeRules.some((rule) => ruleError(rule)) || overrides.some((override) => overrideError(override))
+  const hasChanges = JSON.stringify({ timeRules, overrides }) !== JSON.stringify(initial)
+  const availableDays = DayOfWeekAllValues.filter((day) => !timeRules.some((rule) => rule.day === day))
+
   const handleSave = async () => {
     setSaving(true)
     try {
       const parkingClient = ParkingClientBuilder.build()
-
-      // Only include enabled rules
-      const enabledRules = timeRules
-        .filter((rule) => rule.enabled)
-        .map(({ day, startTime, endTime }) => ({
-          day,
-          startTime,
-          endTime,
-        }))
-
-      await parkingClient.parkingSpots.update(id, {
-        timeRules: enabledRules,
-      })
-
+      await parkingClient.parkingSpots.update(id, { timeRules, timeRuleOverrides: overrides })
       showToast({ type: 'default', message: 'Availability updated successfully' })
       router.back()
-    } catch (error) {
-      showErrorToast(error)
+    } catch (saveError) {
+      showErrorToast(saveError)
     } finally {
       setSaving(false)
     }
   }
-
-  const hasChanges = JSON.stringify(timeRules) !== JSON.stringify(initialTimeRules)
-  const availableDays = DayOfWeekAllValues.filter((day) => !timeRules.some((rule) => rule.day === day))
 
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
@@ -241,7 +149,7 @@ const ConfigureAvailability: React.FC = () => {
 
       <View style={{ marginBottom: 16 }}>
         <Text variant='titleMedium' style={{ marginBottom: 12 }}>
-          Availability Rules
+          Weekly Availability
         </Text>
 
         {timeRules.length === 0 ? (
@@ -257,6 +165,7 @@ const ConfigureAvailability: React.FC = () => {
             <TimeRuleItem
               key={`${rule.day}-${index}`}
               rule={rule}
+              error={ruleError(rule)}
               onUpdate={(updated) => {
                 updateTimeRule(index, updated)
               }}
@@ -293,14 +202,63 @@ const ConfigureAvailability: React.FC = () => {
         </>
       )}
 
-      <View style={{ marginTop: 24, gap: 12 }}>
+      <Divider style={{ marginVertical: 16 }} />
+
+      <View style={{ marginBottom: 16 }}>
+        <Text variant='titleMedium' style={{ marginBottom: 4 }}>
+          Overrides
+        </Text>
+        <Text variant='bodyMedium' style={{ color: theme.colors.onSurfaceVariant, marginBottom: 12 }}>
+          One-off changes that take priority over the weekly schedule for a specific date and time range.
+        </Text>
+
+        <View style={{ marginBottom: 12 }}>
+          <QuickOverrideActions onAdd={addOverride} />
+        </View>
+
+        {overrides.length === 0 ? (
+          <Card>
+            <Card.Content>
+              <Text style={{ textAlign: 'center', color: theme.colors.onSurfaceVariant }}>No overrides set.</Text>
+            </Card.Content>
+          </Card>
+        ) : (
+          overrides.map((override, index) => (
+            <OverrideItem
+              key={`${override.startsAt}-${index}`}
+              override={override}
+              timeZone={parkingSpot.timeZone}
+              error={overrideError(override)}
+              onEdit={() => {
+                setEditor({ visible: true, index })
+              }}
+              onDelete={() => {
+                deleteOverride(index)
+              }}
+            />
+          ))
+        )}
+
+        <Button
+          mode='outlined'
+          icon='plus'
+          style={{ marginTop: 8 }}
+          onPress={() => {
+            setEditor({ visible: true, index: null })
+          }}
+        >
+          Add Override
+        </Button>
+      </View>
+
+      <View style={{ marginTop: 8, gap: 12 }}>
         <Button
           mode='contained'
           onPress={() => {
             void handleSave()
           }}
           loading={saving}
-          disabled={saving || !hasChanges}
+          disabled={saving || !hasChanges || hasInvalid}
         >
           Save Changes
         </Button>
@@ -314,6 +272,16 @@ const ConfigureAvailability: React.FC = () => {
           Cancel
         </Button>
       </View>
+
+      <OverrideEditorModal
+        visible={editor.visible}
+        timeZone={parkingSpot.timeZone}
+        initial={editor.index === null ? null : (overrides[editor.index] ?? null)}
+        onDismiss={() => {
+          setEditor({ visible: false, index: null })
+        }}
+        onSave={saveOverride}
+      />
     </ScrollView>
   )
 }

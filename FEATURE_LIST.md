@@ -9,8 +9,6 @@ What am I planning to work on next?
 - **`Landlord FE:`** Add editing of parking spots
 - **`Landlord FE:`** Ability to add a photo of the parking spot
   - Probably backed by a generic file upload service?
-- **`Landlord FE:`** Ability to add time rules (and overrides)
-  - Including maybe some sort of "make available for next X hours" type UI? Should this be an override or something else?
 - **`BE:`** Real implementation of parking spot bookings and time rules
   - BE remaining, for time rules/overrides:
     - Time rule evaluation should be able to:
