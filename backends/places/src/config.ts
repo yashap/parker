@@ -18,4 +18,6 @@ export const config = {
     apiKey: process.env['SUPERTOKENS_API_KEY'],
   },
   googleMapsApiKey: required(process.env['GOOGLE_MAPS_API_KEY'], 'Must set the env var GOOGLE_MAPS_API_KEY'),
+  // Overridable so e2e tests (and CI) can point at a local fixture server instead of the real Google Maps API
+  googleMapsApiUrl: env('GOOGLE_MAPS_API_URL', 'https://maps.googleapis.com'),
 } as const

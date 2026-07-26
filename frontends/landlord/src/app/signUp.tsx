@@ -32,7 +32,7 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = React.useState<string>('')
   const authContext = useAuthContext()
   return (
-    <View>
+    <View testID='signUpScreen'>
       <Card className='gap-3 p-3'>
         {/* Header */}
         <View className='items-center'>
@@ -40,6 +40,7 @@ const SignUp: React.FC = () => {
           <Text variant='titleMedium'>
             {'Already have an account? '}
             <Text
+              testID='goToLogIn'
               style={{ color: theme.colors.link }}
               onPress={() => {
                 router.replace('/logIn')
@@ -53,11 +54,18 @@ const SignUp: React.FC = () => {
         <Divider />
 
         {/* Form inputs */}
-        <TextInput label='Email Address' value={email} onChangeText={setEmail} />
-        <TextInput label='Password' secureTextEntry value={password} onChangeText={setPassword} />
+        <TextInput testID='signUpEmailInput' label='Email Address' value={email} onChangeText={setEmail} />
+        <TextInput
+          testID='signUpPasswordInput'
+          label='Password'
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
 
         {/* Submit */}
         <Button
+          testID='submitSignUp'
           mode='contained'
           onPress={() => {
             void signUp({ email, password }, authContext)

@@ -117,6 +117,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
         }}
       >
         <TextInput
+          testID='addressInput'
           label='Address'
           value={query}
           onChangeText={handleTextChange}
@@ -176,8 +177,9 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
                 data={suggestions}
                 keyExtractor={(item) => item.placeId}
                 keyboardShouldPersistTaps='always'
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                   <TouchableOpacity
+                    testID={`addressSuggestion-${index}`}
                     onPress={() => {
                       void handleSuggestionPress(item)
                     }}

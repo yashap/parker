@@ -138,10 +138,10 @@ export const OverrideEditorModal: React.FC<OverrideEditorModalProps> = ({
         </Text>
 
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', gap: 8, marginTop: 20 }}>
-          <Button mode='outlined' onPress={onDismiss}>
+          <Button testID='cancelOverrideEditor' mode='outlined' onPress={onDismiss}>
             Cancel
           </Button>
-          <Button mode='contained' onPress={handleSave} disabled={!isValid}>
+          <Button testID='saveOverrideEditor' mode='contained' onPress={handleSave} disabled={!isValid}>
             Save
           </Button>
         </View>

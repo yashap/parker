@@ -29,7 +29,7 @@ export const TimeRuleItem: React.FC<TimeRuleItemProps> = ({ rule, error, onUpdat
   const activeTime = activePicker ? timeOfDayToHoursMinutes(rule[activePicker]) : { hours: 9, minutes: 0 }
 
   return (
-    <Card style={{ marginBottom: 8 }}>
+    <Card testID={`timeRule-${rule.day}`} style={{ marginBottom: 8 }}>
       <Card.Content>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Text variant='titleMedium' style={{ flex: 1 }}>

@@ -7,6 +7,7 @@
     "JSON_LOGS",
     "DATABASE_URL",
     "GOOGLE_MAPS_API_KEY",
+    "GOOGLE_MAPS_API_URL",
     "PORT",
     "HOST_NAME",
     "SUPERTOKENS_CORE_URL",

@@ -36,6 +36,7 @@ type ConfigureAvailabilityButtonProps = Omit<ButtonProps, 'onPress' | 'loading' 
 const ConfigureAvailabilityButton = ({ parkingSpotId, ...rest }: ConfigureAvailabilityButtonProps) => (
   <Button
     {...rest}
+    testID={`configureAvailability-${parkingSpotId}`}
     onPress={() => {
       router.push(`/parkingSpots/configureAvailability?id=${parkingSpotId}`)
     }}
@@ -54,6 +55,7 @@ const DeleteParkingSpotButton = ({ parkingSpotId, onDeleted, ...rest }: DeletePa
   return (
     <Button
       {...rest}
+      testID={`deleteParkingSpot-${parkingSpotId}`}
       onPress={() => {
         const doDelete = async () => {
           setDeleteInProgress(true)
@@ -111,9 +113,10 @@ const ParkingSpotList: React.FC = () => {
   }
 
   return (
-    <View className='flex-1 px-1 pt-2'>
+    <View testID='parkingSpotsListScreen' className='flex-1 px-1 pt-2'>
       {/* TODO: make "add spot" prominent if no spots, subtle otherwise? */}
       <Card
+        testID='addParkingSpotCard'
         className={cardClassName}
         onPress={() => {
           router.push('/parkingSpots/new')
@@ -124,7 +127,7 @@ const ParkingSpotList: React.FC = () => {
       <FlatList
         data={parkingSpots}
         renderItem={({ item: parkingSpot }) => (
-          <Card key={parkingSpot.id} className={cardClassName}>
+          <Card key={parkingSpot.id} testID={`parkingSpotCard-${parkingSpot.id}`} className={cardClassName}>
             <Card.Title title={parkingSpot.address} left={ParkingSpotImage} />
             <Card.Content>
               <Text variant='bodyMedium'>{`Coordinates: ${parkingSpot.location.longitude}, ${parkingSpot.location.latitude}`}</Text>

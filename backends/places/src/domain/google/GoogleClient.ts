@@ -65,6 +65,7 @@ export class GoogleClient {
   }: GetPlaceSuggestionsParams): Promise<PlaceSuggestion[]> {
     try {
       const request: PlaceAutocompleteRequest = {
+        url: `${config.googleMapsApiUrl}/maps/api/place/autocomplete/json`,
         params: {
           input: search,
           key: this.apiKey,
@@ -105,6 +106,7 @@ export class GoogleClient {
   public async getPlaceDetails(placeId: string): Promise<PlaceDetails> {
     try {
       const request: PlaceDetailsRequest = {
+        url: `${config.googleMapsApiUrl}/maps/api/place/details/json`,
         params: {
           place_id: placeId,
           key: this.apiKey,

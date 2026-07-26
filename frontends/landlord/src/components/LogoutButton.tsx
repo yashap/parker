@@ -21,6 +21,7 @@ export const LogoutButton = () => {
   const authContext = useAuthContext()
   return (
     <Button
+      testID='logoutButton'
       mode='text'
       textColor={theme.colors.link}
       onPress={() => {

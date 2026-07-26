@@ -23,7 +23,9 @@ const onSubmit = async (data: ParkingSpotData) => {
       // TODO!
       timeRuleOverrides: [],
     })
-    router.push('/parkingSpots/list')
+    // Go back to the list we came from (it refetches on refocus) rather than pushing a second copy
+    // of it onto the stack
+    router.back()
   } catch (error) {
     showErrorToast(error)
   }
@@ -38,10 +40,13 @@ const NewParkingSpot: React.FC = () => {
   }
 
   return (
-    <View className='flex-1 items-stretch gap-3 p-3'>
+    <View testID='newParkingSpotScreen' className='flex-1 items-stretch gap-3 p-3'>
       <AddressAutocomplete onAddressSelected={handleAddressSelected} />
       {parkingSpotData && (
-        <View style={{ marginTop: 8, padding: 12, backgroundColor: '#f5f5f5', borderRadius: 8 }}>
+        <View
+          testID='selectedLocationPanel'
+          style={{ marginTop: 8, padding: 12, backgroundColor: '#f5f5f5', borderRadius: 8 }}
+        >
           <Text style={{ fontSize: 12, color: '#666', marginBottom: 4 }}>Selected location:</Text>
           <Text style={{ fontSize: 14, fontWeight: '500' }}>{parkingSpotData.address}</Text>
           <Text style={{ fontSize: 12, color: '#888', marginTop: 4 }}>
@@ -51,6 +56,7 @@ const NewParkingSpot: React.FC = () => {
       )}
       {/* TODO: maybe switch to Link component? https://docs.expo.dev/routing/navigating-pages/ */}
       <Button
+        testID='submitParkingSpot'
         mode='contained'
         disabled={!parkingSpotData}
         onPress={() => {

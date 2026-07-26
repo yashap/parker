@@ -20,6 +20,7 @@
     "serve:landlord": "pnpm --filter @parker/landlord serve",
     "sync": "pnpm install && pnpm db:migrate-up && pnpm db:migrate-up:test",
     "test": "turbo run test",
+    "test:e2e:web": "pnpm --filter @parker/e2e-tests-web test:e2e",
     "test:force": "turbo run test --force",
     "test:watch": "turbo run test:watch"
   },
