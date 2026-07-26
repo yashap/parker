@@ -13,20 +13,20 @@
     "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
   },
   "dependencies": {
-    "@parker/correlation-id-propagator": "*",
+    "@parker/correlation-id-propagator": "workspace:*",
     "lodash": "^4.17.21",
     "tslib": "^2.8.1",
-    "winston": "^3.17.0"
+    "winston": "^3.19.0"
   },
   "devDependencies": {
-    "@parker/context-propagation": "*",
-    "@parker/eslint-config": "*",
-    "@parker/test-utils": "*",
-    "@parker/tsconfig": "*",
+    "@parker/context-propagation": "workspace:*",
+    "@parker/eslint-config": "workspace:*",
+    "@parker/test-utils": "workspace:*",
+    "@parker/tsconfig": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.3.0",
-    "eslint": "^9.34.0",
+    "eslint": "^9.39.5",
     "jest": "~29.7.0",
     "ts-jest": "^29.4.1",
     "typescript": "~5.9.2"

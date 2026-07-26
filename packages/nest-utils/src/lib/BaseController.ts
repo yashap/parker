@@ -7,7 +7,7 @@ export abstract class BaseController {
     if (!maybeValue) {
       throw this.buildEntityNotFoundError()
     }
-    return maybeValue as T
+    return maybeValue
   }
 
   protected buildEntityNotFoundError(): NotFoundError {

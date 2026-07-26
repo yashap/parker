@@ -11,18 +11,19 @@
     "lint": "tsc --noEmit && eslint \"src/**\""
   },
   "dependencies": {
-    "@parker/api-client-utils": "*",
-    "@parker/errors": "*",
+    "@parker/api-client-utils": "workspace:*",
+    "@parker/errors": "workspace:*",
     "supertest": "^7.1.4",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@parker/eslint-config": "*",
-    "@parker/test-utils": "*",
-    "@parker/tsconfig": "*",
+    "@parker/eslint-config": "workspace:*",
+    "@parker/test-utils": "workspace:*",
+    "@parker/tsconfig": "workspace:*",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.3.0",
-    "eslint": "^9.34.0",
+    "@types/supertest": "^6.0.3",
+    "eslint": "^9.39.5",
     "jest": "~29.7.0",
     "ts-jest": "^29.4.1",
     "typescript": "~5.9.2"

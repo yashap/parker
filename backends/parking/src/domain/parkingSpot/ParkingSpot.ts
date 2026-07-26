@@ -28,8 +28,7 @@ export const parseParkingSpotOrdering = (ordering: {
 }
 
 export type ListParkingSpotPagination =
-  | ListParkingSpotCursor
-  | Omit<ListParkingSpotCursor, 'lastOrderValueSeen' | 'lastIdSeen'>
+  ListParkingSpotCursor | Omit<ListParkingSpotCursor, 'lastOrderValueSeen' | 'lastIdSeen'>
 
 export const parkingSpotToDto = (parkingSpot: ParkingSpot): ParkingSpotDto => {
   return {

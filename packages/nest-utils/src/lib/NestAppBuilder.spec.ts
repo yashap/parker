@@ -149,7 +149,7 @@ describe(NestAppBuilder.name, () => {
     const getLogPayload = (level: LogLevel, message: string): LogPayload => {
       const logCall = mockLog.mock.calls.find((args) => args[0] === level && args[1] === message)
       expect(logCall).toBeDefined()
-      return required(logCall)[2] as LogPayload
+      return required(logCall)[2]
     }
 
     beforeEach(() => {
