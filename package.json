@@ -15,7 +15,7 @@
     "db:up:test": "./tools/scripts/ensure_postgres_up.sh -p 6441 -c parker_postgres_test -v parker_postgres_data_test",
     "email": "open http://127.0.0.1:4436",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run format",
-    "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint --force",
+    "lint": "prettier --check \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run lint",
     "serve:backend": "turbo run serve --filter='./backends/*' --parallel",
     "serve:landlord": "pnpm --filter @parker/landlord serve",
     "sync": "pnpm install && pnpm db:migrate-up && pnpm db:migrate-up:test",
