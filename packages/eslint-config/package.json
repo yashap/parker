@@ -2,7 +2,14 @@
   "name": "@parker/eslint-config",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "type": "module",
+  "exports": {
+    "./default.config.mjs": "./default.config.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "default.config.mjs"
+  ],
   "scripts": {
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/"
   },

@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { ErrorOptions, ServerError, ServerErrorDto } from './ServerError'
+import { ErrorOptions, ServerError, ServerErrorDto } from './ServerError.js'
 import {
   buildServerErrorFromDto,
   InputValidationError,
   InternalServerError,
   NotFoundError,
   UnknownError,
-} from './serverErrors'
+} from './serverErrors.js'
 
 describe(ServerError.name, () => {
   describe(ServerError.isServerErrorDto.name, () => {

@@ -1,6 +1,6 @@
-import { Pagination, encodeCursor } from './Cursor'
-import { OrderDirectionValues } from './orderDirection'
-import { PaginatedResponseDto, PaginationResponseDto } from './paginationDto'
+import { Pagination, encodeCursor } from './Cursor.js'
+import { OrderDirectionValues } from './orderDirection.js'
+import { PaginatedResponseDto, PaginationResponseDto } from './paginationDto.js'
 
 export const buildPaginatedResponse = <K extends string, T extends Record<K, unknown> & { id: string }>(
   data: T[],

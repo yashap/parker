@@ -2,18 +2,28 @@
   "name": "@parker/context-propagation",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/ .tsbuildinfo",
     "format": "eslint \"src/**\" --fix",
     "lint": "tsc --noEmit && eslint \"src/**\"",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
-  },
-  "dependencies": {
-    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "@parker/eslint-config": "workspace:*",

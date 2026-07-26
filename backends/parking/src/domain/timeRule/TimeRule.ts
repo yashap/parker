@@ -1,6 +1,6 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { TimeRuleDto } from '@parker/parking-client'
-import { TimeRuleDao } from 'src/db/types'
+import { TimeRuleDao } from '../../db/types.js'
 
 export type TimeRule = Omit<TimeRuleDao, 'id' | 'createdAt' | 'updatedAt' | 'parkingSpotId'>
 

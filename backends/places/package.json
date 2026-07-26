@@ -2,16 +2,17 @@
   "name": "@parker/places",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "main": "./dist/main.js",
-  "types": "./dist/main.d.ts",
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
-    "serve": "tsx watch --env-file-if-exists=.env src/main.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/ .tsbuildinfo",
+    "serve": "tsx watch --conditions=development --env-file-if-exists=.env src/main.ts",
     "format": "eslint \"src/**\" --fix",
     "lint": "tsc --noEmit && eslint \"src/**\"",
     "test": "vitest run --passWithNoTests",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "start": "node dist/main.js"
   },
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.4.2",
@@ -25,7 +26,6 @@
     "fastify": "^4.29.1",
     "lodash": "^4.17.21",
     "supertokens-node": "^23.1.0",
-    "tslib": "^2.8.1",
     "uuid": "^11.1.0",
     "zod": "^3.25.76"
   },
@@ -39,7 +39,6 @@
     "@types/uuid": "^10.0.0",
     "axios": "^1.11.0",
     "eslint": "^9.39.5",
-    "eslint-plugin-no-relative-import-paths": "^1.6.1",
     "tsx": "^4.23.1",
     "typescript": "~5.9.2",
     "vitest": "^4.1.10"

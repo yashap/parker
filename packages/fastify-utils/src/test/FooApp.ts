@@ -5,9 +5,9 @@ import { initContract } from '@ts-rest/core'
 import { initServer } from '@ts-rest/fastify'
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { FastifyAppBuilder } from '../lib/FastifyAppBuilder'
-import { initMicroserviceSuperTokens } from '../lib/initSuperTokens'
-import { tsRestPluginOptions } from '../lib/tsRestPluginOptions'
+import { FastifyAppBuilder } from '../lib/FastifyAppBuilder.js'
+import { initMicroserviceSuperTokens } from '../lib/initSuperTokens.js'
+import { tsRestPluginOptions } from '../lib/tsRestPluginOptions.js'
 
 /**
  * This is a basic Fastify server, with a client/server contract defined using ts-rest, that makes it easy to test our

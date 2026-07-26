@@ -1,8 +1,8 @@
 import { DbConnection, TransactionManager } from '@parker/drizzle-utils'
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
-import { config } from 'src/config'
-import * as schema from 'src/db/schema'
+import { config } from '../config.js'
+import * as schema from './schema.js'
 
 export type DatabaseSchema = typeof schema
 

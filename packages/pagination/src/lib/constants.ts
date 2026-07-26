@@ -1,4 +1,4 @@
-import { OrderDirection } from './orderDirection'
+import { OrderDirection } from './orderDirection.js'
 
 export const DEFAULT_LIMIT = 50
 export const DEFAULT_MAX_LIMIT = 200

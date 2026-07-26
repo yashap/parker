@@ -2,11 +2,24 @@
   "name": "@parker/logging",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/ .tsbuildinfo",
     "format": "eslint \"src/**\" --fix",
     "lint": "tsc --noEmit && eslint \"src/**\"",
     "test": "vitest run --passWithNoTests",
@@ -15,7 +28,6 @@
   "dependencies": {
     "@parker/correlation-id-propagator": "workspace:*",
     "lodash": "^4.17.21",
-    "tslib": "^2.8.1",
     "winston": "^3.19.0"
   },
   "devDependencies": {

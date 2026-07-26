@@ -12,7 +12,7 @@ import { Logger, LogLevel } from '@parker/logging'
 import type { FastifyInstance } from 'fastify'
 import { v4 as uuid } from 'uuid'
 import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest'
-import { expectServerError } from '../test/expectServerError'
+import { expectServerError } from '../test/expectServerError.js'
 import {
   buildFooApp,
   buildFooClient,
@@ -21,8 +21,8 @@ import {
   FooClient,
   FooRepository,
   ListFoosRequest,
-} from '../test/FooApp'
-import { FastifyAppBuilder } from './FastifyAppBuilder'
+} from '../test/FooApp.js'
+import { FastifyAppBuilder } from './FastifyAppBuilder.js'
 
 describe(FastifyAppBuilder.name, () => {
   let app: FastifyInstance

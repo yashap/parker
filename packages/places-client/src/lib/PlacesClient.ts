@@ -7,8 +7,8 @@ import {
   extractGetByIdResponse,
   extractListResponse,
 } from '@parker/api-client-utils'
-import { contract } from './contract'
-import { PlaceDetailsDto, SearchPlaceSuggestionsRequest, SearchPlaceSuggestionsResponse } from './model'
+import { contract } from './contract/index.js'
+import { PlaceDetailsDto, SearchPlaceSuggestionsRequest, SearchPlaceSuggestionsResponse } from './model/index.js'
 
 export class PlacesClient {
   private client: ApiClient<typeof contract>

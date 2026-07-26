@@ -1,6 +1,6 @@
 import type { RequestValidationError } from '@ts-rest/fastify'
 import type { FastifyReply, FastifyRequest } from 'fastify'
-import { parkerErrorHandler } from './errorHandler'
+import { parkerErrorHandler } from './errorHandler.js'
 
 /**
  * The options every service should pass when registering a ts-rest router plugin, e.g.:

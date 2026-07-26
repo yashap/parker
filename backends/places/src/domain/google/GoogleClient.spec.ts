@@ -8,8 +8,8 @@ import {
 import { InternalServerError } from '@parker/errors'
 import { AxiosRequestHeaders, AxiosResponse } from 'axios'
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
-import { config } from 'src/config'
-import { GoogleClient } from 'src/domain/google/GoogleClient'
+import { config } from '../../config.js'
+import { GoogleClient } from './GoogleClient.js'
 
 const buildAxiosResponse = <T>(data: unknown): AxiosResponse<T> => ({
   data: data as T,

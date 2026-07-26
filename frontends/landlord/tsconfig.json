@@ -4,11 +4,7 @@
     "target": "ESNext",
     "jsx": "react-native",
     "lib": ["DOM", "ESNext"],
-    "module": "CommonJS",
     "noEmit": true,
-    "resolveJsonModule": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
       "src/*": ["src/*"]

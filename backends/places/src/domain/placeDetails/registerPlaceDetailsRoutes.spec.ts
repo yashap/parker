@@ -5,9 +5,9 @@ import { addTemporalEqualityTesters } from '@parker/test-utils'
 import type { FastifyInstance } from 'fastify'
 import { v4 as uuid } from 'uuid'
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
-import { GoogleClient } from 'src/domain/google/GoogleClient'
-import { registerPlaceDetailsRoutes } from 'src/domain/placeDetails/registerPlaceDetailsRoutes'
-import { buildTestApp } from 'src/test/buildTestApp'
+import { buildTestApp } from '../../test/buildTestApp.js'
+import { GoogleClient } from '../google/GoogleClient.js'
+import { registerPlaceDetailsRoutes } from './registerPlaceDetailsRoutes.js'
 
 describe(registerPlaceDetailsRoutes.name, () => {
   let app: FastifyInstance

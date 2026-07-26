@@ -68,9 +68,6 @@ importers:
       supertokens-node:
         specifier: ^23.1.0
         version: 23.1.0(supports-color@8.1.1)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       uuid:
         specifier: ^11.1.0
         version: 11.1.1
@@ -108,9 +105,6 @@ importers:
       eslint:
         specifier: ^9.39.5
         version: 9.39.5(jiti@1.21.7)(supports-color@8.1.1)
-      eslint-plugin-no-relative-import-paths:
-        specifier: ^1.6.1
-        version: 1.6.1
       tsx:
         specifier: ^4.23.1
         version: 4.23.1
@@ -156,9 +150,6 @@ importers:
       supertokens-node:
         specifier: ^23.1.0
         version: 23.1.0(supports-color@8.1.1)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       uuid:
         specifier: ^11.1.0
         version: 11.1.1
@@ -193,9 +184,6 @@ importers:
       eslint:
         specifier: ^9.39.5
         version: 9.39.5(jiti@1.21.7)(supports-color@8.1.1)
-      eslint-plugin-no-relative-import-paths:
-        specifier: ^1.6.1
-        version: 1.6.1
       tsx:
         specifier: ^4.23.1
         version: 4.23.1
@@ -225,9 +213,6 @@ importers:
       supertokens-node:
         specifier: ^23.1.0
         version: 23.1.0(supports-color@8.1.1)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@parker/api-client-test-utils':
         specifier: workspace:*
@@ -247,9 +232,6 @@ importers:
       eslint:
         specifier: ^9.39.5
         version: 9.39.5(jiti@1.21.7)(supports-color@8.1.1)
-      eslint-plugin-no-relative-import-paths:
-        specifier: ^1.6.1
-        version: 1.6.1
       tsx:
         specifier: ^4.23.1
         version: 4.23.1
@@ -410,9 +392,6 @@ importers:
       '@parker/errors':
         specifier: workspace:*
         version: link:../errors
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@parker/eslint-config':
         specifier: workspace:*
@@ -456,9 +435,6 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.18.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -489,10 +465,6 @@ importers:
         version: 4.1.10(@types/node@24.13.3)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@1.21.7)(terser@5.49.0)(tsx@4.23.1)(yaml@2.9.0))
 
   packages/context-propagation:
-    dependencies:
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@parker/eslint-config':
         specifier: workspace:*
@@ -517,10 +489,6 @@ importers:
         version: 4.1.10(@types/node@24.13.3)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@1.21.7)(terser@5.49.0)(tsx@4.23.1)(yaml@2.9.0))
 
   packages/core:
-    dependencies:
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@parker/eslint-config':
         specifier: workspace:*
@@ -549,9 +517,6 @@ importers:
       '@parker/context-propagation':
         specifier: workspace:*
         version: link:../context-propagation
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@parker/eslint-config':
         specifier: workspace:*
@@ -589,9 +554,6 @@ importers:
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(@types/pg@8.20.0)(pg@8.22.0)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       uuid:
         specifier: ^11.1.0
         version: 11.1.1
@@ -626,6 +588,9 @@ importers:
       pg:
         specifier: ^8.16.3
         version: 8.22.0
+      tsx:
+        specifier: ^4.23.1
+        version: 4.23.1
       typescript:
         specifier: ~5.9.2
         version: 5.9.3
@@ -644,9 +609,6 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.18.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@parker/eslint-config':
         specifier: workspace:*
@@ -739,9 +701,6 @@ importers:
       supertokens-node:
         specifier: ^23.1.0
         version: 23.1.0(supports-color@8.1.1)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -784,10 +743,6 @@ importers:
         version: 4.1.10(@types/node@24.13.3)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@1.21.7)(terser@5.49.0)(tsx@4.23.1)(yaml@2.9.0))
 
   packages/geography:
-    dependencies:
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@parker/eslint-config':
         specifier: workspace:*
@@ -819,9 +774,6 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.18.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       winston:
         specifier: ^3.19.0
         version: 3.19.0
@@ -862,9 +814,6 @@ importers:
       js-base64:
         specifier: ^3.7.8
         version: 3.9.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -911,9 +860,6 @@ importers:
       axios:
         specifier: ^1.11.0
         version: 1.18.1(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -951,9 +897,6 @@ importers:
       axios:
         specifier: ^1.11.0
         version: 1.18.1(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -982,9 +925,6 @@ importers:
       '@js-temporal/polyfill':
         specifier: ^0.5.1
         version: 0.5.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@parker/eslint-config':
         specifier: workspace:*
@@ -1016,9 +956,6 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.18.1
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
     devDependencies:
       '@parker/eslint-config':
         specifier: workspace:*

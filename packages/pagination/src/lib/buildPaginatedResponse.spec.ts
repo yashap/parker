@@ -2,9 +2,9 @@ import { required } from '@parker/errors'
 import { v4 as uuid } from 'uuid'
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { buildPaginatedResponse } from './buildPaginatedResponse'
-import { Cursor, decodeCursor } from './Cursor'
-import { OrderDirection, OrderDirectionValues } from './orderDirection'
+import { buildPaginatedResponse } from './buildPaginatedResponse.js'
+import { Cursor, decodeCursor } from './Cursor.js'
+import { OrderDirection, OrderDirectionValues } from './orderDirection.js'
 
 describe(buildPaginatedResponse.name, () => {
   type UserCursor = Cursor<'age', number>

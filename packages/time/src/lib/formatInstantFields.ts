@@ -1,6 +1,6 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { IllegalInputError } from '@parker/errors'
-import { pick } from 'lodash'
+import pick from 'lodash/pick.js'
 
 export const formatInstantFields = <T extends Record<string, unknown>, F extends keyof T>(
   obj: T,

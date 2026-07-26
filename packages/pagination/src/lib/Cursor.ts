@@ -1,8 +1,8 @@
 import { InputValidationError } from '@parker/errors'
 import { Base64 } from 'js-base64'
 import { z } from 'zod'
-import { DEFAULT_MAX_LIMIT } from './constants'
-import { OrderDirection, OrderDirectionSchema } from './orderDirection'
+import { DEFAULT_MAX_LIMIT } from './constants.js'
+import { OrderDirection, OrderDirectionSchema } from './orderDirection.js'
 
 const CursorSchema = z.object({
   limit: z.number().min(1).max(DEFAULT_MAX_LIMIT).describe('Number of items to fetch'),

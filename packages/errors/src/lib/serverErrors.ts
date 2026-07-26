@@ -1,5 +1,5 @@
-import { isEmpty } from 'lodash'
-import { ErrorOptions, ServerError, WrapErrorOptions } from './ServerError'
+import isEmpty from 'lodash/isEmpty.js'
+import { ErrorOptions, ServerError, WrapErrorOptions } from './ServerError.js'
 
 /**
  * 4xx errors

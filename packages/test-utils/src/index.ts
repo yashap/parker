@@ -1,1 +1,1 @@
-export * from './lib/addTemporalEqualityTesters'
+export * from './lib/addTemporalEqualityTesters.js'

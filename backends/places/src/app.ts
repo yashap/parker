@@ -1,9 +1,9 @@
 import { FastifyAppBuilder, requireSession } from '@parker/fastify-utils'
 import type { FastifyInstance } from 'fastify'
-import { config } from 'src/config'
-import { GoogleClient } from 'src/domain/google/GoogleClient'
-import { registerPlaceDetailsRoutes } from 'src/domain/placeDetails/registerPlaceDetailsRoutes'
-import { registerPlaceSuggestionsRoutes } from 'src/domain/placeSuggestions/registerPlaceSuggestionsRoutes'
+import { config } from './config.js'
+import { GoogleClient } from './domain/google/GoogleClient.js'
+import { registerPlaceDetailsRoutes } from './domain/placeDetails/registerPlaceDetailsRoutes.js'
+import { registerPlaceSuggestionsRoutes } from './domain/placeSuggestions/registerPlaceSuggestionsRoutes.js'
 
 export interface AppDeps {
   googleClient: GoogleClient

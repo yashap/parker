@@ -1,8 +1,8 @@
 import { initMicroserviceSuperTokens } from '@parker/fastify-utils'
 import type { FastifyInstance } from 'fastify'
-import { buildApp } from 'src/app'
-import { config } from 'src/config'
-import { GoogleClient } from 'src/domain/google/GoogleClient'
+import { buildApp } from '../app.js'
+import { config } from '../config.js'
+import { GoogleClient } from '../domain/google/GoogleClient.js'
 
 export interface TestAppOverrides {
   googleClient?: GoogleClient

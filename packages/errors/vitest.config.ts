@@ -1,15 +1,11 @@
-import * as path from 'path'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   resolve: {
-    alias: {
-      // Resolve @parker/test-utils to its TypeScript source: its compiled CommonJS output imports `expect` from
-      // vitest, and vitest refuses to be require()d from CommonJS. Resolving to source lets vitest transform the
-      // module, wiring `vitest` up to the running worker's instance. TODO(M6): replace this alias with a
-      // `development` conditional export on @parker/test-utils.
-      '@parker/test-utils': path.resolve(__dirname, '../test-utils/src/index.ts'),
-    },
+    // Resolve workspace deps (e.g. @parker/test-utils) to their TS source via the `development` export condition,
+    // so vitest transforms them itself. Critically, @parker/test-utils imports `expect` from vitest, and vitest
+    // refuses to be require()d from a pre-compiled module - resolving to source wires it to the running worker.
+    conditions: ['development', 'import', 'node'],
   },
   test: {
     include: ['src/**/*.{spec,test}.ts'],

@@ -4,10 +4,10 @@ import { getSessionUserId, tsRestPluginOptions } from '@parker/fastify-utils'
 import { BookingStatusValues, contract as rootContract } from '@parker/parking-client'
 import { initServer } from '@ts-rest/fastify'
 import type { FastifyInstance } from 'fastify'
-import { Db } from 'src/db/Db'
-import { parkingSpotBookingTable } from 'src/db/schema'
-import { ParkingSpotBookingInputDao } from 'src/db/types'
-import { parkingSpotBookingToDto } from 'src/domain/parkingSpotBooking/ParkingSpotBooking'
+import { Db } from '../../db/Db.js'
+import { parkingSpotBookingTable } from '../../db/schema.js'
+import { ParkingSpotBookingInputDao } from '../../db/types.js'
+import { parkingSpotBookingToDto } from './ParkingSpotBooking.js'
 
 const contract = rootContract.parkingSpotBookings
 

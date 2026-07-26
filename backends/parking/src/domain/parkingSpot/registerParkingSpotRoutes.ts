@@ -4,15 +4,10 @@ import { DEFAULT_LIMIT, buildPaginatedResponse, parsePagination } from '@parker/
 import { contract as rootContract } from '@parker/parking-client'
 import { initServer } from '@ts-rest/fastify'
 import type { FastifyInstance } from 'fastify'
-import {
-  ListParkingSpotPagination,
-  ParkingSpot,
-  parkingSpotToDto,
-  parseParkingSpotOrdering,
-} from 'src/domain/parkingSpot/ParkingSpot'
-import { ParkingSpotRepository } from 'src/domain/parkingSpot/ParkingSpotRepository'
-import { timeRulesFromDto } from 'src/domain/timeRule'
-import { timeRuleOverridesFromDto } from 'src/domain/timeRuleOverride'
+import { timeRulesFromDto } from '../timeRule/index.js'
+import { timeRuleOverridesFromDto } from '../timeRuleOverride/index.js'
+import { ListParkingSpotPagination, ParkingSpot, parkingSpotToDto, parseParkingSpotOrdering } from './ParkingSpot.js'
+import { ParkingSpotRepository } from './ParkingSpotRepository.js'
 
 const contract = rootContract.parkingSpots
 

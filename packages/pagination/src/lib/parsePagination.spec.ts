@@ -1,9 +1,9 @@
 import { InputValidationError } from '@parker/errors'
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { Cursor, encodeCursor } from './Cursor'
-import { PaginationRequestDto } from './paginationDto'
-import { parsePagination } from './parsePagination'
+import { Cursor, encodeCursor } from './Cursor.js'
+import { PaginationRequestDto } from './paginationDto.js'
+import { parsePagination } from './parsePagination.js'
 
 describe(parsePagination.name, () => {
   type UserCursor = Cursor<'age' | 'name', number | string>

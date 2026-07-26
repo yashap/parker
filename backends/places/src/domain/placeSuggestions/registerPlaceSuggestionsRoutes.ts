@@ -2,7 +2,7 @@ import { tsRestPluginOptions } from '@parker/fastify-utils'
 import { contract as rootContract } from '@parker/places-client'
 import { initServer } from '@ts-rest/fastify'
 import type { FastifyInstance } from 'fastify'
-import { GoogleClient } from 'src/domain/google/GoogleClient'
+import { GoogleClient } from '../google/GoogleClient.js'
 
 const contract = rootContract.placeSuggestions
 

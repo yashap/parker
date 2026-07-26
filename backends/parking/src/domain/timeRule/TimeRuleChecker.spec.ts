@@ -1,8 +1,8 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { DayOfWeekValues } from '@parker/api-client-utils'
 import { describe, expect, it } from 'vitest'
-import { TimeRule } from 'src/domain/timeRule/TimeRule'
-import { TimeRuleChecker } from 'src/domain/timeRule/TimeRuleChecker'
+import { TimeRule } from './TimeRule.js'
+import { TimeRuleChecker } from './TimeRuleChecker.js'
 
 describe(TimeRuleChecker.name, () => {
   // Wed Aug 28 2024 13:00:00 EDT

@@ -1,2 +1,2 @@
-export * from './lib/GeoJsonPoint'
-export * from './lib/Point'
+export * from './lib/GeoJsonPoint.js'
+export * from './lib/Point.js'

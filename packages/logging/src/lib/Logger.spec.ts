@@ -1,5 +1,5 @@
 import { describe, it } from 'vitest'
-import { Logger } from './Logger'
+import { Logger } from './Logger.js'
 
 describe(Logger.name, () => {
   describe('Logging', () => {

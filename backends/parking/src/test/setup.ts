@@ -1,8 +1,8 @@
 import { mockAuth, unmockAuth } from '@parker/fastify-utils'
 import { addTemporalEqualityTesters } from '@parker/test-utils'
 import { afterAll, afterEach, beforeAll } from 'vitest'
-import { Db } from 'src/db/Db'
-import { TestDbTeardown } from 'src/test/TestDbTeardown'
+import { Db } from '../db/Db.js'
+import { TestDbTeardown } from './TestDbTeardown.js'
 
 addTemporalEqualityTesters()
 

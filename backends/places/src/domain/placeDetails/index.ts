@@ -1,1 +1,1 @@
-export * from './registerPlaceDetailsRoutes'
+export * from './registerPlaceDetailsRoutes.js'

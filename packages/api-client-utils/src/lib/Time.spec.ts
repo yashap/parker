@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { TimeSchema } from './Time'
+import { TimeSchema } from './Time.js'
 
 describe('TimeSchema', () => {
   it('allows valid times', () => {

@@ -1,1 +1,1 @@
-export * from './TimeRuleOverride'
+export * from './TimeRuleOverride.js'

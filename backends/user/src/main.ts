@@ -1,6 +1,6 @@
 import { FastifyAppBuilder, initLoginServiceSuperTokens } from '@parker/fastify-utils'
 import { Logger } from '@parker/logging'
-import { config } from 'src/config'
+import { config } from './config.js'
 
 const logger = new Logger('UserService')
 

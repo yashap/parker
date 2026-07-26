@@ -12,14 +12,16 @@ import {
 } from '@parker/parking-client'
 import { eq } from 'drizzle-orm'
 import type { FastifyInstance } from 'fastify'
-import { omit, orderBy, sortBy } from 'lodash'
+import omit from 'lodash/omit.js'
+import orderBy from 'lodash/orderBy.js'
+import sortBy from 'lodash/sortBy.js'
 import { v4 as uuid } from 'uuid'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { Db } from 'src/db/Db'
-import { parkingSpotTable } from 'src/db/schema'
-import { registerParkingSpotRoutes } from 'src/domain/parkingSpot/registerParkingSpotRoutes'
-import { buildTestApp } from 'src/test/buildTestApp'
-import { expectSystemTimestampStrings } from 'src/test/expectSystemTimestamp'
+import { Db } from '../../db/Db.js'
+import { parkingSpotTable } from '../../db/schema.js'
+import { buildTestApp } from '../../test/buildTestApp.js'
+import { expectSystemTimestampStrings } from '../../test/expectSystemTimestamp.js'
+import { registerParkingSpotRoutes } from './registerParkingSpotRoutes.js'
 
 describe(registerParkingSpotRoutes.name, () => {
   let app: FastifyInstance

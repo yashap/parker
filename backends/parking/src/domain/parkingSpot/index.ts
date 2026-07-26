@@ -1,3 +1,3 @@
-export * from './ParkingSpot'
-export * from './ParkingSpotRepository'
-export * from './registerParkingSpotRoutes'
+export * from './ParkingSpot.js'
+export * from './ParkingSpotRepository.js'
+export * from './registerParkingSpotRoutes.js'

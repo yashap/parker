@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { assertTestOnly } from './assertTestOnly'
+import { assertTestOnly } from './assertTestOnly.js'
 
 describe('assertTestOnly', () => {
   const originalNodeEnv = process.env['NODE_ENV']

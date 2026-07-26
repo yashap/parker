@@ -1,6 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { InputValidationError } from '@parker/errors'
-import { isString, pick } from 'lodash'
+import isString from 'lodash/isString.js'
+import pick from 'lodash/pick.js'
 
 export const parseInstantFields = <T extends Record<string, unknown>, F extends keyof T>(
   obj: T,

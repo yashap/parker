@@ -4,10 +4,10 @@ import { EndpointNotFoundError } from '@parker/errors'
 import { Logger } from '@parker/logging'
 import Fastify, { type FastifyInstance } from 'fastify'
 import supertokens from 'supertokens-node'
-import { correlationIdPlugin } from './correlationIdPlugin'
-import { parkerErrorHandler } from './errorHandler'
-import { httpLoggingPlugin } from './httpLoggingPlugin'
-import { supertokensFastify } from './supertokensPlugin'
+import { correlationIdPlugin } from './correlationIdPlugin.js'
+import { parkerErrorHandler } from './errorHandler.js'
+import { httpLoggingPlugin } from './httpLoggingPlugin.js'
+import { supertokensFastify } from './supertokensPlugin.js'
 
 export interface FastifyAppBuilderOptions {
   /**

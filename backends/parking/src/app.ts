@@ -1,10 +1,10 @@
 import { FastifyAppBuilder, requireSession } from '@parker/fastify-utils'
 import type { FastifyInstance } from 'fastify'
-import { config } from 'src/config'
-import { Db } from 'src/db/Db'
-import { ParkingSpotRepository } from 'src/domain/parkingSpot/ParkingSpotRepository'
-import { registerParkingSpotRoutes } from 'src/domain/parkingSpot/registerParkingSpotRoutes'
-import { registerParkingSpotBookingRoutes } from 'src/domain/parkingSpotBooking/registerParkingSpotBookingRoutes'
+import { config } from './config.js'
+import { Db } from './db/Db.js'
+import { ParkingSpotRepository } from './domain/parkingSpot/ParkingSpotRepository.js'
+import { registerParkingSpotRoutes } from './domain/parkingSpot/registerParkingSpotRoutes.js'
+import { registerParkingSpotBookingRoutes } from './domain/parkingSpotBooking/registerParkingSpotBookingRoutes.js'
 
 export interface AppDeps {
   db: Db

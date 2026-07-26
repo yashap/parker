@@ -1,8 +1,8 @@
 import { initMicroserviceSuperTokens } from '@parker/fastify-utils'
 import { Logger } from '@parker/logging'
-import { buildApp } from 'src/app'
-import { config } from 'src/config'
-import { GoogleClient } from 'src/domain/google/GoogleClient'
+import { buildApp } from './app.js'
+import { config } from './config.js'
+import { GoogleClient } from './domain/google/GoogleClient.js'
 
 const logger = new Logger('PlacesService')
 

@@ -1,2 +1,2 @@
-export * from './ParkingSpotBooking'
-export * from './registerParkingSpotBookingRoutes'
+export * from './ParkingSpotBooking.js'
+export * from './registerParkingSpotBookingRoutes.js'

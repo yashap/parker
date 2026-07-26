@@ -1,4 +1,4 @@
-import { AssertionError } from './universalErrors'
+import { AssertionError } from './universalErrors.js'
 
 const DEFAULT_ERROR_MESSAGE = 'Value was unexpectedly null/undefined'
 

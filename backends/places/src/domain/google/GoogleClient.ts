@@ -15,7 +15,7 @@ import {
   PlaceSuggestionDto,
   SearchPlaceSuggestionsRequest,
 } from '@parker/places-client'
-import { config } from 'src/config'
+import { config } from '../../config.js'
 
 export type PlaceSuggestion = PlaceSuggestionDto
 export type PlaceDetails = PlaceDetailsDto

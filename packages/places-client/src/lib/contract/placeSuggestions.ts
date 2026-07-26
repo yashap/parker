@@ -1,6 +1,6 @@
 import { ContractBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
-import { SearchPlaceSuggestionsRequestSchema, SearchPlaceSuggestionsResponseSchema } from '../model/PlaceSuggestions'
+import { SearchPlaceSuggestionsRequestSchema, SearchPlaceSuggestionsResponseSchema } from '../model/PlaceSuggestions.js'
 
 const c = initContract()
 

@@ -1,4 +1,4 @@
-import ExtendableError from 'extendable-error'
+import { ExtendableError } from 'extendable-error'
 
 export abstract class BaseError extends ExtendableError {
   public override readonly cause?: Error

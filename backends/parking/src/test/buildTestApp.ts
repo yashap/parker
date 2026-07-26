@@ -1,9 +1,9 @@
 import { initMicroserviceSuperTokens } from '@parker/fastify-utils'
 import type { FastifyInstance } from 'fastify'
-import { buildApp } from 'src/app'
-import { config } from 'src/config'
-import { Db } from 'src/db/Db'
-import { ParkingSpotRepository } from 'src/domain/parkingSpot/ParkingSpotRepository'
+import { buildApp } from '../app.js'
+import { config } from '../config.js'
+import { Db } from '../db/Db.js'
+import { ParkingSpotRepository } from '../domain/parkingSpot/ParkingSpotRepository.js'
 
 export const buildTestApp = async (): Promise<FastifyInstance> => {
   // No SuperTokens core has to actually be running for tests (tests use mockAuth), but SuperTokens must be initialized

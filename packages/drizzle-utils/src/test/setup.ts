@@ -1,6 +1,6 @@
 import { addTemporalEqualityTesters } from '@parker/test-utils'
 import { afterAll, afterEach, beforeAll } from 'vitest'
-import { TestDb } from './TestDb'
+import { TestDb } from './TestDb.js'
 
 addTemporalEqualityTesters()
 

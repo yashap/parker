@@ -1,2 +1,2 @@
-export * from './TimeRuleChecker'
-export * from './TimeRule'
+export * from './TimeRuleChecker.js'
+export * from './TimeRule.js'

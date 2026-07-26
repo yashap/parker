@@ -1,4 +1,4 @@
-import type { AsyncLocalStorage } from 'async_hooks'
+import { AsyncLocalStorage } from 'node:async_hooks'
 
 export class ContextPropagator<T> {
   private readonly storage: AsyncLocalStorage<T> | undefined = this.createStorage()
@@ -45,13 +45,10 @@ export class ContextPropagator<T> {
   }
 
   private createStorage(): AsyncLocalStorage<T> | undefined {
-    // Do not import CLS on platforms other than Node.js.
-    if (!process.versions.node) {
+    // Skip on non-Node runtimes (Metro / RN). AsyncLocalStorage is Node-only.
+    if (typeof process === 'undefined' || !process.versions.node) {
       return undefined
     }
-
-    // Import AsyncLocalStorage dynamically to make this class compatible on platforms other than Node.js.
-    // eslint-disable-next-line
-    return new (require('async_hooks').AsyncLocalStorage)() as AsyncLocalStorage<T>
+    return new AsyncLocalStorage<T>()
   }
 }

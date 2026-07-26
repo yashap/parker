@@ -4,9 +4,9 @@ import { PlacesClient } from '@parker/places-client'
 import type { FastifyInstance } from 'fastify'
 import { v4 as uuid } from 'uuid'
 import { afterEach, beforeEach, describe, expect, it, vi, type Mocked } from 'vitest'
-import { GoogleClient } from 'src/domain/google/GoogleClient'
-import { registerPlaceSuggestionsRoutes } from 'src/domain/placeSuggestions/registerPlaceSuggestionsRoutes'
-import { buildTestApp } from 'src/test/buildTestApp'
+import { buildTestApp } from '../../test/buildTestApp.js'
+import { GoogleClient } from '../google/GoogleClient.js'
+import { registerPlaceSuggestionsRoutes } from './registerPlaceSuggestionsRoutes.js'
 
 describe(registerPlaceSuggestionsRoutes.name, () => {
   let app: FastifyInstance

@@ -1,9 +1,9 @@
 import { initMicroserviceSuperTokens } from '@parker/fastify-utils'
 import { Logger } from '@parker/logging'
-import { buildApp } from 'src/app'
-import { config } from 'src/config'
-import { Db } from 'src/db/Db'
-import { ParkingSpotRepository } from 'src/domain/parkingSpot/ParkingSpotRepository'
+import { buildApp } from './app.js'
+import { config } from './config.js'
+import { Db } from './db/Db.js'
+import { ParkingSpotRepository } from './domain/parkingSpot/ParkingSpotRepository.js'
 
 const logger = new Logger('ParkingService')
 
