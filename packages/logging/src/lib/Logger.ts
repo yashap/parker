@@ -56,6 +56,14 @@ const getLevel = (): LogLevel => {
   }
 }
 
+// Format an error, including its full chain of causes (if any), so that wrapped errors don't hide the underlying
+// failure
+const formatError = (error: unknown): string => {
+  const errorString = (error as Error).stack ? (error as Error).stack : toString(error)
+  const cause = (error as { cause?: unknown }).cause
+  return cause ? `${errorString}\n  Caused by: ${formatError(cause)}` : `${errorString}`
+}
+
 const getFormat = (): winston.Logform.Format => {
   if ((process.env['JSON_LOGS'] ?? '').toLowerCase() === 'true') {
     return winston.format.json()
@@ -71,7 +79,7 @@ const getFormat = (): winston.Logform.Format => {
         metadata && Object.keys(metadata).length > 0
           ? ` ${AnsiColors.Cyan}${JSON.stringify(metadata)}${AnsiColors.Yellow}`
           : ''
-      const errorString = error ? `\n  ${(error as Error).stack ? (error as Error).stack : toString(error)}` : ''
+      const errorString = error ? `\n  ${formatError(error)}` : ''
       return `${timestamp} ${level} [${name}]: ${message}${metadataString}${errorString}`
     })
   )

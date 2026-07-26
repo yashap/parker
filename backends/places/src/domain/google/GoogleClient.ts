@@ -26,9 +26,29 @@ export type GetPlaceSuggestionsParams = Omit<SearchPlaceSuggestionsRequest, 'lat
   location?: { latitude: number; longitude: number }
 }
 
+interface GoogleApiErrorDetails {
+  httpStatus?: number
+  googleStatus?: string
+  googleErrorMessage?: string
+}
+
+const extractGoogleApiErrorDetails = (error: unknown): GoogleApiErrorDetails | undefined => {
+  const response = (
+    error as { response?: { status?: number; data?: { status?: string; error_message?: string } } } | null | undefined
+  )?.response
+  if (!response) {
+    return undefined
+  }
+  return {
+    httpStatus: response.status,
+    googleStatus: response.data?.status,
+    googleErrorMessage: response.data?.error_message,
+  }
+}
+
 @Injectable()
 export class GoogleClient {
-  private readonly logger = new Logger('GoogleClientCache')
+  private readonly logger = new Logger('GoogleClient')
   private readonly client: Client
   private readonly apiKey: string
 
@@ -61,9 +81,12 @@ export class GoogleClient {
 
       const response: PlaceAutocompleteResponse = await this.client.placeAutocomplete(request)
 
-      // TODO: maybe better error handling here?
       if (response.data.status !== Status.OK && response.data.status !== Status.ZERO_RESULTS) {
-        throw new InternalServerError(`Google Places API error: ${response.data.status}`)
+        throw new InternalServerError(`Google Places API error: ${response.data.status}`, {
+          metadata: {
+            googleApiError: { googleStatus: response.data.status, googleErrorMessage: response.data.error_message },
+          },
+        })
       }
 
       const predictions = response.data.predictions
@@ -77,8 +100,7 @@ export class GoogleClient {
         subLabel: prediction.structured_formatting.secondary_text || '',
       }))
     } catch (error) {
-      this.logger.error('Error calling Google Places API', { error })
-      throw error
+      throw this.logAndWrapError('Error calling Google Places API', error)
     }
   }
 
@@ -97,7 +119,11 @@ export class GoogleClient {
       const response: PlaceDetailsResponse = await this.client.placeDetails(request)
 
       if (response.data.status !== Status.OK) {
-        throw new InternalServerError(`Google Places Details API error: ${response.data.status}`)
+        throw new InternalServerError(`Google Places Details API error: ${response.data.status}`, {
+          metadata: {
+            googleApiError: { googleStatus: response.data.status, googleErrorMessage: response.data.error_message },
+          },
+        })
       }
 
       const place = response.data.result
@@ -117,9 +143,22 @@ export class GoogleClient {
         addressComponents: addressComponents.length > 0 ? addressComponents : undefined,
       }
     } catch (error) {
-      this.logger.error('Error calling Google Places Details API', { error })
-      throw error
+      throw this.logAndWrapError('Error calling Google Places Details API', error)
     }
+  }
+
+  // If the error is a failed HTTP response from Google, wrap it so that Google's actual error details end up in the
+  // error metadata, ensuring they're included both in logs and in our own error responses
+  private logAndWrapError(message: string, error: unknown): unknown {
+    const googleApiError = extractGoogleApiErrorDetails(error)
+    const wrappedError = googleApiError
+      ? new InternalServerError(`${message}: ${googleApiError.googleStatus ?? 'unknown status'}`, {
+          cause: error,
+          metadata: { googleApiError },
+        })
+      : error
+    this.logger.error(message, { error: wrappedError })
+    return wrappedError
   }
 
   private parseAddressComponents(components?: GoogleAddressComponent[]): AddressComponents[] {
