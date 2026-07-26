@@ -5,7 +5,7 @@
     "password": "dev_admin_password",
     "host": "localhost",
     "database": "parking",
-    "port": "5440",
+    "port": "6440",
     "schema": "public"
   },
   "test": {
@@ -14,7 +14,7 @@
     "password": "dev_admin_password",
     "host": "localhost",
     "database": "parking",
-    "port": "5441",
+    "port": "6441",
     "schema": "public"
   }
 }

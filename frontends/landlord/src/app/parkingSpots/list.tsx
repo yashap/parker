@@ -29,6 +29,21 @@ const EditParkingSpotButton = (props: EditParkingSpotButtonProps) => (
   </Button>
 )
 
+type ConfigureAvailabilityButtonProps = Omit<ButtonProps, 'onPress' | 'loading' | 'children'> & {
+  parkingSpotId: string
+}
+
+const ConfigureAvailabilityButton = ({ parkingSpotId, ...rest }: ConfigureAvailabilityButtonProps) => (
+  <Button
+    {...rest}
+    onPress={() => {
+      router.push(`/parkingSpots/configureAvailability?id=${parkingSpotId}`)
+    }}
+  >
+    Configure Availability
+  </Button>
+)
+
 type DeleteParkingSpotButtonProps = Omit<ButtonProps, 'onPress' | 'loading' | 'children'> & {
   parkingSpotId: string
   onDeleted?: () => void
@@ -115,6 +130,7 @@ const ParkingSpotList: React.FC = () => {
               <Text variant='bodyMedium'>{`Coordinates: ${parkingSpot.location.longitude}, ${parkingSpot.location.latitude}`}</Text>
             </Card.Content>
             <Card.Actions>
+              <ConfigureAvailabilityButton parkingSpotId={parkingSpot.id} />
               <EditParkingSpotButton />
               <DeleteParkingSpotButton parkingSpotId={parkingSpot.id} onDeleted={incrementRefreshCount} />
             </Card.Actions>

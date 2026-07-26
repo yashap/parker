@@ -34,6 +34,7 @@ const Router = () => {
         <Stack.Screen name='logIn' />
         <Stack.Screen name='parkingSpots/list' />
         <Stack.Screen name='parkingSpots/new' />
+        <Stack.Screen name='parkingSpots/configureAvailability' />
       </Stack>
     </SafeAreaView>
   )

@@ -8,7 +8,7 @@ export interface Configuration {
   googleMapsApiKey: string
 }
 
-const port = Number(process.env['PORT'] ?? 3502)
+const port = Number(process.env['PORT'] ?? 4502)
 const hostName: string = process.env['HOST_NAME'] ?? 'http://localhost'
 
 export const config: Configuration = {

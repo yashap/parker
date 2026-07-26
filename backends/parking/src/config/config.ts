@@ -6,7 +6,7 @@ export interface Configuration {
   auth: AuthModuleConfig
 }
 
-const port = Number(process.env['PORT'] ?? 3501)
+const port = Number(process.env['PORT'] ?? 4501)
 const hostName: string = process.env['HOST_NAME'] ?? 'http://localhost'
 
 export const config: Configuration = {

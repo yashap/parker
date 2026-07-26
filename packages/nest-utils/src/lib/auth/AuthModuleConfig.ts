@@ -10,7 +10,7 @@ export const buildAuthModuleConfig = (
 ): AuthModuleConfig => {
   return {
     ...config,
-    supertokensUrl: process.env['SUPERTOKENS_CORE_URL'] ?? 'http://localhost:3567',
-    websiteDomain: process.env['PARKER_WEB_URL'] ?? 'http://localhost:3000',
+    supertokensUrl: process.env['SUPERTOKENS_CORE_URL'] ?? 'http://localhost:4567',
+    websiteDomain: process.env['PARKER_WEB_URL'] ?? 'http://localhost:9081',
   }
 }

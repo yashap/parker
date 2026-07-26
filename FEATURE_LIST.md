@@ -4,15 +4,14 @@ What am I planning to work on next?
 
 ## Features
 
-- Improve `landlord` frontend for creating parking spots
-  - Add a map to show where the parking spot is
-    - I should consider getting on latest Expo/RN/React for this
-  - Add editing
-  - Ability to add time rules (and overrides)
-    - Including maybe some sort of "make available for next X hours" type UI? Should this be an override or something else?
-  - Ability to add a photo of the parking spot
-    - Probably backed by a generic file upload service?
-- Real implementation of parking spot bookings and time rules (BE)
+- **`Landlord FE:`** Add a map to show where the parking spot is
+  - I should consider getting on latest Expo/RN/React for this
+- **`Landlord FE:`** Add editing of parking spots
+- **`Landlord FE:`** Ability to add a photo of the parking spot
+  - Probably backed by a generic file upload service?
+- **`Landlord FE:`** Ability to add time rules (and overrides)
+  - Including maybe some sort of "make available for next X hours" type UI? Should this be an override or something else?
+- **`BE:`** Real implementation of parking spot bookings and time rules
   - BE remaining, for time rules/overrides:
     - Time rule evaluation should be able to:
       - Account for time rules + overrides
@@ -24,21 +23,22 @@ What am I planning to work on next?
       - Probably an ability to get availability windows as well?
     - Proper implementation of business logic around bookings (e.g. based on availability, time rules, etc.)
     - Tests
-- Create a simple renter app, that lets you book a parking spot
+- **`Renter FE:`** Create a simple renter app, that lets you book a parking spot
   - View spots near you on a map
   - Click one to view details, with the option to book
     - Will probably require a concept of "availability" on FE and BE, based on time rules and existing bookings
   - No payments for now, all free
-- Implement fares/fare rules/payments
+- **`Full Stack:`** Implement fares/fare rules/payments
   - Including ability to add credit card/apple pay
   - Both renters and landlords should be able to see past payments
-- Navigate to parking spot once booked in renter
-- AI-backed voice interface for booking parking spots
-- Implement SSO for both landlord and renter apps
+- **`Renter FE:`** Navigate to parking spot once booked in renter
+  - Some sort of map-based navigation UI
+- **`Renter FE:`** AI-backed voice interface for booking parking spots
+- **`Full Stack:`** Implement SSO for both landlord and renter apps
   - Google, FB, Apple, etc. signup/login
-- Add splash screens, logos, etc.
-- Ensure landlord works on Android
-- **Maybe**: RN-web version of landlord and/or renter?
+- **`FE:`** Add splash screens, logos, etc.
+- **`FE:`** Ensure both renter and landlord work on Android
+  - **Maybe**: RN-web version of landlord and/or renter?
 
 ## Bugs
 
@@ -46,7 +46,7 @@ None known at the moment.
 
 ## Tech Debt
 
-- Clean up all the vibe-coded code from adding places search (frontend and backend)
+- **`Full Stack:`** Clean up all the vibe-coded code from adding places search (frontend and backend)
   - Cleanup of code from [this PR](https://github.com/yashap/parker/pull/20)
   - `places` service:
     - `GoogleClient.getPlaceDetails` should return `undefined` if the place id doesn't exist. Need to test against real Google what happens here
@@ -56,21 +56,21 @@ None known at the moment.
     - Place details are returning an `AddressComponents[]`, but should it just be `AddressComponents`?
   - `landlord` app:
     - Just generally review the code for messiness
-- Switch to [encrypted .env](https://dotenvx.com/), and stop ignoring .env files
-- Is it possible to do conversion to `Temport.Instant` within `ts-rest`?
-- Can I make supertokens migrate during normal migrations, not on startup?
+- **`BE:`** Switch to [encrypted .env](https://dotenvx.com/), and stop ignoring .env files
+- **`BE:`** Is it possible to do conversion to `Temporal.Instant` within `ts-rest`?
+- **`BE:`** Can I make supertokens migrate during normal migrations, not on startup?
 - General landlord improvements
   - Form lib?
   - Styling
   - [Default font styles](https://tailwindcss.com/docs/font-family) and whatnot for tailwind?
     - And upgrade to latest tailwind/nativewind
   - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
-- Validate flows around bad auth
+- **`Full Stack:`** Validate flows around bad auth
   - Handled well on BE and FE? Ideally some BE tests!
-- Maybe switch to pnpm instead of yarn v1 workspaces?
+- **`Full Stack:`** Maybe switch to pnpm instead of yarn v1 workspaces?
   - I believe new RN supports pnpm
-- E2E tests, possibly using [Maestro](https://www.mobile.dev/)
-- Move libs to absolute imports
+- **`FE:`** E2E tests, possibly using [Maestro](https://www.mobile.dev/)
+- **`Full Stack:`** - Move libs to absolute imports
   - In theory this is just:
 
     ```ts
@@ -97,5 +97,5 @@ None known at the moment.
     // Including install of eslint-plugin-no-relative-import-paths
     ```
 
-  - But for some reason, when I do this in libs, I get weird unexpeceted any types in consumers of libs
+  - But for some reason, when I do this in libs, I get weird unexpected any types in consumers of libs
   - Maybe it's the baseUrl thing? I didn't experiment with it

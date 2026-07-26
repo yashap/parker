@@ -19,7 +19,7 @@
     "db:migrate-up": "yarn db:up && turbo run db:migrate-up",
     "db:migrate-up:test": "yarn db:up:test && turbo run db:migrate-up:test",
     "db:up": "./tools/scripts/ensure_postgres_up.sh",
-    "db:up:test": "./tools/scripts/ensure_postgres_up.sh -p 5441 -c parker_postgres_test -v parker_postgres_data_test",
+    "db:up:test": "./tools/scripts/ensure_postgres_up.sh -p 6441 -c parker_postgres_test -v parker_postgres_data_test",
     "db:restore-fixtures": "turbo run db:restore-fixtures",
     "email": "open http://127.0.0.1:4436",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,jsx,json}\" && turbo run format",
