@@ -9,7 +9,7 @@ if [ "$migration_name" = '' ]; then
     exit 1
 fi
 
-generate_output=$(yarn drizzle-kit generate --name="$migration_name")
+generate_output=$(pnpm exec drizzle-kit generate --name="$migration_name")
 
 # This saving of the output and removing bad quoting is a hack around a Drizzle bug when generating migrations, that over-quotes
 # Can remove this hack once the Drizzle bug is fixed
@@ -17,6 +17,8 @@ echo "$generate_output"
 # shellcheck disable=SC2001
 file_name="$(echo "$generate_output" | grep 'Your SQL migration file' | sed -e 's/.*Your SQL migration file ➜ \(.*\) 🚀.*/\1/')"
 
-sed -i '' 's/"GEOMETRY(POINT,4326)"/GEOMETRY(POINT,4326)/g' "$file_name"
-sed -i '' 's/"TIMESTAMP(3) WITH TIME ZONE"/TIMESTAMP(3) WITH TIME ZONE/g' "$file_name"
-sed -i '' 's/"TIME WITHOUT TIME ZONE"/TIME WITHOUT TIME ZONE/g' "$file_name"
+# Note: `sed -i.bak` (rather than BSD-only `sed -i ''`) so this works on both macOS and Linux
+sed -i.bak 's/"GEOMETRY(POINT,4326)"/GEOMETRY(POINT,4326)/g' "$file_name"
+sed -i.bak 's/"TIMESTAMP(3) WITH TIME ZONE"/TIMESTAMP(3) WITH TIME ZONE/g' "$file_name"
+sed -i.bak 's/"TIME WITHOUT TIME ZONE"/TIME WITHOUT TIME ZONE/g' "$file_name"
+rm -f "$file_name.bak"

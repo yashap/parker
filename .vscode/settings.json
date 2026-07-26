@@ -1,7 +1,6 @@
 {
   "cSpell.words": [
     "codegen",
-    "corepack",
     "Daos",
     "datetime",
     "datname",
@@ -16,8 +15,6 @@
     "Keycloak",
     "Logform",
     "nativewind",
-    "nestjs",
-    "nextjs",
     "openapi",
     "openapitools",
     "ossp",

@@ -35,24 +35,27 @@ export class Logger {
 }
 ```
 
-Then we just need to **set** the context when our service receives an HTTP request, and **read** the context when we log. This is why putting it in a library is important - we may want to set the context in one app/library (e.g. an **Express** middleware library), and read the context in another app/library (e.g. a logging library). It's key that these reads and writes access the **same instance of `ContextPropagator`**, e.g. `LogContextPropagator` above, and it's much easier to share this singleton if `LogContextPropagator` is in a library.
+Then we just need to **set** the context when our service receives an HTTP request, and **read** the context when we log. This is why putting it in a library is important - we may want to set the context in one app/library (e.g. a Fastify plugin), and read the context in another app/library (e.g. a logging library). It's key that these reads and writes access the **same instance of `ContextPropagator`**, e.g. `LogContextPropagator` above, and it's much easier to share this singleton if `LogContextPropagator` is in a library.
 
-An example of setting this context in **Express** middleware, so it gets set on every request our services receives:
+An example of setting this context in a Fastify `onRequest` hook, so it gets set on every request our service receives:
 
 ```ts
 import { LogContextPropagator } from '@parker/logging'
-import { NextFunction } from 'express'
-import { v4 as uuid } from 'uuid'
+import { randomUUID } from 'node:crypto'
 
-export const logContextMiddleware = (request: Request, _response: Response, next: NextFunction): void => {
-  LogContextPropagator.runWithContext(
-    {
-      correlationId: uuid(),
-      userId: getUserIdFromRequest(request),
-    },
-    next
-  )
-}
+app.addHook('onRequest', async (request) => {
+  LogContextPropagator.enterWith({
+    correlationId: randomUUID(),
+    userId: getUserIdFromRequest(request),
+  })
+})
 ```
 
-And that's it, as long as we add `logContextMiddleware` to our Express server, and use the `Logger` class for our logging, we now have `correlationId` and `userId` magically set in all of our logs!
+And that's it - as long as the hook is registered and we use the `Logger` class for our logging, we now have `correlationId` and `userId` magically set in all of our logs!
+
+## `runWithContext` vs `enterWith`
+
+- `runWithContext(context, callback)` - runs `callback` with the context set, and tears it down afterwards. Use this when you have a clear callback to wrap.
+- `enterWith(context)` - sets the context for the remainder of the current async execution, with no callback to wrap. This is what Fastify hooks need, since a hook returns rather than wrapping the rest of the request.
+
+`@parker/correlation-id-propagator` is a real instance of this pattern, and `correlationIdPlugin` in `@parker/fastify-utils` is the `enterWith` hook that populates it.
