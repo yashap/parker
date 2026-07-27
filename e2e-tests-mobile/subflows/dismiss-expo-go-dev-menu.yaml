@@ -1,0 +1,27 @@
+# Shared subflow, referenced by the flows in ../flows via `runFlow`. It deliberately lives outside
+# flows/ so that `maestro test flows/` doesn't pick it up as a test of its own.
+#
+# On the first launch after Expo Go's storage is cleared (which every flow does, via `clearState`,
+# to drop any leftover SuperTokens session), Expo Go opens its own developer menu over our app,
+# with a one-time onboarding explainer on top of that. Both layers have to go before our UI is
+# reachable. Each step is conditional, so this is a no-op when the menu isn't showing.
+appId: host.exp.Exponent
+---
+# Layer 1: the onboarding explainer. "Continue" dismisses it and reveals the dev menu proper.
+- extendedWaitUntil:
+    visible: 'This is the developer menu'
+    timeout: 10000
+    optional: true
+- runFlow:
+    when:
+      visible: 'This is the developer menu'
+    commands:
+      - tapOn: 'Continue'
+
+# Layer 2: the dev menu itself. Gated on one of its own entries rather than on "Close" alone, so a
+# "Close" button in our app could never be mistaken for it.
+- runFlow:
+    when:
+      visible: 'Go home'
+    commands:
+      - tapOn: 'Close'

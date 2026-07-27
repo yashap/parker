@@ -45,6 +45,13 @@ Monorepo for the **Parker** parking app — landlords list parking spots, renter
   pnpm --filter @parker/e2e-tests-web exec playwright install chromium
   ```
 
+- [Maestro](https://maestro.mobile.dev/getting-started/installing-maestro) — only needed for the mobile e2e
+  tests, and not available on npm:
+
+  ```bash
+  brew install maestro
+  ```
+
 ### Useful commands
 
 All of these are run from the root of the repo. Most wrap a `turbo run` command so they take advantage of
@@ -74,6 +81,9 @@ pnpm test
 
 # Playwright web e2e tests — backends and the Expo web app must already be running
 pnpm test:e2e:web
+
+# Maestro mobile e2e tests — backends and the iOS Simulator must already be running
+pnpm test:e2e:mobile
 
 # Compile every workspace to dist/ (only needed to verify the production build; dev never needs it)
 pnpm build
@@ -105,8 +115,9 @@ pnpm db:clean
 pnpm clean
 ```
 
-Note also the more detailed e2e docs: [the web e2e README](./e2e-tests-web/README.md) covers how to bring up
-the full stack, state isolation, and the known coverage gaps.
+Note also the more detailed e2e docs: [the web e2e README](./e2e-tests-web/README.md) and
+[the mobile e2e README](./e2e-tests-mobile/README.md) each cover how to bring up the full stack, state
+isolation, and the known coverage gaps.
 
 ### Serving a single backend
 
@@ -215,7 +226,7 @@ A few things the ESM + `"type": "module"` setup forces, which are easy to get wr
 | Backend services | Fastify 4 + ts-rest + zod                                                |
 | Auth             | SuperTokens (self-hosted core container + `supertokens-node`)            |
 | Frontend         | React Native + Expo (SDK 57) + Expo Router + NativeWind                  |
-| Tests            | Vitest (unit + integration), Playwright (web e2e)                        |
+| Tests            | Vitest (unit + integration), Playwright (web e2e), Maestro (mobile e2e)  |
 | CI               | GitHub Actions — `lint`, `test`, `e2e-web` jobs                          |
 
 ## Architecture notes
@@ -244,10 +255,13 @@ A few things the ESM + `"type": "module"` setup forces, which are easy to get wr
   stack. It starts **no** services for you; see [the web e2e README](./e2e-tests-web/README.md) for the
   bring-up sequence, and note the Google Maps calls are stubbed by a fixture server on `:4599` rather than
   hitting the real API.
+- **Maestro** (`pnpm test:e2e:mobile`) — the same core journeys as the web suite, but driving the iOS Simulator
+  so the native render path is covered too. Also starts no services, and is local-only (a simulator makes it a
+  poor fit for CI). See [the mobile e2e README](./e2e-tests-mobile/README.md).
 
 ## Workspace conventions
 
-Workspaces live in `backends/*`, `frontends/*`, `packages/*`, and `e2e-tests-web` (see
+Workspaces live in `backends/*`, `frontends/*`, `packages/*`, `e2e-tests-web`, and `e2e-tests-mobile` (see
 `pnpm-workspace.yaml`).
 
 **Install an external dependency**

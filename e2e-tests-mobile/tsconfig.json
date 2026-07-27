@@ -1,0 +1,4 @@
+{
+  "extends": "@parker/tsconfig/library.json",
+  "include": ["src/**/*"]
+}

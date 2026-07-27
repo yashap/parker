@@ -1,0 +1,18 @@
+# Shared subflow, referenced by the flows in ../flows via `runFlow`. It deliberately lives outside
+# flows/ so that `maestro test flows/` doesn't pick it up as a test of its own.
+#
+# The new-parking-spot screen calls `useDeviceLocation` (expo-location) to bias address suggestions
+# towards the user, so iOS asks for location permission the first time that screen mounts. Grant
+# it. `clearState` resets the grant every run, so this fires on every run rather than only once.
+# The web suite does the equivalent with Playwright's `permissions: ['geolocation']`.
+appId: host.exp.Exponent
+---
+- extendedWaitUntil:
+    visible: 'Allow While Using App'
+    timeout: 10000
+    optional: true
+- runFlow:
+    when:
+      visible: 'Allow While Using App'
+    commands:
+      - tapOn: 'Allow While Using App'
