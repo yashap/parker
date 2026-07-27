@@ -88,6 +88,20 @@ describe(FastifyAppBuilder.name, () => {
       })
     })
 
+    it('matches routes whose path params are very long', async () => {
+      // Fastify's router rejects path params longer than 100 chars by default, turning the request
+      // into a 404 that looks like a missing route. We raise maxParamLength because real ids exceed
+      // it (Google Places returns ~120-char compound place ids). This is a regression test: with the
+      // default limit, this request never reaches the handler and fails as EndpointNotFoundError
+      // instead of the handler's own NotFoundError.
+      const longName = 'x'.repeat(300)
+      const error = await expectServerError(client.getFooByName({ params: { name: longName } }), NotFoundError)
+      expect(error.toDto()).toStrictEqual({
+        message: 'Foo not found',
+        code: 'NotFoundError',
+      })
+    })
+
     it('returns an EndpointNotFoundError for an unknown endpoint', async () => {
       const error = await expectServerError(
         injectInstance.request({

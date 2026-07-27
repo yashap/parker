@@ -5,6 +5,7 @@ import { initContract } from '@ts-rest/core'
 import { initServer } from '@ts-rest/fastify'
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
+import { getEntityOrNotFound } from '../lib/controllerHelpers.js'
 import { FastifyAppBuilder } from '../lib/FastifyAppBuilder.js'
 import { initMicroserviceSuperTokens } from '../lib/initSuperTokens.js'
 import { tsRestPluginOptions } from '../lib/tsRestPluginOptions.js'
@@ -52,6 +53,14 @@ const contract = c.router({
     },
     query: ListFoosRequestSchema,
   },
+  getFooByName: {
+    method: 'GET',
+    path: '/foos/byName/:name',
+    pathParams: z.object({ name: z.string() }),
+    responses: {
+      200: FooSchema,
+    },
+  },
 })
 
 export type FooClient = ApiClient<typeof contract>
@@ -70,6 +79,10 @@ export class FooRepository {
 
   public static listFoos({ limit }: ListFoosRequest): Foo[] {
     return this.foos.slice(0, limit)
+  }
+
+  public static getFooByName(name: string): Foo | undefined {
+    return this.foos.find((foo) => foo.name === name)
   }
 
   public static clear(): void {
@@ -95,6 +108,10 @@ export const buildFooApp = async (): Promise<FastifyInstance> => {
     listFoos: async ({ query }) => {
       const foos = FooRepository.listFoos(query)
       return { status: 200, body: { data: foos, pagination: {} } }
+    },
+    getFooByName: async ({ params }) => {
+      const foo = getEntityOrNotFound(FooRepository.getFooByName(params.name), 'Foo')
+      return { status: 200, body: foo }
     },
   })
   return FastifyAppBuilder.build({

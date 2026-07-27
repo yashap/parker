@@ -25,6 +25,11 @@ export class FastifyAppBuilder {
     const app = Fastify({
       logger: false,
       ignoreTrailingSlash: true,
+      // Fastify's router refuses to match a path parameter longer than 100 chars by default,
+      // turning such requests into 404s that look like missing routes. Express (our old stack) had
+      // no such limit, and we have real params that exceed it - e.g. Google Places returns
+      // ~120-char compound place ids for address-type autocomplete results.
+      maxParamLength: 500,
     })
 
     // Correlation IDs and HTTP logging must come first so they wrap everything downstream.
