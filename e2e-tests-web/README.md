@@ -18,7 +18,7 @@ pnpm sync
 GOOGLE_MAPS_API_URL=http://localhost:4599 GOOGLE_MAPS_API_KEY=e2e-fixture-key pnpm serve:backend
 
 # 3. Start the Expo web build (Metro)
-pnpm --filter @parker/landlord serve:web
+pnpm serve:landlord:web
 
 # 4. Once both terminals are running, run the E2E tests:
 pnpm test:e2e:web

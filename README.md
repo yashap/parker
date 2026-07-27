@@ -60,9 +60,10 @@ pnpm sync
 # In own terminal: serve all backends (parking, places, user + the SuperTokens core container, in parallel via turbo)
 pnpm serve:backend
 
-# In own terminal: the Expo app
-pnpm serve:landlord       # iOS simulator
-pnpm serve:landlord:web   # web, on :9081 — this is what the e2e tests drive
+# In own terminal: the Expo app (one platform per terminal)
+pnpm serve:landlord:ios       # iOS simulator, on :9082
+pnpm serve:landlord:android   # Android emulator, on :9083
+pnpm serve:landlord:web       # web, on :9081 — this is what the e2e tests drive
 
 # Lint (prettier check + per-workspace tsc --noEmit + eslint) and format
 pnpm lint

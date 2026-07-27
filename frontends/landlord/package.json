@@ -5,7 +5,6 @@
   "main": "expo-router/entry",
   "scripts": {
     "clean": "rm -rf .expo/ .turbo/ dist/ coverage/ node_modules/",
-    "serve": "pnpm serve:ios",
     "serve:android": "expo start --android --port 9083",
     "serve:ios": "expo start --ios --port 9082",
     "serve:any": "expo start --port 9081",

@@ -84,7 +84,7 @@ jobs:
           GOOGLE_MAPS_API_KEY: e2e-fixture-key
 
       - name: Start Expo web (9081)
-        run: nohup pnpm --filter @parker/landlord serve:web > /tmp/expo-web.log 2>&1 &
+        run: nohup pnpm serve:landlord:web > /tmp/expo-web.log 2>&1 &
         env:
           EXPO_NO_TELEMETRY: '1'
           BROWSER: none
