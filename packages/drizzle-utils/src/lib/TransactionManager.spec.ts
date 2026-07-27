@@ -1,9 +1,10 @@
 import { required } from '@parker/errors'
 import { PgQueryResultHKT, PgTransaction } from 'drizzle-orm/pg-core'
-import { User, TestDb, TestDbSchema } from '../test/TestDb'
-import { userTable } from '../test/testSchema'
-import { ActiveTransactionContext } from './ActiveTransactionContext'
-import { TransactionManager } from './TransactionManager'
+import { beforeAll, describe, expect, it } from 'vitest'
+import { User, TestDb, TestDbSchema } from '../test/TestDb.js'
+import { userTable } from '../test/testSchema.js'
+import { ActiveTransactionContext } from './ActiveTransactionContext.js'
+import { TransactionManager } from './TransactionManager.js'
 
 describe(TransactionManager.name, () => {
   let transactionManager: TransactionManager<TestDbSchema>

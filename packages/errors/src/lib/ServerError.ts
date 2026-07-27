@@ -1,4 +1,4 @@
-import { BaseError } from './BaseError'
+import { BaseError } from './BaseError.js'
 
 export interface ServerErrorDto<T = unknown> {
   message: string

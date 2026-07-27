@@ -1,10 +1,13 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "globalEnv": [
+    "CI",
     "NODE_ENV",
     "LOG_LEVEL",
     "JSON_LOGS",
     "DATABASE_URL",
+    "GOOGLE_MAPS_API_KEY",
+    "GOOGLE_MAPS_API_URL",
     "PORT",
     "HOST_NAME",
     "SUPERTOKENS_CORE_URL",
@@ -40,7 +43,8 @@
       "outputs": []
     },
     "serve": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "test": {
       "outputs": []

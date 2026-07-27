@@ -1,6 +1,6 @@
 import { initContract } from '@ts-rest/core'
-import { placeDetailsContract } from './placeDetails'
-import { placeSuggestionsContract } from './placeSuggestions'
+import { placeDetailsContract } from './placeDetails.js'
+import { placeSuggestionsContract } from './placeSuggestions.js'
 
 const c = initContract()
 

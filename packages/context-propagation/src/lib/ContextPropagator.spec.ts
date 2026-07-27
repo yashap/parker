@@ -1,4 +1,5 @@
-import { ContextPropagator } from './ContextPropagator'
+import { describe, expect, it } from 'vitest'
+import { ContextPropagator } from './ContextPropagator.js'
 
 describe(ContextPropagator.name, () => {
   interface Context {

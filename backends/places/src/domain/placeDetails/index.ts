@@ -1,2 +1,1 @@
-export * from './PlaceDetailsController'
-export * from './PlaceDetailsModule'
+export * from './registerPlaceDetailsRoutes.js'

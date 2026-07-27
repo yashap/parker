@@ -135,7 +135,7 @@ const ConfigureAvailability: React.FC = () => {
   }
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
+    <ScrollView testID='configureAvailabilityScreen' style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
       <Card style={{ marginBottom: 16 }}>
         <Card.Content>
           <Text variant='titleLarge' style={{ marginBottom: 8 }}>
@@ -189,6 +189,7 @@ const ConfigureAvailability: React.FC = () => {
                 {availableDays.map((day) => (
                   <List.Item
                     key={day}
+                    testID={`addDay-${day}`}
                     title={day}
                     onPress={() => {
                       addTimeRule(day)
@@ -226,6 +227,7 @@ const ConfigureAvailability: React.FC = () => {
           overrides.map((override, index) => (
             <OverrideItem
               key={`${override.startsAt}-${index}`}
+              testID={`overrideItem-${index}`}
               override={override}
               timeZone={parkingSpot.timeZone}
               error={overrideError(override)}
@@ -240,6 +242,7 @@ const ConfigureAvailability: React.FC = () => {
         )}
 
         <Button
+          testID='addOverride'
           mode='outlined'
           icon='plus'
           style={{ marginTop: 8 }}
@@ -253,6 +256,7 @@ const ConfigureAvailability: React.FC = () => {
 
       <View style={{ marginTop: 8, gap: 12 }}>
         <Button
+          testID='saveAvailability'
           mode='contained'
           onPress={() => {
             void handleSave()

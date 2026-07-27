@@ -1,8 +1,9 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { required } from '@parker/errors'
-import { User, TestDb, Reminder } from '../test/TestDb'
-import { reminderTable, userTable } from '../test/testSchema'
-import { instant } from './instant'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { User, TestDb, Reminder } from '../test/TestDb.js'
+import { reminderTable, userTable } from '../test/testSchema.js'
+import { instant } from './instant.js'
 
 describe(instant.name, () => {
   let user: User

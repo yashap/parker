@@ -1,1 +1,1 @@
-export * from './lib/SupertestInstance'
+export * from './lib/FastifyInjectInstance.js'

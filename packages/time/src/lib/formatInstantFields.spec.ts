@@ -1,6 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill'
 import { IllegalInputError } from '@parker/errors'
-import { formatInstantFields } from './formatInstantFields'
+import { describe, expect, it } from 'vitest'
+import { formatInstantFields } from './formatInstantFields.js'
 
 describe(formatInstantFields.name, () => {
   it('formats instant fields', () => {

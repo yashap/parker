@@ -2,45 +2,56 @@
   "name": "@parker/drizzle-utils",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/",
-    "db:clean:test": "yarn db:up:test && ../../tools/scripts/drop_db.sh drizzle_utils parker_postgres_test",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/ .tsbuildinfo",
+    "db:clean:test": "pnpm db:up:test && ../../tools/scripts/drop_db.sh drizzle_utils parker_postgres_test",
     "db:generate-custom-migration": "../../tools/scripts/generate_custom_db_migration.sh",
-    "db:generate-migration": "yarn db:up:test && ../../tools/scripts/generate_db_migration.sh",
-    "db:migrate-up:test": "yarn db:up:test && yarn drizzle-kit migrate",
+    "db:generate-migration": "pnpm db:up:test && ../../tools/scripts/generate_db_migration.sh",
+    "db:migrate-up:test": "pnpm db:up:test && DATABASE_URL='postgresql://dev_admin:dev_admin_password@localhost:6441/drizzle_utils?schema=public' tsx --conditions=development ./src/test/migrate.ts",
     "db:up:test": "../../tools/scripts/ensure_postgres_db.sh -d drizzle_utils -c parker_postgres_test",
     "format": "eslint \"src/**\" --fix",
     "lint": "tsc --noEmit && eslint \"src/**\"",
-    "test": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand src/",
-    "test:watch": "LOG_LEVEL=\"${LOG_LEVEL:-off}\" jest --forceExit --runInBand --watch src/"
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@js-temporal/polyfill": "^0.5.1",
-    "@parker/context-propagation": "*",
-    "@parker/errors": "*",
-    "@parker/geography": "*",
-    "drizzle-orm": "^0.44.5",
-    "tslib": "^2.8.1",
+    "@parker/context-propagation": "workspace:*",
+    "@parker/errors": "workspace:*",
+    "@parker/geography": "workspace:*",
+    "drizzle-orm": "^0.45.2",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@parker/api-client-utils": "*",
-    "@parker/eslint-config": "*",
-    "@parker/pagination": "*",
-    "@parker/test-utils": "*",
-    "@parker/tsconfig": "*",
-    "@types/jest": "^30.0.0",
+    "@parker/api-client-utils": "workspace:*",
+    "@parker/eslint-config": "workspace:*",
+    "@parker/pagination": "workspace:*",
+    "@parker/test-utils": "workspace:*",
+    "@parker/tsconfig": "workspace:*",
     "@types/node": "^24.3.0",
     "@types/pg": "^8.15.5",
-    "drizzle-kit": "^0.31.4",
-    "eslint": "^9.34.0",
-    "jest": "~29.7.0",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9.39.5",
     "pg": "^8.16.3",
-    "ts-jest": "^29.4.1",
     "typescript": "~5.9.2",
-    "zod": "^3.24.1"
+    "vitest": "^4.1.10",
+    "zod": "^3.25.76",
+    "tsx": "^4.23.1"
   }
 }

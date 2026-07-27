@@ -12,7 +12,7 @@ import {
   fetchAllPages,
 } from '@parker/api-client-utils'
 import { DEFAULT_LIMIT } from '@parker/pagination'
-import { contract } from './contract'
+import { contract } from './contract/index.js'
 import {
   CreateParkingSpotBookingRequest,
   CreateParkingSpotRequest,
@@ -23,7 +23,7 @@ import {
   ParkingSpotBookingDto,
   ParkingSpotDto,
   UpdateParkingSpotRequest,
-} from './model/types'
+} from './model/types.js'
 
 export class ParkingClient {
   private client: ApiClient<typeof contract>

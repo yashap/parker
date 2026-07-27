@@ -1,6 +1,6 @@
 import { PaginatedResponseSchema } from '@parker/pagination'
 import { z, ZodTypeAny } from 'zod'
-import { ServerErrorSchema } from './ServerError'
+import { ServerErrorSchema } from './ServerError.js'
 
 const AllErrors = {
   400: ServerErrorSchema,

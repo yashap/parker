@@ -7,14 +7,14 @@ import {
   ParkingSpotSchema,
   UpdateParkingSpotRequestSchema,
   ListParkingSpotsClosestToPointResponseSchema,
-} from './ParkingSpot'
+} from './ParkingSpot.js'
 import {
   BookingStatusSchema,
   CreateParkingSpotBookingRequestSchema,
   ParkingSpotBookingSchema,
-} from './ParkingSpotBooking'
-import { TimeRuleSchema } from './TimeRule'
-import { TimeRuleOverrideSchema } from './TimeRuleOverride'
+} from './ParkingSpotBooking.js'
+import { TimeRuleSchema } from './TimeRule.js'
+import { TimeRuleOverrideSchema } from './TimeRuleOverride.js'
 
 // Requests
 export type CreateParkingSpotRequest = z.infer<typeof CreateParkingSpotRequestSchema>

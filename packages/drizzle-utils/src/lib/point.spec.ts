@@ -1,8 +1,9 @@
 import { required } from '@parker/errors'
 import { Point } from '@parker/geography'
-import { User, TestDb, FavouriteLocation } from '../test/TestDb'
-import { favouriteLocationTable, userTable } from '../test/testSchema'
-import { instant } from './instant'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { User, TestDb, FavouriteLocation } from '../test/TestDb.js'
+import { favouriteLocationTable, userTable } from '../test/testSchema.js'
+import { instant } from './instant.js'
 
 describe(instant.name, () => {
   let user: User

@@ -1,4 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
+import { expect } from 'vitest'
 
 const areInstantsEqual = (a: unknown, b: unknown): boolean | undefined => {
   const isInstanceA = a instanceof Temporal.Instant
@@ -105,11 +106,7 @@ const areDurationsEqual = (a: unknown, b: unknown): boolean | undefined => {
 }
 
 export const addTemporalEqualityTesters = () => {
-  // eslint-disable-next-line
-  const expectGlobal = require('@jest/globals').expect as {
-    addEqualityTesters(testers: ((a: unknown, b: unknown) => boolean | undefined)[]): void
-  }
-  expectGlobal.addEqualityTesters([
+  expect.addEqualityTesters([
     areInstantsEqual,
     arePlainTimesEqual,
     areZonedDateTimesEqual,

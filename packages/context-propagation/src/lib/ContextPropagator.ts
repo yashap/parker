@@ -1,4 +1,4 @@
-import type { AsyncLocalStorage } from 'async_hooks'
+import { AsyncLocalStorage } from 'node:async_hooks'
 
 export class ContextPropagator<T> {
   private readonly storage: AsyncLocalStorage<T> | undefined = this.createStorage()
@@ -25,6 +25,17 @@ export class ContextPropagator<T> {
   }
 
   /**
+   * Set context for the remainder of the current asynchronous execution (and anything it spawns), without wrapping a
+   * callback. Useful in hook-based frameworks (e.g. Fastify hooks), where there's no single callback that wraps the
+   * rest of the request lifecycle.
+   *
+   * @param context The context to set
+   */
+  public enterWith(context: T): void {
+    this.storage?.enterWith(context)
+  }
+
+  /**
    * Get context set earlier (by a call to runWithContext). If no context was set, returns undefined.
    *
    * @returns Context set by runWithContext, or undefined
@@ -34,13 +45,10 @@ export class ContextPropagator<T> {
   }
 
   private createStorage(): AsyncLocalStorage<T> | undefined {
-    // Do not import CLS on platforms other than Node.js.
-    if (!process.versions.node) {
+    // Skip on non-Node runtimes (Metro / RN). AsyncLocalStorage is Node-only.
+    if (typeof process === 'undefined' || !process.versions.node) {
       return undefined
     }
-
-    // Import AsyncLocalStorage dynamically to make this class compatible on platforms other than Node.js.
-    // eslint-disable-next-line
-    return new (require('async_hooks').AsyncLocalStorage)() as AsyncLocalStorage<T>
+    return new AsyncLocalStorage<T>()
   }
 }

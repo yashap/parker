@@ -1,4 +1,5 @@
-import { Logger } from './Logger'
+import { describe, it } from 'vitest'
+import { Logger } from './Logger.js'
 
 describe(Logger.name, () => {
   describe('Logging', () => {

@@ -8,10 +8,11 @@ import {
   PaginationRequestDto,
   parsePagination,
 } from '@parker/pagination'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { Post, TestDb, User } from '../test/TestDb'
-import { postTable, userTable } from '../test/testSchema'
-import { buildPaginationQuery } from './buildPaginationQuery'
+import { Post, TestDb, User } from '../test/TestDb.js'
+import { postTable, userTable } from '../test/testSchema.js'
+import { buildPaginationQuery } from './buildPaginationQuery.js'
 
 describe(buildPaginationQuery.name, () => {
   const baseTimestamp = Temporal.Instant.fromEpochMilliseconds(1_000_000_000)

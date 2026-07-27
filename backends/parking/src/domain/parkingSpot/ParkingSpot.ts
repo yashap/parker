@@ -4,9 +4,9 @@ import { Cursor } from '@parker/pagination'
 import { ParkingSpotDto } from '@parker/parking-client'
 import { formatInstantFields } from '@parker/time'
 import { z } from 'zod'
-import { ParkingSpotDao } from 'src/db/types'
-import { TimeRule, timeRuleToDto } from 'src/domain/timeRule'
-import { TimeRuleOverride, timeRuleOverrideToDto } from 'src/domain/timeRuleOverride'
+import { ParkingSpotDao } from '../../db/types.js'
+import { TimeRule, timeRuleToDto } from '../timeRule/index.js'
+import { TimeRuleOverride, timeRuleOverrideToDto } from '../timeRuleOverride/index.js'
 
 export type ParkingSpot = ParkingSpotDao & {
   timeRules: TimeRule[]
@@ -28,8 +28,7 @@ export const parseParkingSpotOrdering = (ordering: {
 }
 
 export type ListParkingSpotPagination =
-  | ListParkingSpotCursor
-  | Omit<ListParkingSpotCursor, 'lastOrderValueSeen' | 'lastIdSeen'>
+  ListParkingSpotCursor | Omit<ListParkingSpotCursor, 'lastOrderValueSeen' | 'lastIdSeen'>
 
 export const parkingSpotToDto = (parkingSpot: ParkingSpot): ParkingSpotDto => {
   return {

@@ -1,5 +1,5 @@
-import { isEmpty } from 'lodash'
-import { ErrorOptions, ServerError, WrapErrorOptions } from './ServerError'
+import isEmpty from 'lodash/isEmpty.js'
+import { ErrorOptions, ServerError, WrapErrorOptions } from './ServerError.js'
 
 /**
  * 4xx errors
@@ -13,6 +13,17 @@ export class InputValidationError<T = unknown> extends ServerError<T> {
   public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): InputValidationError<A> {
     const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
     return new InputValidationError(message, options)
+  }
+}
+
+export class UnauthorizedError<T = unknown> extends ServerError<T> {
+  constructor(message: string, options: ErrorOptions<T> = {}) {
+    super(401, message, options)
+  }
+
+  public static wrap<A = unknown>(error: Error, optionOverrides: WrapErrorOptions<A> = {}): UnauthorizedError<A> {
+    const { message, options } = this.buildOptionsForWrappedError(error, optionOverrides)
+    return new UnauthorizedError(message, options)
   }
 }
 
@@ -102,6 +113,8 @@ export const buildServerErrorFromDto = (dto: unknown, statusCode: number): Serve
     const options = { cause: dto, metadata: dto.metadata }
     if (statusCode === 400 && dto.code === InputValidationError.name) {
       return new InputValidationError(dto.message, options)
+    } else if (statusCode === 401 && dto.code === UnauthorizedError.name) {
+      return new UnauthorizedError(dto.message, options)
     } else if (statusCode === 403 && dto.code === ForbiddenError.name) {
       return new ForbiddenError(dto.message, options)
     } else if (statusCode === 404 && dto.code === NotFoundError.name) {

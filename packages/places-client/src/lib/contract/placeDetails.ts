@@ -1,7 +1,7 @@
 import { ContractBuilder } from '@parker/api-client-utils'
 import { initContract } from '@ts-rest/core'
 import { z } from 'zod'
-import { PlaceDetailsSchema } from '../model/PlaceDetails'
+import { PlaceDetailsSchema } from '../model/PlaceDetails.js'
 
 const c = initContract()
 

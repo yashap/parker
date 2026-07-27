@@ -1,0 +1,19 @@
+{
+  "name": "@parker/e2e-tests-mobile",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf node_modules/.cache .maestro .turbo",
+    "format": "eslint \"src/**/*.ts\" --fix",
+    "lint": "tsc --noEmit && eslint \"src/**/*.ts\"",
+    "test:e2e:mobile": "maestro test flows/"
+  },
+  "devDependencies": {
+    "@parker/eslint-config": "workspace:*",
+    "@parker/tsconfig": "workspace:*",
+    "@types/node": "^24.3.0",
+    "eslint": "^9.39.5",
+    "typescript": "~5.9.2"
+  }
+}

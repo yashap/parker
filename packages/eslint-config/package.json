@@ -2,17 +2,25 @@
   "name": "@parker/eslint-config",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "type": "module",
+  "exports": {
+    "./default.config.mjs": "./default.config.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "default.config.mjs"
+  ],
   "scripts": {
     "clean": "rm -rf node_modules/ dist/ coverage/ .turbo/"
   },
   "dependencies": {
-    "@eslint/js": "^9.34.0",
-    "eslint": "^9.34.0",
+    "@eslint/js": "^9.39.5",
+    "@typescript-eslint/parser": "^8.65.0",
+    "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
-    "typescript-eslint": "^8.41.0"
+    "typescript-eslint": "^8.65.0"
   },
   "devDependencies": {
     "@types/eslint-config-prettier": "^6.11.3",

@@ -9,5 +9,7 @@ type ScreenProps = Omit<SafeAreaViewProps, 'style'> & {
 export const Screen = (props: ScreenProps) => {
   const theme = useTheme()
   const { style, ...rest } = props
-  return <SafeAreaView style={{ backgroundColor: theme.colors.background, ...style }} className='flex-1' {...rest} />
+  // NativeWind's className only reaches React Native core components; third-party ones (Paper,
+  // safe-area-context) need explicit style props, so keep layout styles here rather than as classes
+  return <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background, ...style }} {...rest} />
 }

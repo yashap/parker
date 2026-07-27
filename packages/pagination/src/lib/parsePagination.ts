@@ -1,7 +1,7 @@
 import { InputValidationError } from '@parker/errors'
-import { DEFAULT_LIMIT, DEFAULT_ORDER_BY, DEFAULT_ORDER_DIRECTION } from './constants'
-import { Cursor, Pagination, ParseOrdering, decodeCursor } from './Cursor'
-import { PaginationRequestDto } from './paginationDto'
+import { DEFAULT_LIMIT, DEFAULT_ORDER_BY, DEFAULT_ORDER_DIRECTION } from './constants.js'
+import { Cursor, Pagination, ParseOrdering, decodeCursor } from './Cursor.js'
+import { PaginationRequestDto } from './paginationDto.js'
 
 export const parsePagination = <K extends string, V>(
   dto: PaginationRequestDto,

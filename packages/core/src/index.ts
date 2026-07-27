@@ -1,1 +1,1 @@
-export * from './lib/TestOnly'
+export * from './lib/assertTestOnly.js'

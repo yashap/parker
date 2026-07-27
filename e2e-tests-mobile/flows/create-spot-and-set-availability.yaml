@@ -1,0 +1,147 @@
+# Expo Go bundle id on iOS; for Android use 'host.exp.exponent' (see src/expoGoBundleIds.ts).
+appId: host.exp.Exponent
+---
+# No `clearState` — see sign-up-and-log-in.yaml for why
+- openLink: exp://127.0.0.1:9082/--/signUp
+- evalScript: ${output.email = 'pk-' + Date.now() + Math.floor(Math.random() * 1000) + '@example.com'}
+
+# See sign-up-and-log-in.yaml for the wait/sweep pattern used at each screen transition
+# Wait for the screen we expect. When nothing is covering it this returns almost immediately, and
+# the conditional below is a single check - so the normal path costs ~nothing. Only if the screen
+# never appears do we conclude something is in front of it and run the sweep.
+- extendedWaitUntil:
+    visible:
+      id: 'signUpScreen'
+    timeout: 20000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: 'signUpScreen'
+    commands:
+      - runFlow: ../subflows/clear-stray-ios-dialogs.yaml
+- assertVisible:
+    id: 'signUpScreen'
+
+# Sign up as a fresh landlord, so the spot list starts empty and this run is self-isolating.
+# See sign-up-and-log-in.yaml for why the email field is tapped twice.
+- tapOn:
+    id: 'signUpEmailInput'
+- tapOn:
+    id: 'signUpEmailInput'
+- inputText: ${output.email}
+- tapOn:
+    id: 'signUpPasswordInput'
+- inputText: 'StrongPassword123'
+- tapOn:
+    id: 'submitSignUp'
+# Wait for the screen we expect. When nothing is covering it this returns almost immediately, and
+# the conditional below is a single check - so the normal path costs ~nothing. Only if the screen
+# never appears do we conclude something is in front of it and run the sweep.
+- extendedWaitUntil:
+    visible:
+      id: 'parkingSpotsListScreen'
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: 'parkingSpotsListScreen'
+    commands:
+      - runFlow: ../subflows/clear-stray-ios-dialogs.yaml
+- assertVisible:
+    id: 'parkingSpotsListScreen'
+
+# Create a parking spot via the address autocomplete. The query matches the Google Maps fixture
+# server's one canned address, and is also a real SF address, so this works whether the places
+# backend is pointed at the fixture server (GOOGLE_MAPS_API_URL) or the real API. We tap the first
+# suggestion and only assert the selected-location panel appears, rather than asserting on the
+# label, so the flow doesn't depend on which of the two is serving.
+- tapOn:
+    id: 'addParkingSpotCard'
+# Wait for the screen we expect. When nothing is covering it this returns almost immediately, and
+# the conditional below is a single check - so the normal path costs ~nothing. Only if the screen
+# never appears do we conclude something is in front of it and run the sweep.
+- extendedWaitUntil:
+    visible:
+      id: 'newParkingSpotScreen'
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: 'newParkingSpotScreen'
+    commands:
+      - runFlow: ../subflows/clear-stray-ios-dialogs.yaml
+- assertVisible:
+    id: 'newParkingSpotScreen'
+- tapOn:
+    id: 'addressInput'
+- tapOn:
+    id: 'addressInput'
+- inputText: '160 Spear'
+# The autocomplete debounces 300ms and then queries the places backend, and the list re-renders as
+# results land - so a tap can hit a row that's being replaced, and the details fetch it triggers
+# fails silently. Retry the tap until the selected-location panel actually appears.
+- retry:
+    maxRetries: 3
+    commands:
+      - tapOn:
+          id: 'addressSuggestion-0'
+      - extendedWaitUntil:
+          visible:
+            id: 'selectedLocationPanel'
+          timeout: 8000
+- assertVisible:
+    id: 'selectedLocationPanel'
+- tapOn:
+    id: 'submitParkingSpot'
+
+# Back on the list with exactly one spot. Maestro matches ids as regexes, which is how we find
+# the card and its buttons without knowing the generated spot id.
+- assertVisible:
+    id: 'parkingSpotsListScreen'
+- assertVisible:
+    id: 'parkingSpotCard-.*'
+
+# Configure that spot's availability: one weekly rule (Monday, default 09:00-17:00) and one
+# quick override (blocked for the next 4 hours)
+- tapOn:
+    id: 'configureAvailability-.*'
+- assertVisible:
+    id: 'configureAvailabilityScreen'
+- tapOn:
+    id: 'addDay-Monday'
+- assertVisible:
+    id: 'timeRule-Monday'
+
+- scrollUntilVisible:
+    element:
+      id: 'quickOverride-blocked-4h'
+    direction: DOWN
+- tapOn:
+    id: 'quickOverride-blocked-4h'
+- assertVisible:
+    id: 'overrideItem-0'
+
+- scrollUntilVisible:
+    element:
+      id: 'saveAvailability'
+    direction: DOWN
+- tapOn:
+    id: 'saveAvailability'
+- assertVisible:
+    id: 'parkingSpotsListScreen'
+
+# Reopen the spot — the rule and override were persisted on the backend, not just held in
+# component state
+- tapOn:
+    id: 'configureAvailability-.*'
+- assertVisible:
+    id: 'configureAvailabilityScreen'
+- assertVisible:
+    id: 'timeRule-Monday'
+- scrollUntilVisible:
+    element:
+      id: 'overrideItem-0'
+    direction: DOWN

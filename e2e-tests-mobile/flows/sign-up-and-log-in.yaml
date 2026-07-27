@@ -1,0 +1,106 @@
+# Expo Go bundle id on iOS; for Android use 'host.exp.exponent' (see src/expoGoBundleIds.ts).
+# Switch to our own bundle id when we move from Expo Go to a dev build.
+appId: host.exp.Exponent
+---
+# Deliberately no `clearState`. It would wipe Expo Go's own storage too, which resets its
+# first-launch onboarding, the location grant, and the Keychain prompt state — so every run would
+# have to fight three iOS/Expo Go dialogs instead of none. We don't need it: signing up a freshly
+# generated user replaces whatever session was left behind, and a landlord only ever sees their own
+# spots. The sweep subflow referenced below still mops those dialogs up when they *do* appear (a
+# first-ever run on a new simulator, or after someone resets Expo Go by hand).
+
+# Open Expo Go with our dev-server URL, deep-linking straight to /signUp via the `--/<route>`
+# syntax. Bypasses the log-in screen entirely so we don't have to tap a Pressable on the auth
+# screen (which fires unreliably from Maestro on iOS Bridgeless mode).
+- openLink: exp://127.0.0.1:9082/--/signUp
+
+# Build a unique email so each run is self-isolating and doesn't pollute dev data. Avoid backtick
+# template literals — Maestro's own `${...}` preprocessor walks them recursively and breaks the
+# string. Plain string concatenation works fine in Maestro's GraalVM JS engine.
+- evalScript: ${output.email = 'pk-' + Date.now() + Math.floor(Math.random() * 1000) + '@example.com'}
+
+# Wait for our screen rather than for the dialogs that might be covering it. In the normal case
+# this returns in well under a second and the sweep below is a no-op, so we pay nothing. Only when
+# something IS in front of the app (Expo Go's first-launch dev menu, or an alert left behind by a
+# run that failed part-way) does this time out, and then the sweep clears it.
+- extendedWaitUntil:
+    visible:
+      id: 'signUpScreen'
+    timeout: 20000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: 'signUpScreen'
+    commands:
+      - runFlow: ../subflows/clear-stray-ios-dialogs.yaml
+- assertVisible:
+    id: 'signUpScreen'
+
+# Sign up. Password kept to letters + digits to dodge any shift-key flakiness in Maestro's
+# iOS input synthesis.
+#
+# iOS Simulator quirk: the very first tap on a TextInput after a screen mount often gets
+# absorbed bringing up the keyboard rather than focusing the field, so the immediately-following
+# inputText goes nowhere. We tap the email field TWICE so the second tap is the one that
+# actually focuses — once the keyboard is up, subsequent fields focus on a single tap.
+- tapOn:
+    id: 'signUpEmailInput'
+- tapOn:
+    id: 'signUpEmailInput'
+- inputText: ${output.email}
+- tapOn:
+    id: 'signUpPasswordInput'
+- inputText: 'StrongPassword123'
+- tapOn:
+    id: 'submitSignUp'
+
+# Signing up establishes a session and lands on the landlord's spot list. The wait here is SHORT:
+# iOS reliably pops its "save password in Keychain?" alert after signup, so when it does, waiting
+# longer for the screen is pure loss - the sweep below clears the alert and the assert re-waits.
+- extendedWaitUntil:
+    visible:
+      id: 'parkingSpotsListScreen'
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: 'parkingSpotsListScreen'
+    commands:
+      - runFlow: ../subflows/clear-stray-ios-dialogs.yaml
+- assertVisible:
+    id: 'parkingSpotsListScreen'
+- assertVisible:
+    id: 'addParkingSpotCard'
+
+# Log out — back to the log-in screen, session cleared
+- tapOn:
+    id: 'logoutButton'
+- assertVisible:
+    id: 'logInScreen'
+
+# Log back in with the same credentials the signup created
+- tapOn:
+    id: 'logInEmailInput'
+- tapOn:
+    id: 'logInEmailInput'
+- inputText: ${output.email}
+- tapOn:
+    id: 'logInPasswordInput'
+- inputText: 'StrongPassword123'
+- tapOn:
+    id: 'submitLogIn'
+- extendedWaitUntil:
+    visible:
+      id: 'parkingSpotsListScreen'
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: 'parkingSpotsListScreen'
+    commands:
+      - runFlow: ../subflows/clear-stray-ios-dialogs.yaml
+- assertVisible:
+    id: 'parkingSpotsListScreen'

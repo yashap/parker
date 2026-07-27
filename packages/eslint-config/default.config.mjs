@@ -62,7 +62,11 @@ export default tseslint.config(
 
     settings: {
       'import/resolver': {
-        typescript: {},
+        typescript: {
+          // Match the tsconfig `customConditions`: resolve workspace deps to their TS source via the
+          // `development` export condition, so imports resolve even when no package has been built.
+          conditionNames: ['development', 'types', 'import', 'require', 'node', 'default'],
+        },
       },
     },
 

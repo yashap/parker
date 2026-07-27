@@ -1,26 +1,27 @@
-// Important to import dotenv as early as possible
-/* eslint-disable import/order */
-import * as dotenv from 'dotenv'
-dotenv.config()
-
-import { Module } from '@nestjs/common'
-import { MicroserviceAuthModule, NestAppBuilder, NestAppRunner } from '@parker/nest-utils'
-import { config } from 'src/config'
-import { PlaceSuggestionsModule } from 'src/domain/placeSuggestions'
-import { PlaceDetailsModule } from 'src/domain/placeDetails'
+import { initMicroserviceSuperTokens } from '@parker/fastify-utils'
 import { Logger } from '@parker/logging'
+import { buildApp } from './app.js'
+import { config } from './config.js'
+import { GoogleClient } from './domain/google/GoogleClient.js'
 
-@Module({
-  imports: [PlaceSuggestionsModule, PlaceDetailsModule, MicroserviceAuthModule.forRoot(config.auth)],
-})
-class AppModule {}
+const logger = new Logger('PlacesService')
 
-const bootstrap = async (port: number): Promise<void> => {
-  const app = await NestAppBuilder.build(AppModule, config.auth.websiteDomain)
-  await NestAppRunner.run(app, port)
+const start = async (): Promise<void> => {
+  initMicroserviceSuperTokens({
+    apiDomain: config.apiDomain,
+    websiteDomain: config.websiteDomain,
+    connectionUri: config.supertokens.connectionUri,
+    apiKey: config.supertokens.apiKey,
+  })
+
+  const googleClient = new GoogleClient()
+  const app = await buildApp({ googleClient })
+
+  await app.listen({ port: config.port, host: '0.0.0.0' })
+  logger.info(`places listening on http://0.0.0.0:${config.port}`)
 }
 
-bootstrap(config.port).catch((error: unknown) => {
-  new Logger('Bootstrap').error('Failed to bootstrap', { error })
-  throw error
+start().catch((error: unknown) => {
+  logger.error('Failed to start places service', { error })
+  process.exit(1)
 })

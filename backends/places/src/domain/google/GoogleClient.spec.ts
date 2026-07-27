@@ -7,8 +7,9 @@ import {
 } from '@googlemaps/google-maps-services-js'
 import { InternalServerError } from '@parker/errors'
 import { AxiosRequestHeaders, AxiosResponse } from 'axios'
-import { config } from 'src/config'
-import { GoogleClient } from 'src/domain/google/GoogleClient'
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
+import { config } from '../../config.js'
+import { GoogleClient } from './GoogleClient.js'
 
 const buildAxiosResponse = <T>(data: unknown): AxiosResponse<T> => ({
   data: data as T,
@@ -26,16 +27,18 @@ const buildDetailsResponse = (data: unknown): PlaceDetailsResponse => buildAxios
 describe('GoogleClient', () => {
   let googleClient: GoogleClient
   let mockClient: {
-    placeAutocomplete: jest.Mock
-    placeDetails: jest.Mock
+    placeAutocomplete: Mock
+    placeDetails: Mock
   }
   const googleMapsApiKey = config.googleMapsApiKey
+  const autocompleteUrl = `${config.googleMapsApiUrl}/maps/api/place/autocomplete/json`
+  const detailsUrl = `${config.googleMapsApiUrl}/maps/api/place/details/json`
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockClient = {
-      placeAutocomplete: jest.fn(),
-      placeDetails: jest.fn(),
+      placeAutocomplete: vi.fn(),
+      placeDetails: vi.fn(),
     }
     googleClient = new GoogleClient()
 
@@ -76,6 +79,7 @@ describe('GoogleClient', () => {
       })
 
       expect(mockClient.placeAutocomplete).toHaveBeenCalledWith({
+        url: autocompleteUrl,
         params: {
           input: 'test search',
           key: googleMapsApiKey,
@@ -124,6 +128,7 @@ describe('GoogleClient', () => {
       })
 
       expect(mockClient.placeAutocomplete).toHaveBeenCalledWith({
+        url: autocompleteUrl,
         params: {
           input: 'test',
           key: googleMapsApiKey,
@@ -291,6 +296,7 @@ describe('GoogleClient', () => {
       })
 
       expect(mockClient.placeAutocomplete).toHaveBeenCalledWith({
+        url: autocompleteUrl,
         params: {
           input: 'test',
           key: googleMapsApiKey,
@@ -306,6 +312,7 @@ describe('GoogleClient', () => {
       })
 
       expect(mockClient.placeAutocomplete).toHaveBeenLastCalledWith({
+        url: autocompleteUrl,
         params: {
           input: 'test',
           key: googleMapsApiKey,
@@ -376,6 +383,7 @@ describe('GoogleClient', () => {
       const result = await googleClient.getPlaceDetails('test-place-id')
 
       expect(mockClient.placeDetails).toHaveBeenCalledWith({
+        url: detailsUrl,
         params: {
           place_id: 'test-place-id',
           key: googleMapsApiKey,

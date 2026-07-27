@@ -1,3 +1,3 @@
-export * from './lib/contract'
-export * from './lib/model'
-export * from './lib/ParkingClient'
+export * from './lib/contract/index.js'
+export * from './lib/model/index.js'
+export * from './lib/ParkingClient.js'

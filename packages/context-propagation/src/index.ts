@@ -1,1 +1,1 @@
-export * from './lib/ContextPropagator'
+export * from './lib/ContextPropagator.js'

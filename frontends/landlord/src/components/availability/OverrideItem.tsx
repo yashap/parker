@@ -8,14 +8,15 @@ interface OverrideItemProps {
   override: TimeRuleOverrideDto
   timeZone: string
   error?: string
+  testID?: string
   onEdit: () => void
   onDelete: () => void
 }
 
-export const OverrideItem: React.FC<OverrideItemProps> = ({ override, timeZone, error, onEdit, onDelete }) => {
+export const OverrideItem: React.FC<OverrideItemProps> = ({ override, timeZone, error, testID, onEdit, onDelete }) => {
   const theme = useTheme()
   return (
-    <Card style={{ marginBottom: 8 }}>
+    <Card testID={testID} style={{ marginBottom: 8 }}>
       <Card.Content>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <View style={{ flex: 1, gap: 4 }}>

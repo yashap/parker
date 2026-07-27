@@ -1,6 +1,6 @@
 import { z, ZodArray, ZodObject, ZodTypeAny } from 'zod'
-import { DEFAULT_MAX_LIMIT } from './constants'
-import { OrderDirectionSchema } from './orderDirection'
+import { DEFAULT_MAX_LIMIT } from './constants.js'
+import { OrderDirectionSchema } from './orderDirection.js'
 
 export const PaginationRequestSchema = z
   .object({

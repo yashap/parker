@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common'
 import { buildPaginationQuery } from '@parker/drizzle-utils'
 import { required } from '@parker/errors'
 import { Point } from '@parker/geography'
 import { ListParkingSpotsRequest } from '@parker/parking-client'
 import { and, asc, eq, sql } from 'drizzle-orm'
-import { isEmpty, omit } from 'lodash'
-import { Db } from 'src/db/Db'
-import { parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from 'src/db/schema'
-import { ParkingSpotDao, ParkingSpotInputDao, TimeRuleDao, TimeRuleOverrideDao } from 'src/db/types'
-import { ListParkingSpotPagination, ParkingSpot } from 'src/domain/parkingSpot/ParkingSpot'
-import { TimeZoneLookup } from 'src/domain/time/TimeZoneLookup'
-import { TimeRule } from 'src/domain/timeRule'
-import { TimeRuleOverride } from 'src/domain/timeRuleOverride'
+import isEmpty from 'lodash/isEmpty.js'
+import omit from 'lodash/omit.js'
+import { Db } from '../../db/Db.js'
+import { parkingSpotTable, timeRuleOverrideTable, timeRuleTable } from '../../db/schema.js'
+import { ParkingSpotDao, ParkingSpotInputDao, TimeRuleDao, TimeRuleOverrideDao } from '../../db/types.js'
+import { TimeZoneLookup } from '../time/TimeZoneLookup.js'
+import { TimeRule } from '../timeRule/index.js'
+import { TimeRuleOverride } from '../timeRuleOverride/index.js'
+import { ListParkingSpotPagination, ParkingSpot } from './ParkingSpot.js'
 
 export type CreateParkingSpotInput = Omit<ParkingSpotInputDao, 'timeZone'> & {
   timeRules: TimeRule[]
@@ -22,7 +22,6 @@ export type UpdateParkingSpotInput = Partial<Omit<CreateParkingSpotInput, 'owner
 
 export type ListParkingSpotFilters = Pick<ListParkingSpotsRequest, 'ownerUserId'>
 
-@Injectable()
 export class ParkingSpotRepository {
   constructor(private readonly db: Db) {}
 

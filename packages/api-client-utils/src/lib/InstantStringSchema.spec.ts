@@ -1,5 +1,6 @@
 import { Temporal } from '@js-temporal/polyfill'
-import { InstantStringSchema } from './InstantStringSchema'
+import { describe, expect, it } from 'vitest'
+import { InstantStringSchema } from './InstantStringSchema.js'
 
 describe('InstantStringSchema', () => {
   it('allows valid instants', () => {

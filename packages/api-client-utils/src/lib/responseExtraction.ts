@@ -2,8 +2,7 @@ import { ServerError, buildServerErrorFromDto } from '@parker/errors'
 import { HTTPStatusCode } from '@ts-rest/core'
 
 type TsRestResponse<ResponseBody, SuccessStatus extends number> =
-  | { status: SuccessStatus; body: ResponseBody }
-  | { status: Exclude<HTTPStatusCode, SuccessStatus>; body: unknown }
+  { status: SuccessStatus; body: ResponseBody } | { status: Exclude<HTTPStatusCode, SuccessStatus>; body: unknown }
 
 const buildError = (response: { status: number; body: unknown }): Error =>
   buildServerErrorFromDto(response.body, response.status)

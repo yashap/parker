@@ -1,5 +1,5 @@
 import { PaginatedResponseDto, PaginationRequestDto } from '@parker/pagination'
-import { omit } from 'lodash'
+import omit from 'lodash/omit.js'
 
 export const fetchAllPages = async <T, R extends PaginationRequestDto>(
   request: Omit<R, 'limit'> & { limit: number },

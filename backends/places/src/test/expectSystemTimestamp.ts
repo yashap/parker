@@ -1,4 +1,5 @@
 import { Temporal } from '@js-temporal/polyfill'
+import { expect } from 'vitest'
 
 export const expectSystemTimestamps = (
   { createdAt, updatedAt }: { createdAt: Temporal.Instant; updatedAt: Temporal.Instant },

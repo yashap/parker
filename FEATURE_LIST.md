@@ -5,8 +5,10 @@ What am I planning to work on next?
 ## Features
 
 - **`Landlord FE:`** Add a map to show where the parking spot is
-  - I should consider getting on latest Expo/RN/React for this
 - **`Landlord FE:`** Add editing of parking spots
+  - The Edit button currently just fires a TODO alert
+- **`Landlord FE:`** Build UI for bookings, and for searching spots near a point
+  - Both already exist in the API and are covered by API-level e2e tests, but have no screens
 - **`Landlord FE:`** Ability to add a photo of the parking spot
   - Probably backed by a generic file upload service?
 - **`BE:`** Real implementation of parking spot bookings and time rules
@@ -38,10 +40,6 @@ What am I planning to work on next?
 - **`FE:`** Ensure both renter and landlord work on Android
   - **Maybe**: RN-web version of landlord and/or renter?
 
-## Bugs
-
-None known at the moment.
-
 ## Tech Debt
 
 - **`Full Stack:`** Clean up all the vibe-coded code from adding places search (frontend and backend)
@@ -65,19 +63,28 @@ None known at the moment.
   - Maybe move everything from `frontends/landlord/app.json` into `frontends/landlord/app.config.ts`?
 - **`Full Stack:`** Validate flows around bad auth
   - Handled well on BE and FE? Ideally some BE tests!
-- **`Full Stack:`** Maybe switch to pnpm instead of yarn v1 workspaces?
-  - I believe new RN supports pnpm
-- **`FE:`** E2E tests, possibly using [Maestro](https://www.mobile.dev/)
+- **`FE:`** Mobile e2e tests, possibly using [Maestro](https://www.mobile.dev/)
+  - Web e2e tests are done (Playwright, in `e2e-tests-web`) - mobile is still uncovered
+- **`BE:`** Upgrade SuperTokens - SDK is pinned to `supertokens-node` ^23, core to 11.4.5
+  - SDK 24 requires core 12, which needs a staged operator migration, so this was deliberately deferred
+  - Both need to be bumped together
+- **`FE:`** Cover the `react-native-paper-dates` picker paths in the web e2e tests
+  - Changing a time rule's start/end times, and picking custom dates/times in the override editor, both go through
+    paper-dates modals that are brittle to drive from Playwright, so they're currently untested
+- **`BE:`** `backends/user` has no tests of its own
+  - Only covered indirectly, via the auth web e2e specs
 - **`Full Stack:`** - Move libs to absolute imports
   - In theory this is just:
 
     ```ts
     // ================================
-    // jest.config.js
+    // vitest.config.ts
     // ================================
-    // Make absolute imports work in jest tests
-    moduleNameMapper: {
-      '^src/(.*)$': '<rootDir>/src/$1',
+    // Make absolute imports work in vitest tests
+    resolve: {
+      alias: {
+        src: path.resolve(__dirname, 'src'),
+      },
     },
 
     // ================================

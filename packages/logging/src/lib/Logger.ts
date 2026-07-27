@@ -1,5 +1,5 @@
 import { CorrelationIdPropagator } from '@parker/correlation-id-propagator'
-import { toString } from 'lodash'
+import toString from 'lodash/toString.js'
 import winston from 'winston'
 
 export enum LogLevel {

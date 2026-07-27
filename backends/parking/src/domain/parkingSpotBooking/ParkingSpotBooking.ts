@@ -1,6 +1,6 @@
 import { BookingStatusDto, ParkingSpotBookingDto } from '@parker/parking-client'
 import { formatInstantFields } from '@parker/time'
-import { ParkingSpotBookingDao } from 'src/db/types'
+import { ParkingSpotBookingDao } from '../../db/types.js'
 
 export type BookingStatus = BookingStatusDto
 

@@ -9,7 +9,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import SuperTokens from 'supertokens-react-native'
 import { config } from 'src/config'
 import { AuthContextProvider } from 'src/contexts/AuthContext'
+import 'src/global.css'
 import { lightTheme, useTheme } from 'src/theme'
+import { paperIcon } from 'src/theme/paperIcon'
 
 SuperTokens.init({
   apiDomain: config.authUrl,
@@ -22,7 +24,7 @@ registerTranslation('en', en)
 const Router = () => {
   const theme = useTheme()
   return (
-    <SafeAreaView style={{ backgroundColor: theme.colors.background }} className='flex-1'>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <Stack
         screenOptions={{
           headerBackTitle: '',
@@ -48,7 +50,7 @@ const Router = () => {
 const Layout: React.FC = () => {
   return (
     <AuthContextProvider>
-      <PaperProvider theme={lightTheme}>
+      <PaperProvider theme={lightTheme} settings={{ icon: paperIcon }}>
         <StatusBar style='auto' />
         <Router />
         <FlashMessage

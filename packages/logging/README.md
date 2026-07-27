@@ -5,7 +5,7 @@ A logging library for backend services.
 ## Usage
 
 ```ts
-import { Logger }
+import { Logger } from '@parker/logging'
 
 const logger = new Logger('UserRepository')
 
@@ -24,8 +24,10 @@ The logger can be configured via environment variables:
 
 - `LOG_LEVEL`
   - What level of logs should be emitted?
-  - Allowed values: `error`, `warn`, `info`, `debug`, `trace`
+  - Allowed values: `off`, `error`, `warn`, `info`, `debug`, `trace`
     - For example, if set to `info`, then `error`/`warn`/`info` level logs will be emitted, while `debug`/`trace` will not
+    - `off` silences everything
+  - Unrecognised values fall back to the default
   - Default: `info`
 - `JSON_LOGS`
   - Should logs be in json format (machine friendly), or "pretty" format (human friendly - colors, indenting, etc.)?

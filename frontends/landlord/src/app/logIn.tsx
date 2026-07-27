@@ -32,14 +32,17 @@ const LogIn: React.FC = () => {
   const [password, setPassword] = React.useState<string>('')
   const authContext = useAuthContext()
   return (
-    <View>
-      <Card className='space-y-3 p-3'>
+    <View testID='logInScreen'>
+      {/* Paper's Card wraps children in its own inner View, so the padding/gap that spaces them has
+          to go on contentStyle rather than style (and can't be a className - see Screen.tsx) */}
+      <Card contentStyle={{ padding: 12, gap: 12 }}>
         {/* Header */}
         <View className='items-center'>
           <Text variant='headlineSmall'>Log in</Text>
           <Text variant='titleMedium'>
             {"Don't have an account? "}
             <Text
+              testID='goToSignUp'
               style={{ color: theme.colors.link }}
               onPress={() => {
                 router.replace('/signUp')
@@ -53,11 +56,21 @@ const LogIn: React.FC = () => {
         <Divider />
 
         {/* Form inputs */}
-        <TextInput label='Email Address' value={email} onChangeText={setEmail} />
-        <TextInput label='Password' secureTextEntry value={password} onChangeText={setPassword} />
+        <TextInput testID='logInEmailInput' label='Email Address' value={email} onChangeText={setEmail} />
+        <TextInput
+          testID='logInPasswordInput'
+          label='Password'
+          secureTextEntry
+          // Weird hack to prevent iOS from covering up the password, which breaks Maestro's input
+          textContentType='oneTimeCode'
+          autoComplete='off'
+          value={password}
+          onChangeText={setPassword}
+        />
 
         {/* Submit */}
         <Button
+          testID='submitLogIn'
           mode='contained'
           onPress={() => {
             void logIn({ email, password }, authContext)

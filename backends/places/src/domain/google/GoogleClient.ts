@@ -7,7 +7,6 @@ import {
   PlaceDetailsResponse,
   Status,
 } from '@googlemaps/google-maps-services-js'
-import { Injectable } from '@nestjs/common'
 import { InternalServerError } from '@parker/errors'
 import { Logger } from '@parker/logging'
 import {
@@ -16,7 +15,7 @@ import {
   PlaceSuggestionDto,
   SearchPlaceSuggestionsRequest,
 } from '@parker/places-client'
-import { config } from 'src/config'
+import { config } from '../../config.js'
 
 export type PlaceSuggestion = PlaceSuggestionDto
 export type PlaceDetails = PlaceDetailsDto
@@ -46,7 +45,6 @@ const extractGoogleApiErrorDetails = (error: unknown): GoogleApiErrorDetails | u
   }
 }
 
-@Injectable()
 export class GoogleClient {
   private readonly logger = new Logger('GoogleClient')
   private readonly client: Client
@@ -67,6 +65,7 @@ export class GoogleClient {
   }: GetPlaceSuggestionsParams): Promise<PlaceSuggestion[]> {
     try {
       const request: PlaceAutocompleteRequest = {
+        url: `${config.googleMapsApiUrl}/maps/api/place/autocomplete/json`,
         params: {
           input: search,
           key: this.apiKey,
@@ -107,6 +106,7 @@ export class GoogleClient {
   public async getPlaceDetails(placeId: string): Promise<PlaceDetails> {
     try {
       const request: PlaceDetailsRequest = {
+        url: `${config.googleMapsApiUrl}/maps/api/place/details/json`,
         params: {
           place_id: placeId,
           key: this.apiKey,

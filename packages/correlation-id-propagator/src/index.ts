@@ -1,1 +1,1 @@
-export * from './lib/CorrelationIdPropagator'
+export * from './lib/CorrelationIdPropagator.js'

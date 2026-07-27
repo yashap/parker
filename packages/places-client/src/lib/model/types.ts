@@ -1,10 +1,10 @@
 import { z } from 'zod'
-import { AddressComponentsSchema, PlaceDetailsSchema } from './PlaceDetails'
+import { AddressComponentsSchema, PlaceDetailsSchema } from './PlaceDetails.js'
 import {
   PlaceSuggestionSchema,
   SearchPlaceSuggestionsRequestSchema,
   SearchPlaceSuggestionsResponseSchema,
-} from './PlaceSuggestions'
+} from './PlaceSuggestions.js'
 
 // Requests
 export type SearchPlaceSuggestionsRequest = z.infer<typeof SearchPlaceSuggestionsRequestSchema>

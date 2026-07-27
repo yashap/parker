@@ -5,6 +5,7 @@ import { FlatList, Keyboard, TouchableOpacity, TouchableWithoutFeedback, View } 
 import { ActivityIndicator, Card, List, Portal, TextInput } from 'react-native-paper'
 import { PlacesClientBuilder } from 'src/apiClient/PlacesClientBuilder'
 import { useDeviceLocation } from 'src/hooks/useDeviceLocation'
+import { showErrorToast } from 'src/toasts/showErrorToast'
 
 const SEARCH_RADIUS_METERS = 100_000
 
@@ -18,13 +19,19 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
   const [isLoading, setIsLoading] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [inputLayout, setInputLayout] = useState({ x: 0, y: 0, width: 0, height: 0 })
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // The debounce cancels pending timers but not requests already in flight, so several searches can
+  // be racing at once (one per pause while typing). Only the latest may update the dropdown:
+  // out-of-order responses would otherwise keep re-rendering the rows under the user's finger, and
+  // a tap on a row that's being replaced falls through to the backdrop and just closes the dropdown.
+  const searchSequenceRef = useRef(0)
   const inputRef = useRef<View>(null)
   const placesClient = PlacesClientBuilder.build()
   const { location: deviceLocation } = useDeviceLocation()
 
   const searchPlaces = useCallback(
     async (searchQuery: string) => {
+      const sequence = ++searchSequenceRef.current
       if (searchQuery.length < 2) {
         setSuggestions([])
         setShowSuggestions(false)
@@ -42,15 +49,22 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
             radius: SEARCH_RADIUS_METERS,
             useStrictBounds: true,
           }),
-          language: locales[0]?.languageCode ?? 'en',
+          language: locales[0].languageCode ?? 'en',
           limit: 5,
         })
+        if (sequence !== searchSequenceRef.current) {
+          return // A newer search has started; discard this stale response
+        }
         setSuggestions(response.data)
         setShowSuggestions(true)
       } catch {
-        setSuggestions([])
+        if (sequence === searchSequenceRef.current) {
+          setSuggestions([])
+        }
       } finally {
-        setIsLoading(false)
+        if (sequence === searchSequenceRef.current) {
+          setIsLoading(false)
+        }
       }
     },
     [deviceLocation, placesClient]
@@ -85,8 +99,8 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
           longitude: placeDetails.location.longitude,
         })
       }
-    } catch {
-      // Silently fail - user can try selecting again
+    } catch (error) {
+      showErrorToast(error, 'Failed to select address')
     }
   }
 
@@ -117,6 +131,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
         }}
       >
         <TextInput
+          testID='addressInput'
           label='Address'
           value={query}
           onChangeText={handleTextChange}
@@ -176,8 +191,9 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({ onAddr
                 data={suggestions}
                 keyExtractor={(item) => item.placeId}
                 keyboardShouldPersistTaps='always'
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                   <TouchableOpacity
+                    testID={`addressSuggestion-${index}`}
                     onPress={() => {
                       void handleSuggestionPress(item)
                     }}
