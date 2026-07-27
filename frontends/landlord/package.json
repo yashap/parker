@@ -16,6 +16,7 @@
   "dependencies": {
     "@babel/runtime": "^7.27.0",
     "@expo/metro-runtime": "~57.0.7",
+    "@expo/vector-icons": "^15.1.1",
     "@hookform/resolvers": "^5.2.1",
     "@js-temporal/polyfill": "^0.5.1",
     "@parker/api-client-utils": "workspace:*",

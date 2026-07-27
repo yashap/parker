@@ -33,7 +33,9 @@ const SignUp: React.FC = () => {
   const authContext = useAuthContext()
   return (
     <View testID='signUpScreen'>
-      <Card className='gap-3 p-3'>
+      {/* Paper's Card wraps children in its own inner View, so the padding/gap that spaces them has
+          to go on contentStyle rather than style (and can't be a className - see Screen.tsx) */}
+      <Card contentStyle={{ padding: 12, gap: 12 }}>
         {/* Header */}
         <View className='items-center'>
           <Text variant='headlineSmall'>Sign up</Text>

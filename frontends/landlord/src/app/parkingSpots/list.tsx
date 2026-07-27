@@ -80,7 +80,7 @@ const DeleteParkingSpotButton = ({ parkingSpotId, onDeleted, ...rest }: DeletePa
   )
 }
 
-const cardClassName = 'mb-2'
+const cardStyle = { marginBottom: 8 }
 
 const ParkingSpotList: React.FC = () => {
   useNavigationHeader({ type: 'defaultHeader', title: 'Your Parking Spots' })
@@ -117,7 +117,7 @@ const ParkingSpotList: React.FC = () => {
       {/* TODO: make "add spot" prominent if no spots, subtle otherwise? */}
       <Card
         testID='addParkingSpotCard'
-        className={cardClassName}
+        style={cardStyle}
         onPress={() => {
           router.push('/parkingSpots/new')
         }}
@@ -127,7 +127,7 @@ const ParkingSpotList: React.FC = () => {
       <FlatList
         data={parkingSpots}
         renderItem={({ item: parkingSpot }) => (
-          <Card key={parkingSpot.id} testID={`parkingSpotCard-${parkingSpot.id}`} className={cardClassName}>
+          <Card key={parkingSpot.id} testID={`parkingSpotCard-${parkingSpot.id}`} style={cardStyle}>
             <Card.Title title={parkingSpot.address} left={ParkingSpotImage} />
             <Card.Content>
               <Text variant='bodyMedium'>{`Coordinates: ${parkingSpot.location.longitude}, ${parkingSpot.location.latitude}`}</Text>
