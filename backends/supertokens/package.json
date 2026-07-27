@@ -8,6 +8,6 @@
     "db:migrate-up": "pnpm db:up",
     "db:up": "../../tools/scripts/ensure_postgres_db.sh -d supertokens && ../../tools/scripts/ensure_postgres_user.sh -u supertokens -w supertokens_password -d supertokens",
     "db:restore-fixtures": "pnpm db:clean && pnpm db:up && ../../tools/scripts/restore_fixtures.sh supertokens postgres://supertokens:supertokens_password@localhost:5432/supertokens?sslmode=disable && pnpm db:migrate-up",
-    "serve": "docker rm -f parker_supertokens && docker run --name parker_supertokens -e POSTGRESQL_USER=\"supertokens\" -e POSTGRESQL_PASSWORD=\"supertokens_password\" -e POSTGRESQL_HOST=\"host.docker.internal\" -e POSTGRESQL_PORT=\"6440\" -e LOG_LEVEL=\"${LOG_LEVEL:-WARN}\" -p 4567:3567 --rm registry.supertokens.io/supertokens/supertokens-postgresql:11.4.5"
+    "serve": "docker rm -f parker_supertokens && docker run --name parker_supertokens --add-host=host.docker.internal:host-gateway -e POSTGRESQL_USER=\"supertokens\" -e POSTGRESQL_PASSWORD=\"supertokens_password\" -e POSTGRESQL_HOST=\"host.docker.internal\" -e POSTGRESQL_PORT=\"6440\" -e LOG_LEVEL=\"${LOG_LEVEL:-WARN}\" -p 4567:3567 --rm registry.supertokens.io/supertokens/supertokens-postgresql:11.4.5"
   }
 }
