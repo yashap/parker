@@ -54,14 +54,20 @@ actually need without that cost.
 
 ## iOS dialogs
 
-Three dialogs can appear in front of the app, none of them ours. Each is handled by a conditional subflow in
-[`subflows/`](./subflows), which is a no-op when the dialog isn't showing:
+Three dialogs can appear in front of the app, none of them ours:
 
-| Dialog                                       | When                                                              | Subflow                          |
-| -------------------------------------------- | ----------------------------------------------------------------- | -------------------------------- |
-| Expo Go's "This is the developer menu" sheet | First launch after Expo Go is installed or its storage is cleared | `dismiss-expo-go-dev-menu.yaml`  |
-| "Allow Expo Go to use your location?"        | First time the new-spot screen mounts (it biases suggestions)     | `allow-ios-location.yaml`        |
-| "Save this password in your Keychain?"       | After a successful sign up or log in                              | `decline-ios-save-password.yaml` |
+| Dialog                                       | When                                                              |
+| -------------------------------------------- | ----------------------------------------------------------------- |
+| Expo Go's "This is the developer menu" sheet | First launch after Expo Go is installed or its storage is cleared |
+| "Allow Expo Go to use your location?"        | First time the new-spot screen mounts (it biases suggestions)     |
+| "Save this password in your Keychain?"       | After a successful sign up or log in                              |
+
+All three are dismissed by [`subflows/clear-stray-ios-dialogs.yaml`](./subflows/clear-stray-ios-dialogs.yaml).
+Note how the flows invoke it: at each screen transition they wait for the screen they expect
+(`optional: true`), and only run the sweep if that screen never appeared. Maestro re-dumps the whole
+accessibility hierarchy for every condition it evaluates (~1-2s each), so checking for dialogs
+unconditionally on every run cost far more than the tests themselves. This way the normal path pays one
+fast wait plus one check, and the cost of clearing dialogs falls only on the runs that actually have them.
 
 Separately, the password fields on the log-in and sign-up screens set `textContentType='oneTimeCode'` and
 `autoComplete='off'`. Without those, iOS covers the field with its "Automatic Strong Password" suggestion and

@@ -3,19 +3,28 @@ appId: host.exp.Exponent
 ---
 # No `clearState` — see sign-up-and-log-in.yaml for why
 - openLink: exp://127.0.0.1:9082/--/signUp
-- evalScript: ${output.email = 'parker-mobile-e2e-' + Date.now() + '-' + Math.floor(Math.random() * 1e6) + '@example.com'}
+- evalScript: ${output.email = 'pk-' + Date.now() + Math.floor(Math.random() * 1000) + '@example.com'}
 
-# Expo Go covers our app with its own developer menu on the first launch after `clearState`
-- runFlow: ../subflows/dismiss-expo-go-dev-menu.yaml
-# iOS system alerts outlive `clearState`, so a previous run that failed part-way can leave one on
-# screen, and a first-ever run hits Expo Go's onboarding. All conditional no-ops otherwise.
-- runFlow: ../subflows/allow-ios-location.yaml
-- runFlow: ../subflows/decline-ios-save-password.yaml
+# See sign-up-and-log-in.yaml for the wait/sweep pattern used at each screen transition
+# Wait for the screen we expect. When nothing is covering it this returns almost immediately, and
+# the conditional below is a single check - so the normal path costs ~nothing. Only if the screen
+# never appears do we conclude something is in front of it and run the sweep.
+- extendedWaitUntil:
+    visible:
+      id: 'signUpScreen'
+    timeout: 20000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: 'signUpScreen'
+    commands:
+      - runFlow: ../subflows/clear-stray-ios-dialogs.yaml
+- assertVisible:
+    id: 'signUpScreen'
 
 # Sign up as a fresh landlord, so the spot list starts empty and this run is self-isolating.
 # See sign-up-and-log-in.yaml for why the email field is tapped twice.
-- assertVisible:
-    id: 'signUpScreen'
 - tapOn:
     id: 'signUpEmailInput'
 - tapOn:
@@ -26,7 +35,20 @@ appId: host.exp.Exponent
 - inputText: 'StrongPassword123'
 - tapOn:
     id: 'submitSignUp'
-- runFlow: ../subflows/decline-ios-save-password.yaml
+# Wait for the screen we expect. When nothing is covering it this returns almost immediately, and
+# the conditional below is a single check - so the normal path costs ~nothing. Only if the screen
+# never appears do we conclude something is in front of it and run the sweep.
+- extendedWaitUntil:
+    visible:
+      id: 'parkingSpotsListScreen'
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: 'parkingSpotsListScreen'
+    commands:
+      - runFlow: ../subflows/clear-stray-ios-dialogs.yaml
 - assertVisible:
     id: 'parkingSpotsListScreen'
 
@@ -37,7 +59,20 @@ appId: host.exp.Exponent
 # label, so the flow doesn't depend on which of the two is serving.
 - tapOn:
     id: 'addParkingSpotCard'
-- runFlow: ../subflows/allow-ios-location.yaml
+# Wait for the screen we expect. When nothing is covering it this returns almost immediately, and
+# the conditional below is a single check - so the normal path costs ~nothing. Only if the screen
+# never appears do we conclude something is in front of it and run the sweep.
+- extendedWaitUntil:
+    visible:
+      id: 'newParkingSpotScreen'
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: 'newParkingSpotScreen'
+    commands:
+      - runFlow: ../subflows/clear-stray-ios-dialogs.yaml
 - assertVisible:
     id: 'newParkingSpotScreen'
 - tapOn:
@@ -45,8 +80,18 @@ appId: host.exp.Exponent
 - tapOn:
     id: 'addressInput'
 - inputText: '160 Spear'
-- tapOn:
-    id: 'addressSuggestion-0'
+# The autocomplete debounces 300ms and then queries the places backend, and the list re-renders as
+# results land - so a tap can hit a row that's being replaced, and the details fetch it triggers
+# fails silently. Retry the tap until the selected-location panel actually appears.
+- retry:
+    maxRetries: 3
+    commands:
+      - tapOn:
+          id: 'addressSuggestion-0'
+      - extendedWaitUntil:
+          visible:
+            id: 'selectedLocationPanel'
+          timeout: 8000
 - assertVisible:
     id: 'selectedLocationPanel'
 - tapOn:

@@ -1,0 +1,41 @@
+# Shared subflow, referenced by the flows in ../flows via `runFlow`. It deliberately lives outside
+# flows/ so that `maestro test flows/` doesn't pick it up as a test of its own.
+#
+# Dismisses anything of Expo Go's or iOS's that might be sitting in front of our app: Expo Go's
+# first-launch developer menu (two layers), the location permission alert, and the Keychain
+# "save this password" alert. iOS alerts outlive the app, so a run that failed part-way can leave
+# one behind for the next run.
+#
+# Every step is a bare `when: visible` conditional with NO wait, so this whole subflow costs
+# ~nothing when the screen is clean — which is the normal case. Callers are responsible for
+# waiting: they wait for the screen they actually expect (optional), and only reach this sweep
+# having found it missing. That way a timeout is paid solely when something really is covering the
+# app, instead of on every single run.
+appId: host.exp.Exponent
+---
+# Expo Go's onboarding explainer. "Continue" dismisses it and reveals the dev menu proper.
+- runFlow:
+    when:
+      visible: 'This is the developer menu'
+    commands:
+      - tapOn: 'Continue'
+
+# The dev menu itself. Gated on one of its own entries rather than on "Close" alone, so a "Close"
+# button in our app could never be mistaken for it.
+- runFlow:
+    when:
+      visible: 'Go home'
+    commands:
+      - tapOn: 'Close'
+
+- runFlow:
+    when:
+      visible: 'Allow While Using App'
+    commands:
+      - tapOn: 'Allow While Using App'
+
+- runFlow:
+    when:
+      visible: 'Save Password'
+    commands:
+      - tapOn: 'Not Now'
