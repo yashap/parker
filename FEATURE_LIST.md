@@ -40,16 +40,6 @@ What am I planning to work on next?
 - **`FE:`** Ensure both renter and landlord work on Android
   - **Maybe**: RN-web version of landlord and/or renter?
 
-## Bugs
-
-- **`Landlord FE:`** The "quick override" buttons ("Available for next…" / "Block for next…") don't work on web
-  - They're built on `react-native-paper`'s `Menu`, which never opens under `react-native-web` in this stack: the
-    button's `onPress` fires and the Menu mounts its Portal, but its internal `show()` measure loop never resolves,
-    and it unmounts again a few hundred ms later
-  - Reproducible with a realistic mouse down/up sequence, so it's an app/library defect, not a test artifact
-  - Consequently untested in the web e2e suite — overrides are covered through the editor modal instead
-  - Workaround for users: use the override editor modal
-
 ## Tech Debt
 
 - **`Full Stack:`** Clean up all the vibe-coded code from adding places search (frontend and backend)

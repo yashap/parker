@@ -297,10 +297,6 @@ when other people run `pnpm db:restore-fixtures`, they'll get the state you snap
 
 Honest list of things that are broken, missing, or untested:
 
-- **The landlord "quick override" buttons don't work on web.** They're built on `react-native-paper`'s `Menu`,
-  which never opens under `react-native-web` in this stack — the button's `onPress` fires and the Menu mounts
-  its Portal, but its internal measure loop never resolves and it unmounts again. It's an app/library defect,
-  not a test artifact. Use the override editor modal instead.
 - **Editing a parking spot is unimplemented** — the Edit button is a TODO alert.
 - **Bookings and closest-to-point search have no UI.** Both exist in the API and are covered by API-level e2e
   tests only.

@@ -37,9 +37,25 @@ test('add a weekly availability rule and verify it persists', async ({ page }) =
   await expect(visibleTestId(page, 'addDay-Tuesday')).toBeVisible()
 })
 
+test('add an override via the quick actions and verify it persists', async ({ page }) => {
+  await signUpNewUser(page)
+  const parkingSpotId = await createParkingSpotViaUi(page)
+
+  await openConfigureAvailability(page, parkingSpotId)
+  await visibleTestId(page, 'quickOverride-blocked-4h').click()
+  await expect(visibleTestId(page, 'overrideItem-0')).toBeVisible()
+  await expect(visibleTestId(page, 'overrideItem-0')).toContainText('Blocked')
+
+  await saveAndReturnToList(page)
+
+  // Reopen — the override was persisted on the backend
+  await openConfigureAvailability(page, parkingSpotId)
+  await expect(visibleTestId(page, 'overrideItem-0')).toBeVisible()
+  await expect(visibleTestId(page, 'overrideItem-0')).toContainText('Blocked')
+})
+
 // Adds an override through the editor modal, accepting its defaults (available, now → now + 1h),
-// so no date/time picker interaction is needed. The Menu-driven "quick override" buttons can't be
-// covered — react-native-paper's Menu never opens on web (see README, "Known coverage gaps").
+// so no date/time picker interaction is needed.
 test('add an override via the editor modal and verify it persists', async ({ page }) => {
   await signUpNewUser(page)
   const parkingSpotId = await createParkingSpotViaUi(page)
